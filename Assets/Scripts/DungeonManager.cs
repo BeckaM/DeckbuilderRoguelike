@@ -7,7 +7,7 @@ namespace Completed
 	
 {
 	
-	public class BoardManager : MonoBehaviour
+	public class DungeonManager : MonoBehaviour
 	{
 		// Using Serializable allows us to embed a class with sub properties in the inspector.
 		[Serializable]
@@ -35,9 +35,10 @@ namespace Completed
 		public GameObject[] wallTiles;									//Array of wall prefabs.
 		public GameObject[] foodTiles;									//Array of food prefabs.
 		public GameObject[] enemyTiles;									//Array of enemy prefabs.
-		public GameObject[] outerWallTiles;								//Array of outer tile prefabs.
-		
-		private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
+		public GameObject[] outerWallTiles;                             //Array of outer tile prefabs.
+
+        private Transform DungeonCanvas;
+        private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
 		private List <Vector3> gridPositions = new List <Vector3> ();	//A list of possible locations to place tiles.
 		
 		
@@ -63,11 +64,13 @@ namespace Completed
 		//Sets up the outer walls and floor (background) of the game board.
 		void BoardSetup ()
 		{
-			//Instantiate Board and set boardHolder to its transform.
+			//Instantiate Board and set boardHolder to its transform. Set the Board Canvas as it's parent.
 			boardHolder = new GameObject ("Board").transform;
-			
-			//Loop along x axis, starting from -1 (to fill corner) with floor or outerwall edge tiles.
-			for(int x = -1; x < columns + 1; x++)
+            DungeonCanvas =  GameObject.Find ("Canvas(Board)").transform;
+            boardHolder.transform.SetParent(DungeonCanvas);
+
+            //Loop along x axis, starting from -1 (to fill corner) with floor or outerwall edge tiles.
+            for (int x = -1; x < columns + 1; x++)
 			{
 				//Loop along y axis, starting from -1 to place floor or outerwall tiles.
 				for(int y = -1; y < rows + 1; y++)
@@ -110,8 +113,9 @@ namespace Completed
 		//LayoutObjectAtRandom accepts an array of game objects to choose from along with a minimum and maximum range for the number of objects to create.
 		void LayoutObjectAtRandom (GameObject[] tileArray, int minimum, int maximum)
 		{
-			//Choose a random number of objects to instantiate within the minimum and maximum limits
-			int objectCount = Random.Range (minimum, maximum+1);
+
+            //Choose a random number of objects to instantiate within the minimum and maximum limits
+            int objectCount = Random.Range (minimum, maximum+1);
 			
 			//Instantiate objects until the randomly chosen limit objectCount is reached
 			for(int i = 0; i < objectCount; i++)
@@ -123,8 +127,11 @@ namespace Completed
 				GameObject tileChoice = tileArray[Random.Range (0, tileArray.Length)];
 				
 				//Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
-				Instantiate(tileChoice, randomPosition, Quaternion.identity);
-			}
+				Instantiate(tileChoice, randomPosition, Quaternion.identity,DungeonCanvas);
+
+                //Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
+                
+            }
 		}
 		
 		
@@ -150,7 +157,7 @@ namespace Completed
 			LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount);
 			
 			//Instantiate the exit tile in the upper right hand corner of our game board
-			Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity);
+			Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity,DungeonCanvas);
 		}
 	}
 }

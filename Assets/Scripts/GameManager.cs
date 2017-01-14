@@ -9,21 +9,23 @@ namespace Completed
 	public class GameManager : MonoBehaviour
 	{
 		public float levelStartDelay = 2f;						//Time to wait before starting level, in seconds.
-		public float turnDelay = 0.1f;							//Delay between each Player turn.
-		public int playerFoodPoints = 100;						//Starting value for Player food points.
-		public static GameManager instance = null;				//Static instance of GameManager which allows it to be accessed by any other script.
+		public float turnDelay = 0.2f;							//Delay between each Player turn.
+        public int playerLife = 500;
+        public static GameManager instance = null;				//Static instance of GameManager which allows it to be accessed by any other script.
 		[HideInInspector] public bool playersTurn = true;		//Boolean to check if it's players turn, hidden in inspector but public.
 		
 		
 		private Text levelText;									//Text to display current level number.
 		private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.
-		private BoardManager boardScript;						//Store a reference to our BoardManager which will set up the level.
-		private int level = 1;									//Current level number, expressed in game as "Day 1".
-		private List<Enemy> enemies;							//List of all Enemy units, used to issue them move commands.
-		private bool enemiesMoving;								//Boolean to check if enemies are moving.
-		private bool doingSetup = true;							//Boolean to check if we're setting up board, prevent Player from moving during setup.
-		
-		
+        private GameObject DungeonCanvas;
+    //    private GameObject DungeonBoard;
+        private GameObject CardGameCanvas;
+        private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
+		private int level = 3;                                  //Current level number, expressed in game as "Day 1".
+        private List<Enemy> enemies;                             //List of all Enemy units, used to issue them move commands.
+        private bool notplayersturn;                           		
+        private bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
+
 		
 		//Awake is always called before any Start functions
 		void Awake()
@@ -47,7 +49,7 @@ namespace Completed
 			enemies = new List<Enemy>();
 			
 			//Get a component reference to the attached BoardManager script
-			boardScript = GetComponent<BoardManager>();
+			boardScript = GetComponent<DungeonManager>();
 			
 			//Call the InitGame function to initialize the first level 
 			InitGame();
@@ -67,15 +69,25 @@ namespace Completed
 		{
 			//While doingSetup is true the player can't move, prevent player from moving while title card is up.
 			doingSetup = true;
-			
-			//Get a reference to our image LevelImage by finding it by name.
-			levelImage = GameObject.Find("LevelImage");
-			
+
+            DungeonCanvas = GameObject.Find("Canvas(Board)");
+            CardGameCanvas = GameObject.Find("Canvas(CardGame)");
+
+            DungeonCanvas.SetActive(true);
+            CardGameCanvas.SetActive(false);
+
+
+
+            //Get a reference to our image LevelImage by finding it by name.
+            levelImage = GameObject.Find("LevelImage");
+
+          
+
 			//Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
 			levelText = GameObject.Find("LevelText").GetComponent<Text>();
 			
-			//Set the text of levelText to the string "Day" and append the current level number.
-			levelText.text = "Day " + level;
+			//Set the text of levelText to the string "Level" and append the current level number.
+			levelText.text = "Level " + level;
 			
 			//Set levelImage to active blocking player's view of the game board during setup.
 			levelImage.SetActive(true);
@@ -90,6 +102,23 @@ namespace Completed
 			boardScript.SetupScene(level);
 			
 		}
+
+        public void InitCardgame()
+        {
+            //While doingSetup is true the player can't move, prevent player from moving while card game.
+
+            doingSetup = true;
+
+   //         DungeonBoard = GameObject.Find("Board");
+
+  //          DungeonBoard.SetActive(false);
+            DungeonCanvas.SetActive(false);
+            CardGameCanvas.SetActive(true);
+
+
+
+
+        }
 		
 		
 		//Hides black image used between levels
@@ -101,30 +130,25 @@ namespace Completed
 			//Set doingSetup to false allowing player to move again.
 			doingSetup = false;
 		}
-		
-		//Update is called every frame.
-		void Update()
-		{
-			//Check that playersTurn or enemiesMoving or doingSetup are not currently true.
-			if(playersTurn || enemiesMoving || doingSetup)
-				
-				//If any of these are true, return and do not start MoveEnemies.
-				return;
-			
-			//Start moving enemies.
-			StartCoroutine (MoveEnemies ());
-		}
-		
-		//Call this to add the passed in Enemy to the List of Enemy objects.
-		public void AddEnemyToList(Enemy script)
-		{
-			//Add Enemy to List enemies.
-			enemies.Add(script);
-		}
-		
-		
-		//GameOver is called when the player reaches 0 food points
-		public void GameOver()
+
+        //Update is called every frame.
+        void Update()
+        {
+            ////Check that playersTurn or enemiesMoving or doingSetup are not currently true.
+            if (playersTurn || doingSetup || notplayersturn)
+
+                //    //If any of these are true, return and do not start MoveEnemies.
+                    return;
+
+                //Start moving enemies.
+                StartCoroutine(MoveEnemies());
+           
+        }
+
+
+
+        //GameOver is called when the player reaches 0 food points
+        public void GameOver()
 		{
 			//Set levelText to display number of levels passed and game over message
 			levelText.text = "After " + level + " days, you starved.";
@@ -135,38 +159,27 @@ namespace Completed
 			//Disable this GameManager.
 			enabled = false;
 		}
-		
-		//Coroutine to move enemies in sequence.
-		IEnumerator MoveEnemies()
-		{
-			//While enemiesMoving is true player is unable to move.
-			enemiesMoving = true;
-			
-			//Wait for turnDelay seconds, defaults to .1 (100 ms).
-			yield return new WaitForSeconds(turnDelay);
-			
-			//If there are no enemies spawned (IE in first level):
-			if (enemies.Count == 0) 
-			{
-				//Wait for turnDelay seconds between moves, replaces delay caused by enemies moving when there are none.
-				yield return new WaitForSeconds(turnDelay);
-			}
-			
-			//Loop through List of Enemy objects.
-			for (int i = 0; i < enemies.Count; i++)
-			{
-				//Call the MoveEnemy function of Enemy at index i in the enemies List.
-				enemies[i].MoveEnemy ();
-				
-				//Wait for Enemy's moveTime before moving next Enemy, 
-				yield return new WaitForSeconds(enemies[i].moveTime);
-			}
-			//Once Enemies are done moving, set playersTurn to true so player can move.
-			playersTurn = true;
-			
-			//Enemies are done moving, set enemiesMoving to false.
-			enemiesMoving = false;
-		}
-	}
+
+
+        //Coroutine to move enemies in sequence.
+        IEnumerator MoveEnemies()
+        {
+
+            notplayersturn = true;
+
+            yield return new WaitForSeconds(turnDelay);
+
+
+            
+                 
+            playersTurn = true;
+            notplayersturn = false;
+
+
+        }
+
+
+
+    }
 }
 
