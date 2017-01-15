@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class CardManager : MonoBehaviour
 {
 
-    private const string fileName = @"C:\tmp\Cards.json"; //@"C:\Users\Public\Documents\Unity Projects\DeckbuilderRoguelike\Assets\JSON\Cards.json";
+    private const string fileName = @"C:\Users\Per\Documents\DeckbuilderRoguelike\Assets\JSON\Cards.json";
+
 
     public string CardName;
     public string CardText;
@@ -17,7 +19,19 @@ public class CardManager : MonoBehaviour
     public GameObject CardObject;
     public Sprite[] sprites;
 
+    public enum Team { My, AI };
+    public Team team = Team.My;
+
+    public enum CardStatus { InDeck, InHand, OnTable, InDiscard };
+    public CardStatus cardStatus = CardStatus.InDeck;
+
     // public List<Card> Deck = new List<Card>();
+
+
+    public void SetCardStatus(CardStatus status)
+    {
+        cardStatus = status;
+    }
 
     public void CreateCard()
     {
@@ -31,6 +45,12 @@ public class CardManager : MonoBehaviour
             SpriteIcon = this.SpriteIcon,
             Damage = this.Damage
         };
+
+        if(cardList == null)
+        {
+            cardList = new Wrapper();
+            cardList.CardItems = new System.Collections.Generic.List<Card>();
+        }
 
         cardList.CardItems.Add(card);
 
@@ -51,31 +71,15 @@ public class CardManager : MonoBehaviour
 
         File.WriteAllText(fileName, awesomeNewCard);
     }
-
-    public void AddCardtoDeck(string[] cardsToCreate)
+    public void GetCard(Card card)
     {
-        string text = File.ReadAllText(fileName);
-        var cardList = JsonUtility.FromJson<Wrapper>(text);
-
-
-        foreach (string cardToCreate in cardsToCreate)
-        {
-
-            // Search for card in json file
-            var card = cardList.CardItems.Find(item => item.CardName.Equals(cardToCreate));
 
             CardName = card.CardName;
             CardText = card.CardText;
             SpriteIcon = card.SpriteIcon;
             Damage = card.Damage;
-
-            GameObject instance = Instantiate(CardObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-
-            var deck = GameObject.Find("Deck").transform;
-            instance.transform.SetParent(deck);
-
-
-            var transformer = instance.transform;
+            
+            var transformer = this.transform;
 
             //Set Image
             var imageObj = transformer.GetChild(0);
@@ -91,8 +95,14 @@ public class CardManager : MonoBehaviour
             var cardDesc = transformer.GetChild(2);
             var DescComponent = cardDesc.GetComponent<Text>();
             DescComponent.text = CardText;
-        }
+
+            
+        
+
+        
     }
+
+
 
     // Use this for initialization
     void Start()

@@ -21,6 +21,7 @@ namespace Completed
     //    private GameObject DungeonBoard;
         private GameObject CardGameCanvas;
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
+        private DeckManager deckscript;
 		private int level = 3;                                  //Current level number, expressed in game as "Day 1".
         private List<Enemy> enemies;                             //List of all Enemy units, used to issue them move commands.
         private bool notplayersturn;                           		
@@ -53,6 +54,10 @@ namespace Completed
 			
 			//Call the InitGame function to initialize the first level 
 			InitGame();
+
+            //Call the Starting Deck function to initialize the starting deck
+            deckscript = GetComponent<DeckManager>();
+            deckscript.StartingDeck();
 		}
 		
 		//This is called each time a scene is loaded.

@@ -18,17 +18,7 @@ public class InspectorCard : Editor
         }
 
       
-        if (GUILayout.Button("Instantiate Card"))
-        {
-            string[] cardstoCreate = new string[5];
-            cardstoCreate[0] = "Murloc2";
-            cardstoCreate[1] = "Murloc3";
-            cardstoCreate[2] = "Unicorn";
-            cardstoCreate[3] = "Unicorn";
-            cardstoCreate[4] = "Unicorn";
-
-            myScript.AddCardtoDeck(cardstoCreate);
-        }
+     
 
 
     }
