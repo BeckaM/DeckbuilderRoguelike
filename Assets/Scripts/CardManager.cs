@@ -102,6 +102,15 @@ public class CardManager : MonoBehaviour
         
     }
 
+    public void PlaceCard()
+    {
+        if (CardgameManager.instance.turn == CardgameManager.Turn.MyTurn && cardStatus == CardStatus.InHand && team == Team.My)
+        {
+            //Selected = false;
+            CardgameManager.instance.PlaceCard(this);
+        }
+    }
+
 
 
     // Use this for initialization

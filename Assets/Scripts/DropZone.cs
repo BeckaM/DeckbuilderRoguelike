@@ -35,4 +35,14 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		}
 
 	}
+    void OnTriggerEnter(Collider Obj)
+    {
+        CardManager card = Obj.GetComponent<CardManager>();
+        if (card)
+        {
+            card.PlaceCard();
+        }
+
+    }
+
 }

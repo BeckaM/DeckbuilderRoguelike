@@ -5,8 +5,10 @@ using System.Collections.Generic;
 public class CardgameManager : MonoBehaviour
 {
 
+    public static CardgameManager instance;
 
     public enum Turn { MyTurn, AITurn };
+    public Turn turn = Turn.MyTurn;
 
     public List<GameObject> MyDeckCards = new List<GameObject>();
     public List<GameObject> MyHandCards = new List<GameObject>();
@@ -54,6 +56,8 @@ public class CardgameManager : MonoBehaviour
 
     }
 
+
+
     public void DrawCardFromDeck(CardManager.Team team)
     {
 
@@ -83,9 +87,69 @@ public class CardgameManager : MonoBehaviour
             AIDeckCards.Remove(tempCard);
             AIHandCards.Add(tempCard);
         }
+    }
 
+         public void PlaceCard(CardManager card)
+    {
+        if (card.team == CardManager.Team.My && MyMana - card.mana >= 0 && MyTableCards.Count < 10)
+        {
+            //card.gameObject.transform.position = MyTablePos.position;
+            card.GetComponent<CardBehaviourScript>().newPos = MyTablePos.position;
 
+            MyHandCards.Remove(card.gameObject);
+            MyTableCards.Add(card.gameObject);
 
+            card.SetCardStatus(CardBehaviourScript.CardStatus.OnTable);
+            //PlaySound(cardDrop);
+
+            if (card.cardtype == CardBehaviourScript.CardType.Magic)///Apply Magic Effect 
+            {
+                card.canPlay = true;
+                if (card.cardeffect == CardBehaviourScript.CardEffect.ToAll)
+                {
+                    card.AddToAll(card, true, delegate { card.Destroy(card); });
+                }
+                else if (card.cardeffect == CardBehaviourScript.CardEffect.ToEnemies)
+                {
+                    card.AddToEnemies(card, AITableCards, true, delegate { card.Destroy(card); });
+                }
+            }
+
+            MyMana -= card.mana;
+        }
+
+        if (card.team == CardBehaviourScript.Team.AI && AIMana - card.mana >= 0 && AITableCards.Count < 10)
+        {
+            //card.gameObject.transform.position = AITablePos.position;
+            card.GetComponent<CardBehaviourScript>().newPos = AITablePos.position;
+
+            AIHandCards.Remove(card.gameObject);
+            AITableCards.Add(card.gameObject);
+
+            card.SetCardStatus(CardBehaviourScript.CardStatus.OnTable);
+            //PlaySound(cardDrop);
+
+            if (card.cardtype == CardBehaviourScript.CardType.Magic)///Apply Magic Effect 
+            {
+                card.canPlay = true;
+                if (card.cardeffect == CardBehaviourScript.CardEffect.ToAll)
+                {
+                    card.AddToAll(card, true, delegate { card.Destroy(card); });
+                }
+                else if (card.cardeffect == CardBehaviourScript.CardEffect.ToEnemies)
+                {
+                    card.AddToEnemies(card, MyTableCards, true, delegate { card.Destroy(card); });
+                }
+            }
+
+            AIMana -= card.mana;
+        }
+
+        TablePositionUpdate();
+        HandPositionUpdate();
+        UpdateGame();
 
     }
+
+
 }
