@@ -10,6 +10,10 @@ public class CardgameManager : MonoBehaviour
     public enum Turn { MyTurn, AITurn };
     public Turn turn = Turn.MyTurn;
 
+    int maxMana = 1;
+    int MyMana = 1;
+    int AIMana = 1;
+
     public List<GameObject> MyDeckCards = new List<GameObject>();
     public List<GameObject> MyHandCards = new List<GameObject>();
     public List<GameObject> MyTableCards = new List<GameObject>();
@@ -20,11 +24,18 @@ public class CardgameManager : MonoBehaviour
 
 
 
+    void Awake()
+    {
+        instance = this;
+
+    }
+
+
     // Use this for initialization
     void Start()
     {
 
-
+       
         //Organize the cards into the correct lists.
         foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
         {
@@ -91,63 +102,64 @@ public class CardgameManager : MonoBehaviour
 
          public void PlaceCard(CardManager card)
     {
-        if (card.team == CardManager.Team.My && MyMana - card.mana >= 0 && MyTableCards.Count < 10)
+        if (card.team == CardManager.Team.My && MyMana - card.Cost >= 0 && MyTableCards.Count < 10)
         {
             //card.gameObject.transform.position = MyTablePos.position;
-            card.GetComponent<CardBehaviourScript>().newPos = MyTablePos.position;
+    //        card.GetComponent<CardManager>().newPos = MyTablePos.position;
 
             MyHandCards.Remove(card.gameObject);
             MyTableCards.Add(card.gameObject);
 
-            card.SetCardStatus(CardBehaviourScript.CardStatus.OnTable);
+            card.SetCardStatus(CardManager.CardStatus.OnTable);
+      
             //PlaySound(cardDrop);
 
-            if (card.cardtype == CardBehaviourScript.CardType.Magic)///Apply Magic Effect 
-            {
-                card.canPlay = true;
-                if (card.cardeffect == CardBehaviourScript.CardEffect.ToAll)
-                {
-                    card.AddToAll(card, true, delegate { card.Destroy(card); });
-                }
-                else if (card.cardeffect == CardBehaviourScript.CardEffect.ToEnemies)
-                {
-                    card.AddToEnemies(card, AITableCards, true, delegate { card.Destroy(card); });
-                }
-            }
+        //    if (card.cardtype == CardManager.CardType.Instant)///Apply Magic Effect 
+        //    {
+        //        card.canPlay = true;
+        //        if (card.cardeffect == CardBehaviourScript.CardEffect.ToAll)
+        //        {
+        //            card.AddToAll(card, true, delegate { card.Destroy(card); });
+        //        }
+        //        else if (card.cardeffect == CardBehaviourScript.CardEffect.ToEnemies)
+        //        {
+        //            card.AddToEnemies(card, AITableCards, true, delegate { card.Destroy(card); });
+        //        }
+        //    }
 
-            MyMana -= card.mana;
+        //    MyMana -= card.Cost;
         }
 
-        if (card.team == CardBehaviourScript.Team.AI && AIMana - card.mana >= 0 && AITableCards.Count < 10)
-        {
-            //card.gameObject.transform.position = AITablePos.position;
-            card.GetComponent<CardBehaviourScript>().newPos = AITablePos.position;
+        //if (card.team == CardBehaviourScript.Team.AI && AIMana - card.Cost >= 0 && AITableCards.Count < 10)
+        //{
+        //    //card.gameObject.transform.position = AITablePos.position;
+        //    card.GetComponent<CardBehaviourScript>().newPos = AITablePos.position;
 
-            AIHandCards.Remove(card.gameObject);
-            AITableCards.Add(card.gameObject);
+        //    AIHandCards.Remove(card.gameObject);
+        //    AITableCards.Add(card.gameObject);
 
-            card.SetCardStatus(CardBehaviourScript.CardStatus.OnTable);
-            //PlaySound(cardDrop);
+        //    card.SetCardStatus(CardBehaviourScript.CardStatus.OnTable);
+        //    //PlaySound(cardDrop);
 
-            if (card.cardtype == CardBehaviourScript.CardType.Magic)///Apply Magic Effect 
-            {
-                card.canPlay = true;
-                if (card.cardeffect == CardBehaviourScript.CardEffect.ToAll)
-                {
-                    card.AddToAll(card, true, delegate { card.Destroy(card); });
-                }
-                else if (card.cardeffect == CardBehaviourScript.CardEffect.ToEnemies)
-                {
-                    card.AddToEnemies(card, MyTableCards, true, delegate { card.Destroy(card); });
-                }
-            }
+        //    if (card.cardtype == CardBehaviourScript.CardType.Magic)///Apply Magic Effect 
+        //    {
+        //        card.canPlay = true;
+        //        if (card.cardeffect == CardBehaviourScript.CardEffect.ToAll)
+        //        {
+        //            card.AddToAll(card, true, delegate { card.Destroy(card); });
+        //        }
+        //        else if (card.cardeffect == CardBehaviourScript.CardEffect.ToEnemies)
+        //        {
+        //            card.AddToEnemies(card, MyTableCards, true, delegate { card.Destroy(card); });
+        //        }
+        //    }
 
-            AIMana -= card.mana;
-        }
+        //    AIMana -= card.Cost;
+        //}
 
-        TablePositionUpdate();
-        HandPositionUpdate();
-        UpdateGame();
+    //    TablePositionUpdate();
+     //   HandPositionUpdate();
+     //   UpdateGame();
 
     }
 

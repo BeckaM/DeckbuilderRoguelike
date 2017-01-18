@@ -25,24 +25,40 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			d.placeholderParent = d.parentToReturnTo;
 		}
 	}
-	
-	public void OnDrop(PointerEventData eventData) {
-		Debug.Log (eventData.pointerDrag.name + " was dropped on " + gameObject.name);
 
-		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
-		if(d != null) {
-			d.parentToReturnTo = this.transform;
-		}
-
-	}
-    void OnTriggerEnter(Collider Obj)
+    public void OnDrop(PointerEventData eventData)
     {
-        CardManager card = Obj.GetComponent<CardManager>();
-        if (card)
+        Debug.Log(eventData.pointerDrag.name + " was dropped on " + gameObject.name);
+
+
+
+        Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
+        if (d != null)
         {
-            card.PlaceCard();
+            d.parentToReturnTo = this.transform;
+
+
+            CardManager card = eventData.pointerDrag.GetComponent<CardManager>();
+            if (card)
+            {
+                card.PlaceCard();
+            }
+
+
         }
 
+
+
+
     }
+    //void OnTriggerEnter(Collider Obj)
+    //{
+    //    CardManager card = Obj.GetComponent<CardManager>();
+    //    if (card)
+    //    {
+    //        card.PlaceCard();
+    //    }
+
+    //}
 
 }

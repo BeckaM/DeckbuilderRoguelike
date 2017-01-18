@@ -16,6 +16,7 @@ public class CardManager : MonoBehaviour
     public string CardText;
     public int SpriteIcon;
     public int Damage;
+    public int Cost;
     public GameObject CardObject;
     public Sprite[] sprites;
 

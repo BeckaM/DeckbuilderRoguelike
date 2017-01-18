@@ -75,10 +75,10 @@ namespace Completed
 			//While doingSetup is true the player can't move, prevent player from moving while title card is up.
 			doingSetup = true;
 
-            DungeonCanvas = GameObject.Find("Canvas(Board)");
+            //DungeonCanvas = GameObject.Find("Canvas(Board)");
             CardGameCanvas = GameObject.Find("Canvas(CardGame)");
 
-            DungeonCanvas.SetActive(true);
+            //DungeonCanvas.SetActive(true);
             CardGameCanvas.SetActive(false);
 
 
@@ -117,7 +117,7 @@ namespace Completed
    //         DungeonBoard = GameObject.Find("Board");
 
   //          DungeonBoard.SetActive(false);
-            DungeonCanvas.SetActive(false);
+            //DungeonCanvas.SetActive(false);
             CardGameCanvas.SetActive(true);
 
 
