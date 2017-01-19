@@ -28,6 +28,7 @@ namespace Completed
 		
 		public int columns = 8; 										//Number of columns in our game board.
 		public int rows = 8;											//Number of rows in our game board.
+        public int vector = 90;                                         //Vector thing.
 		public Count wallCount = new Count (5, 9);						//Lower and upper limit for our random number of walls per level.
 		public Count foodCount = new Count (1, 5);						//Lower and upper limit for our random number of food items per level.
 		public GameObject exit;											//Prefab to spawn for exit.
@@ -88,6 +89,9 @@ namespace Completed
 					
 					//Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
 					instance.transform.SetParent (boardHolder);
+
+                    var rotate = Random.Range(0, 3) * vector;
+                    instance.transform.Rotate(0, 0, rotate);
 				}
 			}
 		}
@@ -155,9 +159,10 @@ namespace Completed
 			
 			//Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
 			LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount);
-			
-			//Instantiate the exit tile in the upper right hand corner of our game board
-			Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity,DungeonCanvas);
+
+            //Instantiate the exit tile in the upper right hand corner of our game board
+            GameObject instance = Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity,DungeonCanvas);
+            instance.transform.Rotate(0, 0, 180);
 		}
 	}
 }

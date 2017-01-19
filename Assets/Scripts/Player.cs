@@ -34,9 +34,9 @@ namespace Completed
 			
 			//Get the current food point total stored in GameManager.instance between levels.
 			life = GameManager.instance.playerLife;
-			
-			//Set the foodText to reflect the current player food total.
-			foodText.text = "Life: " + life;
+            
+            //Set the foodText to reflect the current player food total.
+            foodText.text = "Life: " + life;
 			
 			//Call the Start function of the MovingObject base class.
 			base.Start ();
