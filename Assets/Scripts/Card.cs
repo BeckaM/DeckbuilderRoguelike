@@ -16,7 +16,7 @@ namespace Assets.Scripts
     }
 
     [Serializable]
-    public class Wrapper
+    public class CardWrapper
     {
         public List<Card> CardItems;
     }

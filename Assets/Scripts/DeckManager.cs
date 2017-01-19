@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using Assets.Scripts;
 using System.IO;
 
-namespace Completed
-{
+
+
     public class DeckManager : MonoBehaviour
     {
 
@@ -48,7 +48,7 @@ namespace Completed
         {
 
             string text = File.ReadAllText(fileName);
-            var cardList = JsonUtility.FromJson<Wrapper>(text);
+            var cardList = JsonUtility.FromJson<CardWrapper>(text);
             var Cardreturn = new List<Card>();
 
 
@@ -86,4 +86,4 @@ namespace Completed
         }
 
     }
-}
+

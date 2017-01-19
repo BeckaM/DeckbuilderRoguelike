@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Completed
-{
+
+
 	using System.Collections.Generic;		//Allows us to use Lists. 
 	using UnityEngine.UI;					//Allows us to use UI.
 	
@@ -23,7 +23,7 @@ namespace Completed
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
         private DeckManager deckscript;
 		private int level = 3;                                  //Current level number, expressed in game as "Day 1".
-        private List<Enemy> enemies;                             //List of all Enemy units, used to issue them move commands.
+                              
         private bool notplayersturn;                           		
         private bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
 
@@ -45,9 +45,7 @@ namespace Completed
 			
 			//Sets this to not be destroyed when reloading scene
 			DontDestroyOnLoad(gameObject);
-			
-			//Assign enemies to a new List of Enemy objects.
-			enemies = new List<Enemy>();
+		
 			
 			//Get a component reference to the attached BoardManager script
 			boardScript = GetComponent<DungeonManager>();
@@ -101,7 +99,7 @@ namespace Completed
 			Invoke("HideLevelImage", levelStartDelay);
 			
 			//Clear any Enemy objects in our List to prepare for next level.
-			enemies.Clear();
+		//	enemies.Clear();
 			
 			//Call the SetupScene function of the BoardManager script, pass it current level number.
 			boardScript.SetupScene(level);
@@ -186,5 +184,5 @@ namespace Completed
 
 
     }
-}
+
 

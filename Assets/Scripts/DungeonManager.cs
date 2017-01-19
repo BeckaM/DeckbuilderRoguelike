@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic; 		//Allows us to use Lists.
 using Random = UnityEngine.Random; 		//Tells Random to use the Unity Engine random number generator.
 
-namespace Completed
+
 	
-{
+
 	
 	public class DungeonManager : MonoBehaviour
 	{
@@ -90,7 +90,7 @@ namespace Completed
 					//Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
 					instance.transform.SetParent (boardHolder);
 
-                    var rotate = Random.Range(0, 3) * vector;
+                    var rotate = Random.Range(0,4) * vector;
                     instance.transform.Rotate(0, 0, rotate);
 				}
 			}
@@ -152,7 +152,7 @@ namespace Completed
 		//	LayoutObjectAtRandom (wallTiles, wallCount.minimum, wallCount.maximum);
 			
 			//Instantiate a random number of food tiles based on minimum and maximum, at randomized positions.
-			LayoutObjectAtRandom (foodTiles, foodCount.minimum, foodCount.maximum);
+			//LayoutObjectAtRandom (foodTiles, foodCount.minimum, foodCount.maximum);
 			
 			//Determine number of enemies based on current level number, based on a logarithmic progression
 			int enemyCount = (int)Mathf.Log(level, 2f);
@@ -165,4 +165,4 @@ namespace Completed
             instance.transform.Rotate(0, 0, 180);
 		}
 	}
-}
+

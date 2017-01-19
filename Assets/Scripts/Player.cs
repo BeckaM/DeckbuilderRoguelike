@@ -3,22 +3,17 @@ using System.Collections;
 using UnityEngine.UI;   //Allows us to use UI.
 using UnityEngine.SceneManagement;
 
-namespace Completed
-{
+
+
 	//Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
 	public class Player : MovingObject
 	{
 		public float restartLevelDelay = 1f;		//Delay time in seconds to restart level.
-		public int pointsPerFood = 10;				//Number of points to add to player food points when picking up a food object.
-		public int pointsPerSoda = 20;				//Number of points to add to player food points when picking up a soda object.
+		
 		public int wallDamage = 1;					//How much damage a player does to a wall when chopping it.
 		public Text foodText;						//UI Text to display current player food total.
 		public AudioClip moveSound1;				//1 of 2 Audio clips to play when player moves.
 		public AudioClip moveSound2;				//2 of 2 Audio clips to play when player moves.
-		public AudioClip eatSound1;					//1 of 2 Audio clips to play when player collects a food object.
-		public AudioClip eatSound2;					//2 of 2 Audio clips to play when player collects a food object.
-		public AudioClip drinkSound1;				//1 of 2 Audio clips to play when player collects a soda object.
-		public AudioClip drinkSound2;				//2 of 2 Audio clips to play when player collects a soda object.
 		public AudioClip gameOverSound;				//Audio clip to play when player dies.
 		
 		private Animator animator;					//Used to store a reference to the Player's animator component.
@@ -183,29 +178,15 @@ namespace Completed
 				enabled = false;
 			}
 			
-			//Check if the tag of the trigger collided with is Food.
-			else if(other.tag == "Food")
-			{
-				//Add pointsPerFood to the players current food total.
-				life += pointsPerFood;
-				
-				//Update foodText to represent current total and notify player that they gained points
-				foodText.text = "+" + pointsPerFood + " Food: " + life;
-				
-				//Call the RandomizeSfx function of SoundManager and pass in two eating sounds to choose between to play the eating sound effect.
-				SoundManager.instance.RandomizeSfx (eatSound1, eatSound2);
-				
-				//Disable the food object the player collided with.
-				other.gameObject.SetActive (false);
-			}
 			
-			//Check if the tag of the trigger collided with is Soda.
+			
+			
 			else if(other.tag == "Enemy")
 			{
 
                 GameManager.instance.InitCardgame();
 
-                //Disable the soda object the player collided with.
+               
                 other.gameObject.SetActive (false);
 			}
 		}
@@ -254,5 +235,5 @@ namespace Completed
 			}
 		}
 	}
-}
+
 

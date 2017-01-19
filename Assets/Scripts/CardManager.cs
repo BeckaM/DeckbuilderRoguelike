@@ -9,7 +9,7 @@ using System.Collections.Generic;
 public class CardManager : MonoBehaviour
 {
 
-    private const string fileName = @"C:\Users\Per\Documents\DeckbuilderRoguelike\Assets\JSON\Cards.json";
+    private const string fileName = @"C:\Users\Public\Documents\Unity Projects\DeckbuilderRoguelike\Assets\JSON\Cards.json";
 
 
     public string CardName;
@@ -37,7 +37,7 @@ public class CardManager : MonoBehaviour
     public void CreateCard()
     {
         string text = File.ReadAllText(fileName);
-        var cardList = JsonUtility.FromJson<Wrapper>(text);
+        var cardList = JsonUtility.FromJson<CardWrapper>(text);
 
         Card card = new Card
         {
@@ -49,7 +49,7 @@ public class CardManager : MonoBehaviour
 
         if(cardList == null)
         {
-            cardList = new Wrapper();
+            cardList = new CardWrapper();
             cardList.CardItems = new System.Collections.Generic.List<Card>();
         }
 
