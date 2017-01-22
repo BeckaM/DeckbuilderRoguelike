@@ -11,7 +11,7 @@ using System.IO;
 
         CardManager cardManager;
         public GameObject CardObject;
-        private const string fileName = @"C:\Users\Public\Documents\Unity Projects\DeckbuilderRoguelike\Assets\JSON\Cards.json";
+        private const string fileName = @".\Assets\JSON\Cards";
 
         // Use this for initialization
         void Start()

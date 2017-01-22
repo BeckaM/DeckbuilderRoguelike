@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Completed
+
+namespace Assets.Scripts
 {	
 	public class Loader : MonoBehaviour 
 	{
