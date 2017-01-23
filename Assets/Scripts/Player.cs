@@ -21,6 +21,7 @@ namespace Assets.Scripts
         private int life;                           //Used to store player food points total during level.
         private Vector2 touchOrigin = -Vector2.one; //Used to store location of screen touch origin for mobile controls.
 
+        private EnemyManager monsterMan;
 
         //Start overrides the Start function of MovingObject
         protected override void Start()
@@ -187,6 +188,9 @@ namespace Assets.Scripts
 
                 GameManager.instance.InitCardgame();
 
+                 monsterMan = other.gameObject.GetComponent<EnemyManager>();
+
+                monsterMan.InitMonsterDeck();
 
                 other.gameObject.SetActive(false);
             }
