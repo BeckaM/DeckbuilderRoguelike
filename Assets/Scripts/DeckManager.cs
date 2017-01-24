@@ -8,43 +8,38 @@ using System.IO;
 
     public class DeckManager : MonoBehaviour
     {
-
+        public static DeckManager instance;
         CardManager cardManager;
         public GameObject CardObject;
         private const string fileName = @".\Assets\JSON\Cards";
 
         // Use this for initialization
-        void Start()
+        void Awake()
         {
-
+            instance = this;
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
-
 
 
         public void StartingDeck()
         {
 
-            string[] cardstoCreate = new string[5];
-            cardstoCreate[0] = "Test";
-            cardstoCreate[1] = "Murloc";
-            cardstoCreate[2] = "Test";
-            cardstoCreate[3] = "Rebecka";
-            cardstoCreate[4] = "Rebecka";
+        List<string> cardstoCreate = new List<string>()
+        {
+            "test",
+            "test",
+            "test",
+            "murloc",
+            "murloc"
+        };
 
 
-            AddCardtoDeck(cardstoCreate);
+        AddCardtoDeck(cardstoCreate);
+       
 
         }
 
 
-        private List<Card> JSONreader(string[] cardstoget)
+        public List<Card> JSONreader(List<string> cardstoget)
         {
 
             string text = File.ReadAllText(fileName);
@@ -67,7 +62,7 @@ using System.IO;
 
 
 
-        public void AddCardtoDeck(string[] cardsToCreate)
+        public void AddCardtoDeck(List<string> cardsToCreate)
         {
 
             var cardobjects = JSONreader(cardsToCreate);

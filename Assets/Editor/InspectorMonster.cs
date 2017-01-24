@@ -2,25 +2,28 @@
 using System.Collections;
 using UnityEditor;
 
-[CustomEditor(typeof(EnemyManager))]
-public class InspectorMonster : Editor
+namespace Assets.Scripts
 {
-    public override void OnInspectorGUI()
+
+    [CustomEditor(typeof(EnemyManager))]
+    public class InspectorMonster : Editor
     {
-
-        DrawDefaultInspector();
-
-
-        EnemyManager myScript = (EnemyManager)target;
-        if (GUILayout.Button("Create New Enemy"))
+        public override void OnInspectorGUI()
         {
-            myScript.CreateEnemy();
+
+            DrawDefaultInspector();
+
+
+            EnemyManager myScript = (EnemyManager)target;
+            if (GUILayout.Button("Create New Enemy"))
+            {
+                myScript.CreateEnemy();
+            }
+
+
+
+
+
         }
-
-      
-     
-
-
     }
 }
-
