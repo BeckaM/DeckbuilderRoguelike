@@ -19,8 +19,7 @@ namespace Assets.Scripts
 
         private Text levelText;                                 //Text to display current level number.
         private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.
-        private GameObject DungeonCanvas;
-        //    private GameObject DungeonBoard;
+        private GameObject DungeonCanvas;                       //    private GameObject DungeonBoard;
         private GameObject CardGameCanvas;
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
         private DeckManager deckscript;
@@ -108,8 +107,13 @@ namespace Assets.Scripts
 
         }
 
-        public void InitCardgame()
+        public void InitCardgame(Collider2D monster)
         {
+            var enemyManager = monster.gameObject.GetComponent<EnemyManager>();
+            enemyManager.InitMonsterDeck();
+
+            monster.gameObject.SetActive(false);
+
             //While doingSetup is true the player can't move, prevent player from moving while card game.
 
             doingSetup = true;

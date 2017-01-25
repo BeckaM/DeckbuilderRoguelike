@@ -11,9 +11,14 @@ namespace Assets.Scripts
     {
         public string EnemyName;
         public int SpriteIcon;
-        public int Level;
+        public int EnemyLevel;
         public int HP;
         public List<string> EnemyDeck;
+
+        public List<DeckComponent> Components;
+
+
+
     }
 
     [Serializable]

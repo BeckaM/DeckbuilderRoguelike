@@ -179,20 +179,9 @@ namespace Assets.Scripts
                 //Disable the player object since level is over.
                 enabled = false;
             }
-
-
-
-
             else if (other.tag == "Enemy")
             {
-
-                GameManager.instance.InitCardgame();
-
-                 monsterMan = other.gameObject.GetComponent<EnemyManager>();
-
-                monsterMan.InitMonsterDeck();
-
-                other.gameObject.SetActive(false);
+                GameManager.instance.InitCardgame(other);
             }
         }
 

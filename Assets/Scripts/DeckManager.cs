@@ -25,11 +25,11 @@ using System.IO;
 
         List<string> cardstoCreate = new List<string>()
         {
-            "test",
-            "test",
-            "test",
-            "murloc",
-            "murloc"
+            "Test",
+            "Test",
+            "Test",
+            "Murloc",
+            "Murloc"
         };
 
 

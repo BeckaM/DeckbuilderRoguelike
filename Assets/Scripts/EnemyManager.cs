@@ -17,31 +17,17 @@ namespace Assets.Scripts
 
         public string EnemyName;
         public int SpriteIcon;
-        public int Level;
+        public int EnemyLevel;
         public int HP;
-
-
-      
-
-        //resource cards for enemy deck
-        private List<string> DeckResource;
-
-        //base cards for enemy deck
-        private List<string> DeckComponentBase;
-
-        //special cards for enemy deck
-        private List<string> DeckComponentSpecial;
-
-        //type cards for enemy deck
-        private List<string> DeckComponentType;
-
 
         public List<string> EnemyDeck;
 
         public GameObject EnemyObject;
         public Sprite[] sprites;
 
-        
+        public List<DeckComponent> Components;
+
+
 
 
 
@@ -59,7 +45,7 @@ namespace Assets.Scripts
             {
                 EnemyName = this.EnemyName,
                 SpriteIcon = this.SpriteIcon,
-                Level = this.Level,
+                EnemyLevel = this.EnemyLevel,
                 HP = this.HP,
                 EnemyDeck = this.EnemyDeck
             };
@@ -97,7 +83,7 @@ namespace Assets.Scripts
 
             EnemyName = enemy.EnemyName;
             SpriteIcon = enemy.SpriteIcon;
-            Level = enemy.Level;
+            EnemyLevel = enemy.EnemyLevel;
             HP = enemy.HP;
             EnemyDeck = enemy.EnemyDeck;
 
@@ -105,20 +91,10 @@ namespace Assets.Scripts
 
             //Set Image
             var imageObj = transformer.GetChild(0);
-            var imageComponent = imageObj.GetComponent<Image>();
+            var imageComponent = imageObj.GetComponent<SpriteRenderer>();
             imageComponent.sprite = sprites[enemy.SpriteIcon];
         }
-
-
-
-
-       
-
-
-
-
-
-
+        
         //Create all the cards in the scene for the monsters deck when the player fights it. 
         internal void InitMonsterDeck()
         {

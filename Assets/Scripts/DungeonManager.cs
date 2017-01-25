@@ -37,8 +37,8 @@ namespace Assets.Scripts
         public GameObject exit;                                         //Prefab to spawn for exit.
         public GameObject[] floorTiles;                                 //Array of floor prefabs.
         public GameObject[] wallTiles;                                  //Array of wall prefabs.
-        public GameObject[] foodTiles;                                  //Array of food prefabs.
-        public GameObject[] enemyTiles;                                 //Array of enemy prefabs.
+        public GameObject[] enemyTiles;                                 //Array of enemies to place.
+        public GameObject enemyPrefab;                                //Enemy prefab.
         public GameObject[] outerWallTiles;                             //Array of outer tile prefabs.
 
         private Transform DungeonCanvas;
@@ -136,31 +136,71 @@ namespace Assets.Scripts
                 //Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
                 Instantiate(tileChoice, randomPosition, Quaternion.identity, DungeonCanvas);
 
-                //Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
 
             }
         }
 
 
 
-        private List<Enemy> JSONreader(string[] enemiestoget)
+        private void CreateEnemyArray(int Level)
+        {
+
+            //Determine number of enemies based on current level number, based on a logarithmic progression
+            int enemyCount = (int)Mathf.Log(Level, 2f);
+
+            //Get all enemies with level lower than current dungeon Level
+            var enemiesToChooseFrom = JSONEnemyReader(Level);
+            List<Enemy> enemyList = new List<Enemy>();
+
+            for (int i = 0; i < enemyCount; i++)
+            {
+                Enemy enemyChoice = enemiesToChooseFrom[Random.Range(0, enemiesToChooseFrom.Count)];
+                enemyList.Add(enemyChoice);
+
+            }
+
+                //Instantiate enemies until the chosen limit enemyCount is reached
+                foreach (var enemy in enemyList)
+            {
+                //Choose a position for randomPosition by getting a random position from our list of available Vector3s stored in gridPosition
+                Vector3 randomPosition = RandomPosition();
+
+                //Choose a random tile from tileArray and assign it to tileChoice
+                //GameObject tileChoice = enemylist[Random.Range(0, enemylist.Count)];
+
+                //Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
+                var instance = Instantiate(enemyPrefab, randomPosition, Quaternion.identity, DungeonCanvas);
+                var script = instance.GetComponent<EnemyManager>();
+
+                script.GetEnemy(enemy);
+                
+
+            }
+
+
+
+
+
+
+
+
+            }
+
+
+        private List<Enemy> JSONEnemyReader(int enemyLevel)
         {
 
             string text = File.ReadAllText(filename);
             var enemyList = JsonUtility.FromJson<EnemyWrapper>(text);
-            var EnemyReturn = new List<Enemy>();
+         
 
 
+            var enemies = enemyList.EnemyItems.FindAll(item => item.EnemyLevel<=enemyLevel);
+               
 
-            foreach (string enemytoget in enemiestoget)
-            {
+            
 
-                var enemy = enemyList.EnemyItems.Find(item => item.EnemyName.Equals(enemytoget));
-                EnemyReturn.Add(enemy);
-
-            }
-
-            return EnemyReturn;
+            return enemies;
 
         }
 
@@ -186,9 +226,6 @@ namespace Assets.Scripts
 
 
 
-
-
-
         //SetupScene initializes our level and calls the previous functions to lay out the game board
         public void SetupScene(int level)
         {
@@ -201,14 +238,14 @@ namespace Assets.Scripts
             //Instantiate a random number of wall tiles based on minimum and maximum, at randomized positions.
             //	LayoutObjectAtRandom (wallTiles, wallCount.minimum, wallCount.maximum);
 
-            //Instantiate a random number of food tiles based on minimum and maximum, at randomized positions.
-            //LayoutObjectAtRandom (foodTiles, foodCount.minimum, foodCount.maximum);
 
-            //Determine number of enemies based on current level number, based on a logarithmic progression
-            int enemyCount = (int)Mathf.Log(level, 2f);
+            CreateEnemyArray(level);
+            
 
             //Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
-            //LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount);
+
+
+         //   LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount);
 
       //      CreateEnemy(enemyCount, level);
 
