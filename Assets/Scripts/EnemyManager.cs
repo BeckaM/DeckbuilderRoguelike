@@ -12,7 +12,7 @@ namespace Assets.Scripts
     public class EnemyManager : MonoBehaviour
     {
 
-        private const string fileName = @"C:\Users\Public\Documents\Unity Projects\DeckbuilderRoguelike\Assets\JSON\Enemies.json";
+        private const string fileName = Constants.EnemyPath;
 
 
         public string EnemyName;
@@ -20,19 +20,12 @@ namespace Assets.Scripts
         public int EnemyLevel;
         public int HP;
 
-        public List<string> EnemyDeck;
-
         public GameObject EnemyObject;
         public Sprite[] sprites;
 
         public List<DeckComponent> Components;
 
-
-
-
-
-
-
+       
 
 
         //Useless function, only for creating new enemies.
@@ -47,8 +40,9 @@ namespace Assets.Scripts
                 SpriteIcon = this.SpriteIcon,
                 EnemyLevel = this.EnemyLevel,
                 HP = this.HP,
-                EnemyDeck = this.EnemyDeck
-            };
+                Components = this.Components
+
+    };
 
             if (enemylist == null)
             {
@@ -85,7 +79,7 @@ namespace Assets.Scripts
             SpriteIcon = enemy.SpriteIcon;
             EnemyLevel = enemy.EnemyLevel;
             HP = enemy.HP;
-            EnemyDeck = enemy.EnemyDeck;
+            
 
             var transformer = this.transform;
 
@@ -98,7 +92,14 @@ namespace Assets.Scripts
         //Create all the cards in the scene for the monsters deck when the player fights it. 
         internal void InitMonsterDeck()
         {
-            throw new NotImplementedException();
+
+            var EnemyDeckBuilder = new EnemyDeckBuilder();
+            EnemyDeckBuilder.BuildMonsterDeck(Components, EnemyLevel);
+
+
+
+
+         //   return hungryMonsterScale > 100 ? "Beasty gulp murloc will eat everything" : "Not that hungry Murloc but can swallow a hero or two";
         }
     }
 }

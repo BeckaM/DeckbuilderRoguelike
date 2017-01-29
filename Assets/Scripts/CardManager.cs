@@ -9,7 +9,7 @@ using System.Collections.Generic;
 public class CardManager : MonoBehaviour
 {
 
-    private const string fileName = @"C:\Users\Public\Documents\Unity Projects\DeckbuilderRoguelike\Assets\JSON\Cards.json";
+    private const string fileName = Constants.CardPath;
 
 
     public string CardName;
@@ -79,6 +79,8 @@ public class CardManager : MonoBehaviour
             CardText = card.CardText;
             SpriteIcon = card.SpriteIcon;
             Damage = card.Damage;
+            team = (CardManager.Team)card.team;
+
             
             var transformer = this.transform;
 

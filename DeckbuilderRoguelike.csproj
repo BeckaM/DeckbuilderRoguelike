@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\Card.cs" />
     <Compile Include="Assets\Scripts\CardManager.cs" />
     <Compile Include="Assets\Scripts\CardgameManager.cs" />
+    <Compile Include="Assets\Scripts\Constants.cs" />
     <Compile Include="Assets\Scripts\DataLayer.cs" />
     <Compile Include="Assets\Scripts\DeckManager.cs" />
     <Compile Include="Assets\Scripts\Draggable.cs" />

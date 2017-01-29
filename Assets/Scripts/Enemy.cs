@@ -13,12 +13,8 @@ namespace Assets.Scripts
         public int SpriteIcon;
         public int EnemyLevel;
         public int HP;
-        public List<string> EnemyDeck;
 
         public List<DeckComponent> Components;
-
-
-
     }
 
     [Serializable]

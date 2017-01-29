@@ -1,1 +1,1 @@
-{"EnemyItems":[{"EnemyName":"Murloc","SpriteIcon":0,"Level":1,"HP":10,"EnemyDeck":["Murloc","Murloc","Test","Test","Test"]}]}
+{"EnemyItems":[{"EnemyName":"Murloc","SpriteIcon":0,"EnemyLevel":0,"HP":10,"Components":[{"ComponentName":"murloc basic attacks","CardNames":["Murloc","Rebecka"],"cardcount":5},{"ComponentName":"murloc test","CardNames":["Test"],"cardcount":5}]}]}

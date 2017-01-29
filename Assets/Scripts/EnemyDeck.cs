@@ -13,7 +13,7 @@ namespace Assets.Scripts
     {
         public string ComponentName;
         public List<string> CardNames;
-        public string cardcount;
+        public int cardcount;
     }    
 }
 

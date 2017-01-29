@@ -8,13 +8,13 @@ using System.IO;
 
     public class DeckManager : MonoBehaviour
     {
-        public static DeckManager instance;
+        public static DeckManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
         CardManager cardManager;
         public GameObject CardObject;
-        private const string fileName = @".\Assets\JSON\Cards";
+        private const string fileName = Constants.CardPath;
 
-        // Use this for initialization
-        void Awake()
+    // Use this for initialization
+    void Awake()
         {
             instance = this;
         }
@@ -62,21 +62,38 @@ using System.IO;
 
 
 
-        public void AddCardtoDeck(List<string> cardsToCreate)
+        public void AddCardtoDeck(List<string> cardsToCreate, string team="My")
         {
 
             var cardobjects = JSONreader(cardsToCreate);
             var deck = GameObject.Find("Deck").transform;
+            var enemydeck = GameObject.Find("EnemyDeck").transform;
 
-            foreach (Card card in cardobjects)
+        foreach (Card card in cardobjects)
             {
-                GameObject instance = Instantiate(CardObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 
-                cardManager = instance.GetComponent<CardManager>();
+            GameObject instance = Instantiate(CardObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+
+            if (team == "AI")
+            {
+                card.team = Card.Team.AI;
+                instance.transform.SetParent(enemydeck);
+            }
+            else
+            {
+                card.team = Card.Team.My;
+                instance.transform.SetParent(deck);
+            }
+                
+              //  GameObject instance = Instantiate(CardObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+
+               cardManager = instance.GetComponent<CardManager>();
 
                cardManager.GetCard(card);
+                
+           
+              
 
-                instance.transform.SetParent(deck);
             }
         }
 

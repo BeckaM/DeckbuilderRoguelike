@@ -13,6 +13,8 @@ namespace Assets.Scripts
         public string CardText;
         public int SpriteIcon;
         public int Damage;
+        public enum Team { My, AI };
+        public Team team = Team.My;
     }
 
     [Serializable]

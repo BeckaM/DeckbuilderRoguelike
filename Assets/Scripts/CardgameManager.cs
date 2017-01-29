@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class CardgameManager : MonoBehaviour
 {
 
+
+    
     public static CardgameManager instance;
 
     public enum Turn { MyTurn, AITurn };
@@ -59,6 +62,8 @@ public class CardgameManager : MonoBehaviour
 
         }
 
+       
+
     }
 
     // Update is called once per frame
@@ -67,6 +72,24 @@ public class CardgameManager : MonoBehaviour
 
     }
 
+
+    public void EndTurn()
+    {
+        if (turn == Turn.AITurn)
+        {
+            DrawCardFromDeck(CardManager.Team.My);
+            turn = Turn.MyTurn;
+        }
+        else if (turn == Turn.MyTurn)
+        {
+            DrawCardFromDeck(CardManager.Team.AI);
+            turn = Turn.AITurn;
+        }
+
+
+
+
+    }
 
 
     public void DrawCardFromDeck(CardManager.Team team)
