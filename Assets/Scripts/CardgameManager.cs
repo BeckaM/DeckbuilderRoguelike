@@ -59,6 +59,7 @@ public class CardgameManager : MonoBehaviour
 
 
             DrawCardFromDeck(CardManager.Team.My);
+            DrawCardFromDeck(CardManager.Team.AI);
 
         }
 
@@ -73,6 +74,8 @@ public class CardgameManager : MonoBehaviour
     }
 
 
+
+    //Triggered by end turn button.
     public void EndTurn()
     {
         if (turn == Turn.AITurn)
@@ -92,6 +95,8 @@ public class CardgameManager : MonoBehaviour
     }
 
 
+
+    //Draw card function, Team indicates who draws.
     public void DrawCardFromDeck(CardManager.Team team)
     {
 

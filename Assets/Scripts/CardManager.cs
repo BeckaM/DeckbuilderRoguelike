@@ -15,18 +15,25 @@ public class CardManager : MonoBehaviour
     public string CardName;
     public string CardText;
     public int SpriteIcon;
-    public int Damage;
     public int Cost;
     public GameObject CardObject;
     public Sprite[] sprites;
+
+    public enum CardType { Instant, Aura };
+    public CardType cardtype;
+    public int Damage;
+    public int Heal;
+    public int Draw;
+    public int Armor;
+
+    public enum Trigger { None, StartofMy, StartofAI, EndofMy, EndofAI, OnDraw, OnMyPlay, OnAIPlay, OnMyDamage, OnAIDamage };
+    public Trigger trigger;
 
     public enum Team { My, AI };
     public Team team = Team.My;
 
     public enum CardStatus { InDeck, InHand, OnTable, InDiscard };
     public CardStatus cardStatus = CardStatus.InDeck;
-
-    // public List<Card> Deck = new List<Card>();
 
 
     public void SetCardStatus(CardStatus status)
@@ -44,7 +51,14 @@ public class CardManager : MonoBehaviour
             CardName = this.CardName,
             CardText = this.CardText,
             SpriteIcon = this.SpriteIcon,
-            Damage = this.Damage
+            
+            cardtype = (Card.CardType)this.cardtype,
+            Damage = this.Damage,
+            Heal = this.Heal,
+            Armor = this.Armor,
+            Draw = this.Draw,
+            trigger = (Card.Trigger)this.trigger
+
         };
 
         if(cardList == null)

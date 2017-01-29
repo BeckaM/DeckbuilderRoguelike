@@ -1,1 +1,1 @@
-{"EnemyItems":[{"EnemyName":"Murloc","SpriteIcon":0,"EnemyLevel":0,"HP":10,"Components":[{"ComponentName":"murloc basic attacks","CardNames":["Murloc","Rebecka"],"cardcount":5},{"ComponentName":"murloc test","CardNames":["Test"],"cardcount":5}]}]}
+{"EnemyItems":[{"EnemyName":"Sylio","SpriteIcon":0,"EnemyLevel":0,"HP":10,"Components":[{"ComponentName":"basic attacks","CardNames":["Serrated Bite"],"cardcount":5},{"ComponentName":"Resources","CardNames":["Serrated Bite"],"cardcount":5}]}]}

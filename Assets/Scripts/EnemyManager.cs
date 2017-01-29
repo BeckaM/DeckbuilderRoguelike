@@ -79,7 +79,8 @@ namespace Assets.Scripts
             SpriteIcon = enemy.SpriteIcon;
             EnemyLevel = enemy.EnemyLevel;
             HP = enemy.HP;
-            
+            Components =  enemy.Components;
+
 
             var transformer = this.transform;
 
