@@ -14,7 +14,7 @@ public class InspectorCard : Editor
         CardManager myScript = (CardManager)target;
         if (GUILayout.Button("Create New Card"))
         {
-            myScript.CreateCard();
+           // myScript.CreateCard();
         }
 
       

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Assets.Scripts;
 
 public class CardgameManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class CardgameManager : MonoBehaviour
 
     
     public static CardgameManager instance;
+
 
     public enum Turn { MyTurn, AITurn };
     public Turn turn = Turn.MyTurn;
@@ -46,9 +48,15 @@ public class CardgameManager : MonoBehaviour
             CardManager c = CardObject.GetComponent<CardManager>();
 
             if (c.team == CardManager.Team.My)
+            {
                 MyDeckCards.Add(CardObject);
+            }
+
+
             else
+            {
                 AIDeckCards.Add(CardObject);
+            }
         }
 
         //Draw our starting hand
@@ -130,7 +138,7 @@ public class CardgameManager : MonoBehaviour
 
          public void PlaceCard(CardManager card)
     {
-        if (card.team == CardManager.Team.My && MyMana - card.Cost >= 0 && MyTableCards.Count < 10)
+        if (card.team == CardManager.Team.My && MyMana - card.card.Cost >= 0 && MyTableCards.Count < 10)
         {
             //card.gameObject.transform.position = MyTablePos.position;
     //        card.GetComponent<CardManager>().newPos = MyTablePos.position;

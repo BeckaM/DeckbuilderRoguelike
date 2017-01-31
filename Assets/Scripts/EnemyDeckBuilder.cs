@@ -20,8 +20,8 @@ namespace Assets.Scripts
             {
                 var cardnumbers = comp.cardcount;
                 var cardstoget = comp.CardNames;
-                DeckManager script2 = GameManager.instance.GetComponent <DeckManager>();
-                script2.JSONreader(cardstoget);
+                
+                DeckManager.instance.JSONreader(cardstoget);
 
                 for (int i = 0; i < cardnumbers; i++)
                 {
@@ -35,8 +35,8 @@ namespace Assets.Scripts
             }
 
             string team = "AI";
-            DeckManager script = GameManager.instance.GetComponent<DeckManager>();
-            script.AddCardtoDeck(FinalList, team);
+            
+            DeckManager.instance.AddCardtoDeck(FinalList, team);
 
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;		//Allows us to use Lists. 
 using UnityEngine.UI;					//Allows us to use UI.
+using UnityEngine.SceneManagement;
 
 
 namespace Assets.Scripts
@@ -22,7 +23,7 @@ namespace Assets.Scripts
         private GameObject DungeonCanvas;                       //    private GameObject DungeonBoard;
         private GameObject CardGameCanvas;
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
-        private DeckManager deckscript;
+       
         private int level = 3;                                  //Current level number, expressed in game as "Day 1".
 
         private bool notplayersturn;
@@ -51,16 +52,26 @@ namespace Assets.Scripts
             //Get a component reference to the attached BoardManager script
             boardScript = GetComponent<DungeonManager>();
 
+            
+            
             //Call the InitGame function to initialize the first level 
-            InitGame();
-
-            //Call the Starting Deck function to initialize the starting deck
-            deckscript = GetComponent<DeckManager>();
-            deckscript.StartingDeck();
+           // InitGame();
+            
         }
 
+        void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnLevelFinishedLoading;
+        }
+        void OnDisable()
+        {
+          
+            SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+        }
+
+
         //This is called each time a scene is loaded.
-        void OnLevelWasLoaded(int index)
+        void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
         {
             //Add one to our level number.
             level++;
@@ -99,8 +110,9 @@ namespace Assets.Scripts
             //Call the HideLevelImage function with a delay in seconds of levelStartDelay.
             Invoke("HideLevelImage", levelStartDelay);
 
-            //Clear any Enemy objects in our List to prepare for next level.
-            //	enemies.Clear();
+            //Call the Starting Deck function to initialize the starting deck
+            
+            DeckManager.instance.StartingDeck();
 
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             boardScript.SetupScene(level);

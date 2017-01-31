@@ -12,9 +12,8 @@ namespace Assets.Scripts
         public string CardName;
         public string CardText;
         public int SpriteIcon;
-       
-        public enum Team { My, AI };
-        public Team team = Team.My;
+
+        public string test;
         public int Cost;
 
         public enum CardType { Instant, Aura };
