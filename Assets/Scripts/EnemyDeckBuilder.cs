@@ -14,8 +14,7 @@ namespace Assets.Scripts
         public void BuildMonsterDeck(List<DeckComponent> DeckComponents, int EnemyLevel)
         {
             
-
-
+            
             foreach (DeckComponent comp in DeckComponents)
             {
                 var cardnumbers = comp.cardcount;
