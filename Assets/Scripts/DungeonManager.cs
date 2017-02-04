@@ -149,7 +149,7 @@ namespace Assets.Scripts
             int enemyCount = (int)Mathf.Log(Level, 2f);
 
             //Get all enemies with level lower than current dungeon Level
-            var enemiesToChooseFrom = JSONEnemyReader(Level);
+            var enemiesToChooseFrom = DAL.ObjectDAL.GetEnemies(Level);
             List<Enemy> enemyList = new List<Enemy>();
 
             for (int i = 0; i < enemyCount; i++)
@@ -172,59 +172,13 @@ namespace Assets.Scripts
                 var instance = Instantiate(enemyPrefab, randomPosition, Quaternion.identity, DungeonCanvas);
                 var script = instance.GetComponent<EnemyManager>();
 
-                script.GetEnemy(enemy);
+                script.PopulateEnemy(enemy);
                 
 
             }
 
-
-
-
-
-
-
-
-            }
-
-
-        private List<Enemy> JSONEnemyReader(int enemyLevel)
-        {
-
-            string text = File.ReadAllText(filename);
-            var enemyList = JsonUtility.FromJson<EnemyWrapper>(text);
-         
-
-
-            var enemies = enemyList.EnemyItems.FindAll(item => item.EnemyLevel<=enemyLevel);
-               
-
-            
-
-            return enemies;
-
+                
         }
-
-
-
-      //  public void CreateEnemy(string[] enemiesToCreate)
-      //  {
-
-      //      var enemyobjects = JSONreader(enemiesToCreate);
-      //      var deck = GameObject.Find("Deck").transform;
-
-      ////      foreach (Enemy enemy in enemybjects)
-      //      {
-      //  //        GameObject instance = Instantiate(EnemyObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-
-      //          enemyManager = instance.GetComponent<EnemyManager>();
-
-      //          enemyManager.GetEnemy(enemy);
-
-      //          instance.transform.SetParent(deck);
-      //      }
-      //  }
-
-
 
         //SetupScene initializes our level and calls the previous functions to lay out the game board
         public void SetupScene(int level)

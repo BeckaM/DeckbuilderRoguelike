@@ -12,25 +12,17 @@ namespace Assets.Scripts
 
         //This is where we build the enemy deck.
         public void BuildMonsterDeck(List<DeckComponent> DeckComponents, int EnemyLevel)
-        {
-            
-            
+        {   
             foreach (DeckComponent comp in DeckComponents)
             {
                 var cardnumbers = comp.cardcount;
                 var cardstoget = comp.CardNames;
                 
-                DeckManager.instance.JSONreader(cardstoget);
-
                 for (int i = 0; i < cardnumbers; i++)
                 {
-                    string cardChoice = cardstoget[Random.Range(0, cardstoget.Count)];
-                  
+                    string cardChoice = cardstoget[Random.Range(0, cardstoget.Count)];                  
                     FinalList.Add(cardChoice);
-
                 }
-
-
             }
 
             string team = "AI";

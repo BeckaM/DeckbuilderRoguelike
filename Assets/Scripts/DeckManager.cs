@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts;
 using System.IO;
+using Assets.Scripts.DAL;
 
 namespace Assets.Scripts
 {
@@ -12,7 +13,6 @@ namespace Assets.Scripts
         public static DeckManager instance = null;              //Static instance of DeckManager which allows it to be accessed by any other script.
         CardManager cardManager;
         public GameObject CardObject;
-        private const string fileName = Constants.CardPath;
 
         // Use this for initialization
         void Awake()
@@ -51,34 +51,9 @@ namespace Assets.Scripts
 
         }
 
-
-        public List<Card> JSONreader(List<string> cardstoget)
-        {
-
-            string text = File.ReadAllText(fileName);
-            var cardList = JsonUtility.FromJson<CardWrapper>(text);
-            var Cardreturn = new List<Card>();
-
-
-
-            foreach (string cardtoget in cardstoget)
-            {
-
-                var card = cardList.CardItems.Find(item => item.CardName.Equals(cardtoget));
-                Cardreturn.Add(card);
-
-            }
-
-            return Cardreturn;
-
-        }
-
-
-
         public void AddCardtoDeck(List<string> cardsToCreate, string team = "My")
         {
-
-            var cardobjects = JSONreader(cardsToCreate);
+            var cardobjects = ObjectDAL.GetCards(cardsToCreate);
             var deck = GameObject.Find("Deck").transform;
             var enemydeck = GameObject.Find("EnemyDeck").transform;
 
@@ -102,7 +77,7 @@ namespace Assets.Scripts
 
 
 
-                cardManager.GetCard(card);
+                cardManager.PopulateCard(card);
             }
         }
 

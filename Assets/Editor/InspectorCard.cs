@@ -1,26 +1,24 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEditor;
+using Assets.Scripts.DAL;
 
-[CustomEditor(typeof(CardManager))]
+[CustomEditor(typeof(CardEditor))]
 public class InspectorCard : Editor
-{
+{    
     public override void OnInspectorGUI()
     {
-
         DrawDefaultInspector();
 
-
-        CardManager myScript = (CardManager)target;
-        if (GUILayout.Button("Create New Card"))
+        CardEditor myScript = (CardEditor)target;
+        if (GUILayout.Button("Get all cards"))
         {
-           // myScript.CreateCard();
+            myScript.GetCardsToEdit();
         }
 
-      
-     
-
-
+        if (GUILayout.Button("Save"))
+        {
+            myScript.SaveCards();
+        }
     }
 }
 

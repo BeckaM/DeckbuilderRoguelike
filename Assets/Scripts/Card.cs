@@ -13,23 +13,14 @@ namespace Assets.Scripts
         public string CardText;
         public int SpriteIcon;
 
-        public string test;
         public int Cost;
 
-        public enum CardType { Instant, Aura };
-        public CardType cardtype;
-        public int Damage;
-        public int Heal;
-        public int Draw;
-        public int Armor;
+        //Permanent = -1, Until end of turn = 0. 
+        public int CardDuration;
 
-        public enum Trigger { None, StartofMy, StartofAI, EndofMy, EndofAI, OnDraw, OnMyPlay, OnAIPlay, OnMyDamage, OnAIDamage };
-        public Trigger trigger;
+        public List<CardEffect> Effects;
 
-
-
-
-    }
+     }
 
     [Serializable]
     public class CardWrapper

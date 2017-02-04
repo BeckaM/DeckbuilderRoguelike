@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using Assets.Scripts.DAL;
 
 public class CardManager : MonoBehaviour
 {
@@ -25,64 +26,13 @@ public class CardManager : MonoBehaviour
         cardStatus = status;
     }
 
-    //public void CreateCard()
-    //{
-    //    string text = File.ReadAllText(fileName);
-    //    var cardList = JsonUtility.FromJson<CardWrapper>(text);
+   
 
-    //    Card card = new Card
-    //    {
-    //        CardName = this.CardName,
-    //        CardText = this.CardText,
-    //        SpriteIcon = this.SpriteIcon,
-            
-    //        cardtype = (Card.CardType)this.cardtype,
-    //        Damage = this.Damage,
-    //        Heal = this.Heal,
-    //        Armor = this.Armor,
-    //        Draw = this.Draw,
-    //        trigger = (Card.Trigger)this.trigger
-
-    //    };
-
-    //    if(cardList == null)
-    //    {
-    //        cardList = new CardWrapper();
-    //        cardList.CardItems = new System.Collections.Generic.List<Card>();
-    //    }
-
-    //    cardList.CardItems.Add(card);
-
-                
-    //    string jsonCard = JsonUtility.ToJson(cardList);
-    //    SaveCard(jsonCard);
-    //}
-
-
-
-
-    private void SaveCard(string awesomeNewCard)
-    {
-        if (!File.Exists(fileName))
-        {
-            return;
-        }
-
-        File.WriteAllText(fileName, awesomeNewCard);
-    }
-
-    public void GetCard(Card card)
+    public void PopulateCard(Card card)
     {
 
             this.card = card;
-
-            //CardName = card.CardName;
-            //CardText = card.CardText;
-            //SpriteIcon = card.SpriteIcon;
-            //Damage = card.Damage;
-            //team = (CardManager.Team)card.team;
-
-            
+                               
             var transformer = this.transform;
 
             //Set Image
@@ -120,7 +70,6 @@ public class CardManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
     }
 
     // Update is called once per frame

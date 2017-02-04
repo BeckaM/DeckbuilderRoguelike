@@ -15,52 +15,10 @@ namespace Assets.Scripts
         public GameObject EnemyObject;
         public Sprite[] sprites;  
 
-        
-        ////Useless function, only for creating new enemies.
-        //public void CreateEnemy()
-        //{
-        //    string text = File.ReadAllText(fileName);
-        //    var enemylist = JsonUtility.FromJson<EnemyWrapper>(text);
-
-        //    Enemy enemy = new Enemy
-        //    {
-        //        EnemyName = this.EnemyName,
-        //        SpriteIcon = this.SpriteIcon,
-        //        EnemyLevel = this.EnemyLevel,
-        //        HP = this.HP,
-        //        Components = this.Components
-
-        //    };
-
-        //    if (enemylist == null)
-        //    {
-        //        enemylist = new EnemyWrapper();
-        //        enemylist.EnemyItems = new System.Collections.Generic.List<Enemy>();
-        //    }
-
-        //    enemylist.EnemyItems.Add(enemy);
-
-
-        //    string jsonEnemy = JsonUtility.ToJson(enemylist);
-        //    SaveEnemy(jsonEnemy);
-        //}
-
-
-
-        //useless function, only for saving an enemy to File.
-        private void SaveEnemy(string awesomeNewMonster)
-        {
-            if (!File.Exists(fileName))
-            {
-                return;
-            }
-
-            File.WriteAllText(fileName, awesomeNewMonster);
-        }
 
 
         //Gets monster properties from Dungeon Manager and sets them on the enemy object.
-        public void GetEnemy(Enemy enemytoget)
+        public void PopulateEnemy(Enemy enemytoget)
         {
 
             enemy = enemytoget;
