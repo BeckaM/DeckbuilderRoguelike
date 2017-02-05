@@ -9,8 +9,6 @@ namespace Assets.Scripts
     public class CardgameManager : MonoBehaviour
     {
 
-
-
         public static CardgameManager instance;
 
 
@@ -32,6 +30,7 @@ namespace Assets.Scripts
         public List<GameObject> AIHandCards = new List<GameObject>();
         public List<GameObject> AITableCards = new List<GameObject>();
 
+        public Enemy enemy;
 
 
         void Awake()
@@ -72,6 +71,8 @@ namespace Assets.Scripts
                 DrawCardFromDeck(CardManager.Team.My);
                 DrawCardFromDeck(CardManager.Team.AI);
             }
+
+            UpdateGame();
         }
 
         internal void ApplyDamage(int value, CardManager.Team team)
@@ -195,7 +196,7 @@ namespace Assets.Scripts
             }
 
 
-           CheckTriggers(CardEffect.Trigger.OnPlayCard, card.team);
+        //   CheckTriggers(CardEffect.Trigger.OnPlayCard, card.team);
 
 
 

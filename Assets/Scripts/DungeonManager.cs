@@ -27,8 +27,7 @@ namespace Assets.Scripts
         }
 
 
-        private string filename = Constants.EnemyPath;
-        EnemyManager enemyManager;
+       
         public int columns = 8;                                         //Number of columns in our game board.
         public int rows = 8;											//Number of rows in our game board.
         public int vector = 90;                                         //Vector thing.
