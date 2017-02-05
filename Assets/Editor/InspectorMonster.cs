@@ -1,29 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
+using Assets.Scripts.DAL;
 
-namespace Assets.Scripts
-{
 
-    [CustomEditor(typeof(EnemyManager))]
+
+
+[CustomEditor(typeof(MonsterEditor))]
     public class InspectorMonster : Editor
     {
-    //    public override void OnInspectorGUI()
-    //    {
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
 
-    //        DrawDefaultInspector();
+            MonsterEditor myScript = (MonsterEditor)target;
+            if (GUILayout.Button("Get all Monsters"))
+            {
+                myScript.GetMonstersToEdit();
+            }
 
-
-    //        EnemyManager myScript = (EnemyManager)target;
-    //        if (GUILayout.Button("Create New Enemy"))
-    //        {
-    //            myScript.CreateEnemy();
-    //        }
-
-
-
-
-
-    //    }
+            if (GUILayout.Button("Save"))
+            {
+                myScript.SaveMonsters();
+            }
+        }
     }
-}

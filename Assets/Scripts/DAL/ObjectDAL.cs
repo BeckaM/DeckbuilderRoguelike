@@ -51,7 +51,7 @@ namespace Assets.Scripts.DAL
             File.WriteAllText(CardPath, jsonCard);
         }
 
-        internal static void SaveEnenies(EnemyWrapper awesomeNewMonster)
+        internal static void SaveEnemies(EnemyWrapper awesomeNewMonster)
         {
             if (!File.Exists(EnemyPath))
             {

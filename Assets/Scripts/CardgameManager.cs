@@ -1,203 +1,210 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
-using Assets.Scripts;
+using System;
+using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine random number generator.
 
-public class CardgameManager : MonoBehaviour
+namespace Assets.Scripts
 {
 
-
-    
-    public static CardgameManager instance;
-
-
-    public enum Turn { MyTurn, AITurn };
-    public Turn turn = Turn.MyTurn;
-
-    int maxMana = 1;
-    int MyMana = 1;
-    int AIMana = 1;
-
-    public List<GameObject> MyDeckCards = new List<GameObject>();
-    public List<GameObject> MyHandCards = new List<GameObject>();
-    public List<GameObject> MyTableCards = new List<GameObject>();
-
-    public List<GameObject> AIDeckCards = new List<GameObject>();
-    public List<GameObject> AIHandCards = new List<GameObject>();
-    public List<GameObject> AITableCards = new List<GameObject>();
-
-
-
-    void Awake()
-    {
-        instance = this;
-
-    }
-
-
-    // Use this for initialization
-    void Start()
+    public class CardgameManager : MonoBehaviour
     {
 
-       
-        //Organize the cards into the correct lists.
-        foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
+
+
+        public static CardgameManager instance;
+
+
+        public enum Turn { MyTurn, AITurn };
+        public Turn turn = Turn.MyTurn;
+
+        int maxMana = 1;
+        public int MyMana = 1;
+        public int AIMana = 1;
+
+        public int MyHP =10;
+        public int MonsterHP = 10;
+
+        public List<GameObject> MyDeckCards = new List<GameObject>();
+        public List<GameObject> MyHandCards = new List<GameObject>();
+        public List<GameObject> MyTableCards = new List<GameObject>();
+
+        public List<GameObject> AIDeckCards = new List<GameObject>();
+        public List<GameObject> AIHandCards = new List<GameObject>();
+        public List<GameObject> AITableCards = new List<GameObject>();
+
+
+
+        void Awake()
         {
-            //CardObject.GetComponent<Rigidbody>().isKinematic = true;
-            CardManager c = CardObject.GetComponent<CardManager>();
+            instance = this;
 
-            if (c.team == CardManager.Team.My)
+        }
+
+
+        // Use this for initialization
+        void Start()
+        {
+
+
+            //Organize the cards into the correct lists.
+            foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
             {
-                MyDeckCards.Add(CardObject);
+                //CardObject.GetComponent<Rigidbody>().isKinematic = true;
+                CardManager c = CardObject.GetComponent<CardManager>();
+
+                if (c.team == CardManager.Team.My)
+                {
+                    MyDeckCards.Add(CardObject);
+                }
+
+
+                else
+                {
+                    AIDeckCards.Add(CardObject);
+                }
             }
 
+            //Draw our starting hand
 
+
+            for (var i = 0; i < 3; i++)
+            {                
+                DrawCardFromDeck(CardManager.Team.My);
+                DrawCardFromDeck(CardManager.Team.AI);
+            }
+        }
+
+        internal void ApplyDamage(int value, CardManager.Team team)
+        {
+            if (team == CardManager.Team.My)
+            {
+                MonsterHP = MonsterHP - value;
+            }
             else
             {
-                AIDeckCards.Add(CardObject);
+                MyHP = MyHP - value;
+            }
+
+
+
+        }
+
+        void UpdateGame()
+        {
+            //MyManaText.text = MyMana.ToString() + "/" + maxMana;
+            //AIManaText.text = AIMana.ToString() + "/" + maxMana;
+
+            if (MyHP <= 0)
+                EndGame();
+            if (MonsterHP <= 0)
+                EndGame();
+
+            foreach (GameObject Card in MyHandCards)
+            {
+                CardManager c = Card.GetComponent<CardManager>();
+                if (c.card.Cost <= MyMana && turn == Turn.MyTurn)
+                {
+                    c.Playable = true;
+
+                }
+            }
+            foreach (GameObject Card in AIHandCards)
+            {
+                CardManager c = Card.GetComponent<CardManager>();
+                if (c.card.Cost <= AIMana && turn == Turn.AITurn)
+                {
+                    c.Playable = true;
+
+                }
+            }
+
+        }
+
+        private void EndGame()
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+        //Triggered by end turn button.
+        public void EndTurn()
+        {
+            if (turn == Turn.AITurn)
+            {
+                DrawCardFromDeck(CardManager.Team.My);
+                turn = Turn.MyTurn;
+            }
+            else if (turn == Turn.MyTurn)
+            {
+                DrawCardFromDeck(CardManager.Team.AI);
+                turn = Turn.AITurn;
+            }
+
+            UpdateGame();
+        }
+        
+        //Draw card function, Team indicates who draws.
+        public void DrawCardFromDeck(CardManager.Team team)
+        {
+
+            if (team == CardManager.Team.My && MyDeckCards.Count != 0 && MyHandCards.Count < 10)
+            {
+                int random = Random.Range(0, MyDeckCards.Count);
+                GameObject tempCard = MyDeckCards[random];
+
+
+                var hand = GameObject.Find("Hand").transform;
+                tempCard.transform.SetParent(hand);
+                tempCard.GetComponent<CardManager>().SetCardStatus(CardManager.CardStatus.InHand);
+
+                MyDeckCards.Remove(tempCard);
+                MyHandCards.Add(tempCard);
+            }
+
+            if (team == CardManager.Team.AI && AIDeckCards.Count != 0 && AIHandCards.Count < 10)
+            {
+                int random = Random.Range(0, AIDeckCards.Count);
+                GameObject tempCard = AIDeckCards[random];
+
+                var AIhand = GameObject.Find("AIHand").transform;
+                tempCard.transform.SetParent(AIhand);
+                tempCard.GetComponent<CardManager>().SetCardStatus(CardManager.CardStatus.InHand);
+
+                AIDeckCards.Remove(tempCard);
+                AIHandCards.Add(tempCard);
             }
         }
 
-        //Draw our starting hand
-
-
-        for (var i = 0; i < 3; i++)
+        public void PlaceCard(CardManager card)
         {
+            
+            
+                card.SetCardStatus(CardManager.CardStatus.OnTable);
+                //PlaySound(cardDrop);
+
+                MyHandCards.Remove(card.gameObject);
+                MyTableCards.Add(card.gameObject);
+
+            foreach (CardEffect effect in card.card.Effects)
+            {
+                if (effect.trigger == CardEffect.Trigger.Instant)
+                {
+                    card.ApplyEffect(effect);
+                }
+            }
 
 
-            DrawCardFromDeck(CardManager.Team.My);
-            DrawCardFromDeck(CardManager.Team.AI);
+           CheckTriggers(CardEffect.Trigger.OnPlayCard, card.team);
+
+
+
 
         }
 
-       
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-
-
-    //Triggered by end turn button.
-    public void EndTurn()
-    {
-        if (turn == Turn.AITurn)
+        private void CheckTriggers(CardEffect.Trigger triggertype, CardManager.Team team)
         {
-            DrawCardFromDeck(CardManager.Team.My);
-            turn = Turn.MyTurn;
-        }
-        else if (turn == Turn.MyTurn)
-        {
-            DrawCardFromDeck(CardManager.Team.AI);
-            turn = Turn.AITurn;
-        }
-
-
-
-
-    }
-
-
-
-    //Draw card function, Team indicates who draws.
-    public void DrawCardFromDeck(CardManager.Team team)
-    {
-
-        if (team == CardManager.Team.My && MyDeckCards.Count != 0 && MyHandCards.Count < 10)
-        {
-            int random = Random.Range(0, MyDeckCards.Count);
-            GameObject tempCard = MyDeckCards[random];
-
-
-            var hand = GameObject.Find("Hand").transform;
-            tempCard.transform.SetParent(hand);
-            tempCard.GetComponent<CardManager>().SetCardStatus(CardManager.CardStatus.InHand);
-
-            MyDeckCards.Remove(tempCard);
-            MyHandCards.Add(tempCard);
-        }
-
-        if (team == CardManager.Team.AI && AIDeckCards.Count != 0 && AIHandCards.Count < 10)
-        {
-            int random = Random.Range(0, AIDeckCards.Count);
-            GameObject tempCard = AIDeckCards[random];
-
-            var AIhand = GameObject.Find("AIHand").transform;
-            tempCard.transform.SetParent(AIhand);
-            tempCard.GetComponent<CardManager>().SetCardStatus(CardManager.CardStatus.InHand);
-
-            AIDeckCards.Remove(tempCard);
-            AIHandCards.Add(tempCard);
+            throw new NotImplementedException();
         }
     }
-
-         public void PlaceCard(CardManager card)
-    {
-        if (card.team == CardManager.Team.My && MyMana - card.card.Cost >= 0 && MyTableCards.Count < 10)
-        {
-            //card.gameObject.transform.position = MyTablePos.position;
-    //        card.GetComponent<CardManager>().newPos = MyTablePos.position;
-
-            MyHandCards.Remove(card.gameObject);
-            MyTableCards.Add(card.gameObject);
-
-            card.SetCardStatus(CardManager.CardStatus.OnTable);
-      
-            //PlaySound(cardDrop);
-
-        //    if (card.cardtype == CardManager.CardType.Instant)///Apply Magic Effect 
-        //    {
-        //        card.canPlay = true;
-        //        if (card.cardeffect == CardBehaviourScript.CardEffect.ToAll)
-        //        {
-        //            card.AddToAll(card, true, delegate { card.Destroy(card); });
-        //        }
-        //        else if (card.cardeffect == CardBehaviourScript.CardEffect.ToEnemies)
-        //        {
-        //            card.AddToEnemies(card, AITableCards, true, delegate { card.Destroy(card); });
-        //        }
-        //    }
-
-        //    MyMana -= card.Cost;
-        }
-
-        //if (card.team == CardBehaviourScript.Team.AI && AIMana - card.Cost >= 0 && AITableCards.Count < 10)
-        //{
-        //    //card.gameObject.transform.position = AITablePos.position;
-        //    card.GetComponent<CardBehaviourScript>().newPos = AITablePos.position;
-
-        //    AIHandCards.Remove(card.gameObject);
-        //    AITableCards.Add(card.gameObject);
-
-        //    card.SetCardStatus(CardBehaviourScript.CardStatus.OnTable);
-        //    //PlaySound(cardDrop);
-
-        //    if (card.cardtype == CardBehaviourScript.CardType.Magic)///Apply Magic Effect 
-        //    {
-        //        card.canPlay = true;
-        //        if (card.cardeffect == CardBehaviourScript.CardEffect.ToAll)
-        //        {
-        //            card.AddToAll(card, true, delegate { card.Destroy(card); });
-        //        }
-        //        else if (card.cardeffect == CardBehaviourScript.CardEffect.ToEnemies)
-        //        {
-        //            card.AddToEnemies(card, MyTableCards, true, delegate { card.Destroy(card); });
-        //        }
-        //    }
-
-        //    AIMana -= card.Cost;
-        //}
-
-    //    TablePositionUpdate();
-     //   HandPositionUpdate();
-     //   UpdateGame();
-
-    }
-
-
 }

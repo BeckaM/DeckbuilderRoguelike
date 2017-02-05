@@ -1,38 +1,40 @@
 ﻿using Assets.Scripts;
-using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System;
-using System.Collections.Generic;
-using Assets.Scripts.DAL;
 
-public class CardManager : MonoBehaviour
+namespace Assets.Scripts
 {
 
-    private const string fileName = Constants.CardPath;
 
-    public Sprite[] sprites;
-    public Card card;
-        
-    public enum CardStatus { InDeck, InHand, OnTable, InDiscard };
-    public CardStatus cardStatus = CardStatus.InDeck;
-
-    public enum Team { My, AI };
-    public Team team = Team.My;
-
-    public void SetCardStatus(CardStatus status)
+    public class CardManager : MonoBehaviour
     {
-        cardStatus = status;
-    }
 
-   
+        private const string fileName = Constants.CardPath;
 
-    public void PopulateCard(Card card)
-    {
+        public Sprite[] sprites;
+        public Card card;
+
+        public enum CardStatus { InDeck, InHand, OnTable, InDiscard };
+        public CardStatus cardStatus = CardStatus.InDeck;
+
+        public enum Team { My, AI };
+        public Team team = Team.My;
+
+        public Boolean Playable = false;
+
+        public void SetCardStatus(CardStatus status)
+        {
+            cardStatus = status;
+        }
+
+
+
+        public void PopulateCard(Card card)
+        {
 
             this.card = card;
-                               
+
             var transformer = this.transform;
 
             //Set Image
@@ -49,34 +51,46 @@ public class CardManager : MonoBehaviour
             var cardDesc = transformer.GetChild(2);
             var DescComponent = cardDesc.GetComponent<Text>();
             DescComponent.text = card.CardText;
-
-            
-        
-
-        
-    }
-
-    public void PlaceCard()
-    {
-        if (CardgameManager.instance.turn == CardgameManager.Turn.MyTurn && cardStatus == CardStatus.InHand && team == Team.My)
+        }
+             
+        internal void ApplyEffect(CardEffect cardEffect)
         {
-            //Selected = false;
-            CardgameManager.instance.PlaceCard(this);
+            if(CardEffect.Effect.DealDamage.Equals(cardEffect.effect)) {
+
+                CardgameManager.instance.ApplyDamage(cardEffect.Value, team);
+
+            }
+
+
+            //if effect is damage
+            // deal "value"
+            // trigger CardGameManager.DealDamage(Value)
+
+            //else if is heal 
+
+            // heal "value"
+            //trigger CardGameManager.Heal(Value)
+
+            //else if DrawCard
+            //trigger CardGameManager.DrawCard(Value)
+
+
+
+            throw new NotImplementedException();
+        }
+
+
+
+        // Use this for initialization
+        void Start()
+        {
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
         }
     }
-
-
-
-    // Use this for initialization
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }
-
 

@@ -15,7 +15,7 @@ namespace Assets.Scripts
 
         public int Value;
 
-        public enum Trigger { Instant, Passive, StartOfTurn, EndOfTurn, OnTakeDamage, OnDealDamage, OnDraw };
+        public enum Trigger { Instant, Passive, StartOfTurn, EndOfTurn, OnTakeDamage, OnDealDamage, OnDraw, OnPlayCard };
         public Trigger trigger;
 
     }
