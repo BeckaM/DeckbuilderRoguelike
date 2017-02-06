@@ -14,13 +14,12 @@ namespace Assets.Scripts
         public float turnDelay = 0.2f;							//Delay between each Player turn.
         public int playerLife = 500;
         public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
-        [HideInInspector]
+       
         public bool playersTurn = true;     //Boolean to check if it's players turn, hidden in inspector but public.
 
 
         private Text levelText;                                 //Text to display current level number.
-        private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.
-        private GameObject DungeonCanvas;                       //    private GameObject DungeonBoard;
+        private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.                 
         private GameObject CardGameCanvas;
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
        
@@ -124,6 +123,8 @@ namespace Assets.Scripts
             var enemyManager = monster.gameObject.GetComponent<EnemyManager>();
             enemyManager.InitMonsterDeck();
 
+            CardgameManager.instance.enemy = enemyManager.enemy;
+
             monster.gameObject.SetActive(false);
 
             //While doingSetup is true the player can't move, prevent player from moving while card game.
@@ -135,10 +136,7 @@ namespace Assets.Scripts
             //          DungeonBoard.SetActive(false);
             //DungeonCanvas.SetActive(false);
             CardGameCanvas.SetActive(true);
-
-
-
-
+                        
         }
 
 
