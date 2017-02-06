@@ -9,9 +9,7 @@ namespace Assets.Scripts
 
     public class CardManager : MonoBehaviour
     {
-
-        private const string fileName = Constants.CardPath;
-
+                
         public Sprite[] sprites;
         public Card card;
 

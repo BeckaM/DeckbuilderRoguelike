@@ -23,7 +23,7 @@ namespace Assets.Scripts
         private GameObject CardGameCanvas;
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
        
-        private int level = 3;                                  //Current level number, expressed in game as "Day 1".
+        private int level = 0;                                  //Current level number, expressed in game as "Day 1".
 
         private bool notplayersturn;
         private bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
@@ -123,7 +123,7 @@ namespace Assets.Scripts
             var enemyManager = monster.gameObject.GetComponent<EnemyManager>();
             enemyManager.InitMonsterDeck();
 
-            CardgameManager.instance.enemy = enemyManager.enemy;
+            CardgameManager.instance.enemy = enemyManager;
 
             monster.gameObject.SetActive(false);
 

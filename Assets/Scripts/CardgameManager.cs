@@ -15,12 +15,11 @@ namespace Assets.Scripts
         public enum Turn { MyTurn, AITurn };
         public Turn turn = Turn.MyTurn;
 
+        public int PlayerHP;
+
         int maxMana = 1;
         public int MyMana = 1;
         public int AIMana = 1;
-
-        public int MyHP =10;
-        public int MonsterHP = 10;
 
         public List<GameObject> MyDeckCards = new List<GameObject>();
         public List<GameObject> MyHandCards = new List<GameObject>();
@@ -30,8 +29,7 @@ namespace Assets.Scripts
         public List<GameObject> AIHandCards = new List<GameObject>();
         public List<GameObject> AITableCards = new List<GameObject>();
 
-        public Enemy enemy;
-
+        public EnemyManager enemy;
 
         void Awake()
         {
@@ -44,6 +42,7 @@ namespace Assets.Scripts
         void Start()
         {
 
+            PlayerHP = GameManager.instance.playerLife;
 
             //Organize the cards into the correct lists.
             foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
@@ -67,7 +66,7 @@ namespace Assets.Scripts
 
 
             for (var i = 0; i < 3; i++)
-            {                
+            {
                 DrawCardFromDeck(CardManager.Team.My);
                 DrawCardFromDeck(CardManager.Team.AI);
             }
@@ -79,11 +78,11 @@ namespace Assets.Scripts
         {
             if (team == CardManager.Team.My)
             {
-                MonsterHP = MonsterHP - value;
+                enemy.MonsterHP = enemy.MonsterHP - value;
             }
             else
             {
-                MyHP = MyHP - value;
+                PlayerHP = PlayerHP - value;
             }
 
 
@@ -95,9 +94,9 @@ namespace Assets.Scripts
             //MyManaText.text = MyMana.ToString() + "/" + maxMana;
             //AIManaText.text = AIMana.ToString() + "/" + maxMana;
 
-            if (MyHP <= 0)
+            if (PlayerHP <= 0)
                 EndGame();
-            if (MonsterHP <= 0)
+            if (enemy.MonsterHP <= 0)
                 EndGame();
 
             foreach (GameObject Card in MyHandCards)
@@ -144,7 +143,7 @@ namespace Assets.Scripts
 
             UpdateGame();
         }
-        
+
         //Draw card function, Team indicates who draws.
         public void DrawCardFromDeck(CardManager.Team team)
         {
@@ -179,13 +178,13 @@ namespace Assets.Scripts
 
         public void PlaceCard(CardManager card)
         {
-            
-            
-                card.SetCardStatus(CardManager.CardStatus.OnTable);
-                //PlaySound(cardDrop);
 
-                MyHandCards.Remove(card.gameObject);
-                MyTableCards.Add(card.gameObject);
+
+            card.SetCardStatus(CardManager.CardStatus.OnTable);
+            //PlaySound(cardDrop);
+
+            MyHandCards.Remove(card.gameObject);
+            MyTableCards.Add(card.gameObject);
 
             foreach (CardEffect effect in card.card.Effects)
             {
@@ -196,7 +195,7 @@ namespace Assets.Scripts
             }
 
 
-        //   CheckTriggers(CardEffect.Trigger.OnPlayCard, card.team);
+            //   CheckTriggers(CardEffect.Trigger.OnPlayCard, card.team);
 
 
 

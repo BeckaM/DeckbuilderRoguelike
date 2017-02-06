@@ -31,7 +31,7 @@ namespace Assets.Scripts.DAL
             string text = File.ReadAllText(EnemyPath);
             var enemyList = JsonUtility.FromJson<EnemyWrapper>(text);
             
-            var enemies = enemyList.EnemyItems.FindAll(item => item.EnemyLevel <= enemyLevel);
+            var enemies = enemyList.EnemyItems.FindAll(item => item.BaseEnemyLevel <= enemyLevel);
             
             return enemies;
 
@@ -65,7 +65,7 @@ namespace Assets.Scripts.DAL
 
         internal static EnemyWrapper GetAllEnemies()
         {
-            string text = File.ReadAllText(Constants.EnemyPath);
+            string text = File.ReadAllText(EnemyPath);
             return JsonUtility.FromJson<EnemyWrapper>(text);
 
         }
@@ -73,7 +73,7 @@ namespace Assets.Scripts.DAL
 
         internal static CardWrapper GetAllCards()
         {
-            string text = File.ReadAllText(Constants.CardPath);
+            string text = File.ReadAllText(CardPath);
             return JsonUtility.FromJson<CardWrapper>(text);
             
         }

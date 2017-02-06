@@ -1,1 +1,1 @@
-{"EnemyItems":[{"EnemyName":"Sylio","SpriteIcon":0,"EnemyLevel":0,"HP":10,"Components":[{"ComponentName":"basic attacks","CardNames":["Serrated Bite"],"cardcount":5},{"ComponentName":"Resources","CardNames":["Serrated Bite"],"cardcount":5}]}]}
+{"EnemyItems":[{"EnemyName":"Sylio","SpriteIcon":0,"BaseEnemyLevel":1,"BaseEnemyHP":10,"Components":[{"ComponentName":"basic attacks","CardNames":["Serrated Bite"],"cardcount":5},{"ComponentName":"Resources","CardNames":["Serrated Bite"],"cardcount":5}]}]}

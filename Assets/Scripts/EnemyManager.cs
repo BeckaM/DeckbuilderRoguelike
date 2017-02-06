@@ -7,10 +7,11 @@ namespace Assets.Scripts
     public class EnemyManager : MonoBehaviour
     {
 
-        private const string fileName = Constants.EnemyPath;
+        
 
         public Enemy enemy;
-       
+        public int MonsterHP;
+        public int MonsterLevel;
 
         public GameObject EnemyObject;
         public Sprite[] sprites;  
@@ -18,11 +19,16 @@ namespace Assets.Scripts
 
 
         //Gets monster properties from Dungeon Manager and sets them on the enemy object.
-        public void PopulateEnemy(Enemy enemytoget)
+        public void PopulateEnemy(Enemy enemytoget, int Level)
         {
 
             enemy = enemytoget;
 
+            MonsterLevel = Random.Range(enemy.BaseEnemyLevel, Level+1);
+
+            int HPperlevel = enemy.BaseEnemyHP / 10;
+            int HPbonus = HPperlevel*(MonsterLevel-enemy.BaseEnemyLevel);
+            MonsterHP = enemy.BaseEnemyHP+(HPperlevel*HPbonus);
 
             var transformer = transform;
 
@@ -37,7 +43,7 @@ namespace Assets.Scripts
         {
 
             var EnemyDeckBuilder = new EnemyDeckBuilder();
-            EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, enemy.EnemyLevel);
+            EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, MonsterLevel);
 
 
          //   return hungryMonsterScale > 100 ? "Beasty gulp murloc will eat everything" : "Not that hungry Murloc but can swallow a hero or two";

@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Assets.Scripts
 {
-    
+
     public class DungeonManager : MonoBehaviour
     {
         // Using Serializable allows us to embed a class with sub properties in the inspector.
@@ -27,7 +27,7 @@ namespace Assets.Scripts
         }
 
 
-       
+
         public int columns = 8;                                         //Number of columns in our game board.
         public int rows = 8;											//Number of rows in our game board.
         public int vector = 90;                                         //Vector thing.
@@ -145,7 +145,7 @@ namespace Assets.Scripts
         {
 
             //Determine number of enemies based on current level number, based on a logarithmic progression
-            int enemyCount = (int)Mathf.Log(Level, 2f);
+            int enemyCount = (int)Mathf.Log(Level, 2f)+2;
 
             //Get all enemies with level lower than current dungeon Level
             var enemiesToChooseFrom = DAL.ObjectDAL.GetEnemies(Level);
@@ -158,8 +158,8 @@ namespace Assets.Scripts
 
             }
 
-                //Instantiate enemies until the chosen limit enemyCount is reached
-                foreach (var enemy in enemyList)
+            //Instantiate enemies until the chosen limit enemyCount is reached
+            foreach (var enemy in enemyList)
             {
                 //Choose a position for randomPosition by getting a random position from our list of available Vector3s stored in gridPosition
                 Vector3 randomPosition = RandomPosition();
@@ -171,12 +171,12 @@ namespace Assets.Scripts
                 var instance = Instantiate(enemyPrefab, randomPosition, Quaternion.identity, DungeonCanvas);
                 var script = instance.GetComponent<EnemyManager>();
 
-                script.PopulateEnemy(enemy);
-                
+                script.PopulateEnemy(enemy, Level);
+
 
             }
 
-                
+
         }
 
         //SetupScene initializes our level and calls the previous functions to lay out the game board
@@ -193,14 +193,14 @@ namespace Assets.Scripts
 
 
             CreateEnemyArray(level);
-            
+
 
             //Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
 
 
-         //   LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount);
+            //   LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount);
 
-      //      CreateEnemy(enemyCount, level);
+            //      CreateEnemy(enemyCount, level);
 
 
             //Instantiate the exit tile in the upper right hand corner of our game board

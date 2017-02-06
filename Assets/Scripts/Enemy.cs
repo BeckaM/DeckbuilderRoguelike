@@ -11,8 +11,8 @@ namespace Assets.Scripts
     {
         public string EnemyName;
         public int SpriteIcon;
-        public int EnemyLevel;
-        public int HP;
+        public int BaseEnemyLevel;
+        public int BaseEnemyHP;
 
         public List<DeckComponent> Components;
     }
