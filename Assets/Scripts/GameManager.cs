@@ -10,9 +10,15 @@ namespace Assets.Scripts
 
     public class GameManager : MonoBehaviour
     {
+
+        public Text lifeTextBoard;                      //UI Text to display current player life total.
+        public Text lifeTextCardGame;
+
+        public int life;
+        
         public float levelStartDelay = 2f;                      //Time to wait before starting level, in seconds.
         public float turnDelay = 0.2f;							//Delay between each Player turn.
-        public int playerLife = 500;
+        
         public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
        
         public bool playersTurn = true;     //Boolean to check if it's players turn, hidden in inspector but public.
@@ -87,21 +93,24 @@ namespace Assets.Scripts
             //DungeonCanvas = GameObject.Find("Canvas(Board)");
             CardGameCanvas = GameObject.Find("Canvas(CardGame)");
 
-            //DungeonCanvas.SetActive(true);
-            CardGameCanvas.SetActive(false);
+           
 
-
-
+            
             //Get a reference to our image LevelImage by finding it by name.
             levelImage = GameObject.Find("LevelImage");
 
-
-
+            
             //Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
             levelText = GameObject.Find("LevelText").GetComponent<Text>();
+            lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
+            lifeTextCardGame = GameObject.Find("LifeTextCardgame").GetComponent<Text>();
+
+            CardGameCanvas.SetActive(false);
 
             //Set the text of levelText to the string "Level" and append the current level number.
             levelText.text = "Level " + level;
+
+            lifeTextBoard.text = "Life:" + life;
 
             //Set levelImage to active blocking player's view of the game board during setup.
             levelImage.SetActive(true);
@@ -124,6 +133,7 @@ namespace Assets.Scripts
             enemyManager.InitMonsterDeck();
 
             CardgameManager.instance.enemy = enemyManager;
+            lifeTextCardGame.text = "Life:" + life;
 
             monster.gameObject.SetActive(false);
 
@@ -162,6 +172,37 @@ namespace Assets.Scripts
             //Start moving enemies.
             StartCoroutine(MoveEnemies());
 
+        }
+
+        public void LoseLife(int loss)
+        {
+
+            //Subtract lost food points from the players total.
+            life -= loss;
+
+            //Update the food display with the new total.
+            lifeTextBoard.text = "-" + loss + " Food: " + life;
+            lifeTextCardGame.text = "-" + loss + " Food: " + life;
+
+            //Check to see if game has ended.
+            CheckIfGameOver();
+        }
+
+        //CheckIfGameOver checks if the player is out of food points and if so, ends the game.
+        private void CheckIfGameOver()
+        {
+            //Check if food point total is less than or equal to zero.
+            if (life <= 0)
+            {
+                //Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
+               // SoundManager.instance.PlaySingle(gameOverSound);
+
+                //Stop the background music.
+                SoundManager.instance.musicSource.Stop();
+
+                //Call the GameOver function of GameManager.
+                GameManager.instance.GameOver();
+            }
         }
 
 

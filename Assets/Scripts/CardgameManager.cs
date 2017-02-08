@@ -42,7 +42,7 @@ namespace Assets.Scripts
         void Start()
         {
 
-            PlayerHP = GameManager.instance.playerLife;
+            PlayerHP = GameManager.instance.life;
 
             //Organize the cards into the correct lists.
             foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
