@@ -14,7 +14,8 @@ namespace Assets.Scripts
         public int MonsterLevel;
 
         public GameObject EnemyObject;
-        public Sprite[] sprites;  
+        public Sprite[] sprites;
+        public Sprite MonsterImage;
 
 
 
@@ -34,6 +35,7 @@ namespace Assets.Scripts
 
             //Set Image
             var imageObj = transformer.GetChild(0);
+            MonsterImage = sprites[enemy.SpriteIcon];
             var imageComponent = imageObj.GetComponent<SpriteRenderer>();
             imageComponent.sprite = sprites[enemy.SpriteIcon];
         }
@@ -48,5 +50,24 @@ namespace Assets.Scripts
 
          //   return hungryMonsterScale > 100 ? "Beasty gulp murloc will eat everything" : "Not that hungry Murloc but can swallow a hero or two";
         }
+
+        public void LoseLife(int loss)
+        {
+
+            //Subtract lost life points from the monster total.
+            MonsterHP -= loss;
+            CardgameManager.instance.monsterLifeText.text = "-" + loss;
+            Invoke("UpdateLife", 1f);
+        }
+
+        internal void UpdateLife()
+        {
+            CardgameManager.instance.monsterLifeText.text =  " Life: " + MonsterHP;
+            CardgameManager.instance.UpdateGame();
+
+        }
+                    
+                  
+        
     }
 }

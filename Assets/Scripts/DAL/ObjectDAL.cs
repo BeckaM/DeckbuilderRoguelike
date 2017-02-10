@@ -9,6 +9,9 @@ namespace Assets.Scripts.DAL
     {
         public const string EnemyPath = @".\Assets\JSON\Enemies";
         public const string CardPath = @".\Assets\JSON\Cards";
+        public const string ClassPath = @"\.Assets\JSON\PlayerClasses";
+
+              
 
         internal static List<Card> GetCards(List<string> cardsToGet)
         {
@@ -62,6 +65,18 @@ namespace Assets.Scripts.DAL
             File.WriteAllText(EnemyPath, jsonEnemy);
         }
 
+        internal static void SaveClasses(PlayerClassWrapper classesToEdit)
+        {
+            if (!File.Exists(ClassPath))
+            {
+                return;
+            }
+            string jsonClass = JsonUtility.ToJson(classesToEdit);
+
+            File.WriteAllText(ClassPath, jsonClass);
+        }
+
+
 
         internal static EnemyWrapper GetAllEnemies()
         {
@@ -76,6 +91,12 @@ namespace Assets.Scripts.DAL
             string text = File.ReadAllText(CardPath);
             return JsonUtility.FromJson<CardWrapper>(text);
             
+        }
+
+        internal static PlayerClassWrapper GetAllClasses()
+        {
+            string text = File.ReadAllText(ClassPath);
+            return JsonUtility.FromJson<PlayerClassWrapper>(text);
         }
     }
 }

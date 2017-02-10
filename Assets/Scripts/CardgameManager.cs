@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine random number generator.
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
@@ -15,7 +16,8 @@ namespace Assets.Scripts
         public enum Turn { MyTurn, AITurn };
         public Turn turn = Turn.MyTurn;
 
-        public int PlayerHP;
+        public Image monsterPortrait;
+        public Text monsterLifeText;
 
         int maxMana = 1;
         public int MyMana = 1;
@@ -42,7 +44,8 @@ namespace Assets.Scripts
         void Start()
         {
 
-            PlayerHP = GameManager.instance.life;
+            monsterLifeText.text = "Life: " + enemy.MonsterHP;
+            monsterPortrait.sprite = enemy.MonsterImage;
 
             //Organize the cards into the correct lists.
             foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
@@ -78,24 +81,24 @@ namespace Assets.Scripts
         {
             if (team == CardManager.Team.My)
             {
-                enemy.MonsterHP = enemy.MonsterHP - value;
+                enemy.LoseLife(value);
             }
             else
             {
-                PlayerHP = PlayerHP - value;
+                GameManager.instance.LoseLife(value);
+               
             }
 
 
 
         }
 
-        void UpdateGame()
+        public void UpdateGame()
         {
             //MyManaText.text = MyMana.ToString() + "/" + maxMana;
             //AIManaText.text = AIMana.ToString() + "/" + maxMana;
 
-            if (PlayerHP <= 0)
-                EndGame();
+            
             if (enemy.MonsterHP <= 0)
                 EndGame();
 
@@ -122,7 +125,8 @@ namespace Assets.Scripts
 
         private void EndGame()
         {
-            throw new NotImplementedException();
+            this.gameObject.SetActive(false);
+            GameManager.instance.ReturnFromCardgame();
         }
 
 

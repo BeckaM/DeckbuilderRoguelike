@@ -22,8 +22,7 @@ namespace Assets.Scripts
         public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
        
         public bool playersTurn = true;     //Boolean to check if it's players turn, hidden in inspector but public.
-
-
+        
         private Text levelText;                                 //Text to display current level number.
         private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.                 
         private GameObject CardGameCanvas;
@@ -33,8 +32,7 @@ namespace Assets.Scripts
 
         private bool notplayersturn;
         private bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
-
-
+        
         //Awake is always called before any Start functions
         void Awake()
         {
@@ -92,14 +90,10 @@ namespace Assets.Scripts
 
             //DungeonCanvas = GameObject.Find("Canvas(Board)");
             CardGameCanvas = GameObject.Find("Canvas(CardGame)");
-
-           
-
-            
+                                   
             //Get a reference to our image LevelImage by finding it by name.
             levelImage = GameObject.Find("LevelImage");
-
-            
+                        
             //Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
             levelText = GameObject.Find("LevelText").GetComponent<Text>();
             lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
@@ -110,7 +104,7 @@ namespace Assets.Scripts
             //Set the text of levelText to the string "Level" and append the current level number.
             levelText.text = "Level " + level;
 
-            lifeTextBoard.text = "Life:" + life;
+            lifeTextBoard.text = "Life: " + life;
 
             //Set levelImage to active blocking player's view of the game board during setup.
             levelImage.SetActive(true);
@@ -140,15 +134,16 @@ namespace Assets.Scripts
             //While doingSetup is true the player can't move, prevent player from moving while card game.
 
             doingSetup = true;
-
-            //         DungeonBoard = GameObject.Find("Board");
-
-            //          DungeonBoard.SetActive(false);
-            //DungeonCanvas.SetActive(false);
+                       
             CardGameCanvas.SetActive(true);
-                        
+                      
         }
 
+
+        public void ReturnFromCardgame()
+        {
+            doingSetup = false;
+        }
 
         //Hides black image used between levels
         void HideLevelImage()
@@ -177,12 +172,12 @@ namespace Assets.Scripts
         public void LoseLife(int loss)
         {
 
-            //Subtract lost food points from the players total.
+            //Subtract lost life points from the players total.
             life -= loss;
 
-            //Update the food display with the new total.
-            lifeTextBoard.text = "-" + loss + " Food: " + life;
-            lifeTextCardGame.text = "-" + loss + " Food: " + life;
+            //Update the life display with the new total.
+            lifeTextBoard.text = "-" + loss + " Life: " + life;
+            lifeTextCardGame.text = "-" + loss + " Life: " + life;
 
             //Check to see if game has ended.
             CheckIfGameOver();
@@ -224,7 +219,6 @@ namespace Assets.Scripts
         //Coroutine to move enemies in sequence.
         IEnumerator MoveEnemies()
         {
-
             notplayersturn = true;
 
             yield return new WaitForSeconds(turnDelay);
@@ -234,8 +228,7 @@ namespace Assets.Scripts
 
             playersTurn = true;
             notplayersturn = false;
-
-
+            
         }
 
 

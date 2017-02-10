@@ -74,7 +74,7 @@ namespace Assets.Scripts
 
 
 
-            throw new NotImplementedException();
+            
         }
 
 
