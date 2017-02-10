@@ -9,7 +9,7 @@ namespace Assets.Scripts.DAL
     {
         public const string EnemyPath = @".\Assets\JSON\Enemies";
         public const string CardPath = @".\Assets\JSON\Cards";
-        public const string ClassPath = @"\.Assets\JSON\PlayerClasses";
+        public const string ClassPath = @".\Assets\JSON\PlayerClasses";
 
               
 

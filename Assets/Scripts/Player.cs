@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;   //Allows us to use UI.
 using UnityEngine.SceneManagement;
-
+using System;
 
 namespace Assets.Scripts
 {
@@ -11,7 +11,7 @@ namespace Assets.Scripts
     {
         public float restartLevelDelay = 1f;        //Delay time in seconds to restart level.
 
-        
+        public bool moveComplete;
         public AudioClip moveSound1;                //1 of 2 Audio clips to play when player moves.
         public AudioClip moveSound2;                //2 of 2 Audio clips to play when player moves.
         public AudioClip gameOverSound;             //Audio clip to play when player dies.
@@ -40,7 +40,8 @@ namespace Assets.Scripts
         private void Update()
         {
             //If it's not the player's turn, exit the function.
-            if (!GameManager.instance.playersTurn) return;
+            //  if (!GameManager.instance.playersTurn) return;
+            if (moveComplete || GameManager.instance.doingSetup) return;
 
             int horizontal = 0;     //Used to store the horizontal move direction.
             int vertical = 0;       //Used to store the vertical move direction.
@@ -125,10 +126,27 @@ namespace Assets.Scripts
                 SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
             }
 
+
+
+            // Set the playersTurn boolean of GameManager to false now that players turn is over.
+            // GameManager.instance.playersTurn = false;
+            moveComplete = true;
+            StartCoroutine(MoveWait());
+            
+        }
+
+        IEnumerator MoveWait()
+        {
+            
+
+            yield return new WaitForSeconds(0.2f);
+
+
+
+
+            moveComplete = false;
            
 
-            //Set the playersTurn boolean of GameManager to false now that players turn is over.
-            GameManager.instance.playersTurn = false;
         }
 
         //OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).

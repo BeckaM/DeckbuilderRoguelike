@@ -31,7 +31,7 @@ namespace Assets.Scripts
         private int level = 0;                                  //Current level number, expressed in game as "Day 1".
 
         private bool notplayersturn;
-        private bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
+        internal bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
         
         //Awake is always called before any Start functions
         void Awake()
@@ -76,10 +76,13 @@ namespace Assets.Scripts
         //This is called each time a scene is loaded.
         void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
         {
-            //Add one to our level number.
-            level++;
-            //Call InitGame to initialize our level.
-            InitGame();
+            if (scene.name == "Main")
+            {
+                //Add one to our level number.
+                level++;
+                //Call InitGame to initialize our level.
+                InitGame();
+            }
         }
 
         //Initializes the game for each level.
@@ -88,23 +91,16 @@ namespace Assets.Scripts
             //While doingSetup is true the player can't move, prevent player from moving while title card is up.
             doingSetup = true;
 
-            //DungeonCanvas = GameObject.Find("Canvas(Board)");
-            CardGameCanvas = GameObject.Find("Canvas(CardGame)");
-                                   
-            //Get a reference to our image LevelImage by finding it by name.
-            levelImage = GameObject.Find("LevelImage");
-                        
-            //Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
-            levelText = GameObject.Find("LevelText").GetComponent<Text>();
-            lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
-            lifeTextCardGame = GameObject.Find("LifeTextCardgame").GetComponent<Text>();
+            FindLevelObjects();
+
+            
 
             CardGameCanvas.SetActive(false);
 
             //Set the text of levelText to the string "Level" and append the current level number.
             levelText.text = "Level " + level;
 
-            lifeTextBoard.text = "Life: " + life;
+            UpdateLifeText();
 
             //Set levelImage to active blocking player's view of the game board during setup.
             levelImage.SetActive(true);
@@ -113,11 +109,26 @@ namespace Assets.Scripts
             Invoke("HideLevelImage", levelStartDelay);
 
             //Call the Starting Deck function to initialize the starting deck
-            
             DeckManager.instance.StartingDeck();
 
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             boardScript.SetupScene(level);
+
+        }
+
+        private void FindLevelObjects()
+        {
+            //DungeonCanvas = GameObject.Find("Canvas(Board)");
+            CardGameCanvas = GameObject.Find("Canvas(CardGame)");
+
+            //Get a reference to our image LevelImage by finding it by name.
+            levelImage = GameObject.Find("LevelImage");
+
+            //Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
+            levelText = GameObject.Find("LevelText").GetComponent<Text>();
+            lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
+            lifeTextCardGame = GameObject.Find("LifeTextCardgame").GetComponent<Text>();
+
 
         }
 
@@ -155,19 +166,7 @@ namespace Assets.Scripts
             doingSetup = false;
         }
 
-        //Update is called every frame.
-        void Update()
-        {
-            ////Check that playersTurn or enemiesMoving or doingSetup are not currently true.
-            if (playersTurn || doingSetup || notplayersturn)
-
-                //    //If any of these are true, return and do not start MoveEnemies.
-                return;
-
-            //Start moving enemies.
-            StartCoroutine(MoveEnemies());
-
-        }
+      
 
         public void LoseLife(int loss)
         {
@@ -176,17 +175,24 @@ namespace Assets.Scripts
             life -= loss;
 
             //Update the life display with the new total.
-            lifeTextBoard.text = "-" + loss + " Life: " + life;
-            lifeTextCardGame.text = "-" + loss + " Life: " + life;
+            UpdateLifeText();
 
             //Check to see if game has ended.
             CheckIfGameOver();
         }
 
         //CheckIfGameOver checks if the player is out of food points and if so, ends the game.
+
+        private void UpdateLifeText()
+        {
+            lifeTextBoard.text = " Life: " + life;
+            lifeTextCardGame.text =" Life: " + life;
+        } 
+
+
         private void CheckIfGameOver()
         {
-            //Check if food point total is less than or equal to zero.
+            //Check if life point total is less than or equal to zero.
             if (life <= 0)
             {
                 //Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
@@ -216,20 +222,7 @@ namespace Assets.Scripts
         }
 
 
-        //Coroutine to move enemies in sequence.
-        IEnumerator MoveEnemies()
-        {
-            notplayersturn = true;
-
-            yield return new WaitForSeconds(turnDelay);
-
-
-
-
-            playersTurn = true;
-            notplayersturn = false;
-            
-        }
+   
 
 
 
