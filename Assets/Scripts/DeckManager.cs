@@ -33,22 +33,11 @@ namespace Assets.Scripts
         }
 
 
-        public void StartingDeck()
+        public void StartingDeck(List <string> cardstoCreate)
         {
 
-            List<string> cardstoCreate = new List<string>()
-        {
-            "Phantom Strike",
-            "Phantom Strike",
-            "Phantom Strike",
-            "Phantom Strike",
-            "Phantom Strike"
-        };
-
-
-            AddCardtoDeck(cardstoCreate);
-
-
+              AddCardtoDeck(cardstoCreate);
+            
         }
 
         public void AddCardtoDeck(List<string> cardsToCreate, string team = "My")

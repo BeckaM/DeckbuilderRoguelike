@@ -168,7 +168,7 @@ namespace Assets.Scripts
                 //GameObject tileChoice = enemylist[Random.Range(0, enemylist.Count)];
 
                 //Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
-                var instance = Instantiate(enemyPrefab, randomPosition, Quaternion.identity, DungeonCanvas);
+                var instance = Instantiate(enemyPrefab, randomPosition, Quaternion.identity, boardHolder);
                 var script = instance.GetComponent<EnemyManager>();
 
                 script.PopulateEnemy(enemy, Level);
@@ -204,7 +204,7 @@ namespace Assets.Scripts
 
 
             //Instantiate the exit tile in the upper right hand corner of our game board
-            GameObject instance = Instantiate(exit, new Vector3(columns - 1, rows - 1, 0f), Quaternion.identity, DungeonCanvas);
+            GameObject instance = Instantiate(exit, new Vector3(columns - 1, rows - 1, 0f), Quaternion.identity, boardHolder);
             instance.transform.Rotate(0, 0, 180);
         }
     }

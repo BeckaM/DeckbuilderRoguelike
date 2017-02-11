@@ -10,12 +10,12 @@ namespace Assets.Scripts
         
 
         public Enemy enemy;
-        public int MonsterHP;
+        public int life;
         public int MonsterLevel;
 
         public GameObject EnemyObject;
         public Sprite[] sprites;
-        public Sprite MonsterImage;
+        public Sprite monsterImage;
 
 
 
@@ -29,13 +29,13 @@ namespace Assets.Scripts
 
             int HPperlevel = enemy.BaseEnemyHP / 10;
             int HPbonus = HPperlevel*(MonsterLevel-enemy.BaseEnemyLevel);
-            MonsterHP = enemy.BaseEnemyHP+(HPperlevel*HPbonus);
+            life = enemy.BaseEnemyHP+(HPperlevel*HPbonus);
 
             var transformer = transform;
 
             //Set Image
             var imageObj = transformer.GetChild(0);
-            MonsterImage = sprites[enemy.SpriteIcon];
+            monsterImage = sprites[enemy.SpriteIcon];
             var imageComponent = imageObj.GetComponent<SpriteRenderer>();
             imageComponent.sprite = sprites[enemy.SpriteIcon];
         }
@@ -55,15 +55,15 @@ namespace Assets.Scripts
         {
 
             //Subtract lost life points from the monster total.
-            MonsterHP -= loss;
+            life -= loss;
             CardgameManager.instance.monsterLifeText.text = "-" + loss;
             Invoke("UpdateLife", 1f);
         }
 
         internal void UpdateLife()
         {
-            CardgameManager.instance.monsterLifeText.text =  " Life: " + MonsterHP;
-            CardgameManager.instance.UpdateGame();
+            CardgameManager.instance.monsterLifeText.text =  " Life: " + life;
+            
 
         }
                     

@@ -9,6 +9,14 @@ namespace Assets.Scripts
     //Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
     public class Player : MovingObject
     {
+
+
+        public int life;
+
+        public PlayerClass playerClass;
+        public Sprite playerImage;
+        public Sprite[] sprites;
+
         public float restartLevelDelay = 1f;        //Delay time in seconds to restart level.
 
         public bool moveComplete;
@@ -27,14 +35,48 @@ namespace Assets.Scripts
         {
             //Get a component reference to the Player's animator component
             animator = GetComponent<Animator>();
-                 
-       
+
+            //Set the player properties.
+            PopulatePlayer();
+            
             //Call the Start function of the MovingObject base class.
             base.Start();
         }
 
+        public void PopulatePlayer()
+        {
+            life = GameManager.instance.lifeHolder;
+            playerClass = GameManager.instance.playerClass;
+            playerImage = sprites[playerClass.SpriteIcon];
 
-       
+            var imageObj = transform.GetChild(0);
+            var imageComponent = imageObj.GetComponent<SpriteRenderer>();
+            imageComponent.sprite = playerImage;
+
+        }
+
+        public void LoseLife(int loss)
+        {
+
+            //Subtract lost life points from the players total.
+            life -= loss;
+            CardgameManager.instance.playerLifeText.text = "-" + loss;
+            Invoke("UpdateLife", 1f);
+
+
+        }
+
+        //CheckIfGameOver checks if the player is out of food points and if so, ends the game.
+
+        private void UpdateLife()
+        {
+            CardgameManager.instance.playerLifeText.text = " Life: " + life;
+            
+        }
+
+
+
+
 
 
         private void Update()
@@ -138,15 +180,9 @@ namespace Assets.Scripts
         IEnumerator MoveWait()
         {
             
-
             yield return new WaitForSeconds(0.2f);
-
-
-
-
             moveComplete = false;
            
-
         }
 
         //OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).
@@ -163,7 +199,7 @@ namespace Assets.Scripts
             }
             else if (other.tag == "Enemy")
             {
-                GameManager.instance.InitCardgame(other);
+                GameManager.instance.InitCardgame(other, this);
             }
         }
 
@@ -171,6 +207,8 @@ namespace Assets.Scripts
         //Restart reloads the scene when called.
         private void Restart()
         {
+            //Store life in Gamemanager between scenes
+            GameManager.instance.lifeHolder = life;
             //Load the last scene loaded, in this case Main, the only scene in the game.
             SceneManager.LoadScene("Main");
         }

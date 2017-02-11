@@ -11,7 +11,22 @@ namespace Assets.Scripts.DAL
         public const string CardPath = @".\Assets\JSON\Cards";
         public const string ClassPath = @".\Assets\JSON\PlayerClasses";
 
-              
+
+
+        internal static List<PlayerClass> GetClasses(List<string> classesToGet)
+        {
+            var playerclasses = GetAllClasses();
+            var classReturn = new List<PlayerClass>();
+
+            foreach (string classtoget in classesToGet)
+            {
+                var playerclass = playerclasses.PlayerClasses.Find(item => item.ClassName.Equals(classtoget));
+                classReturn.Add(playerclass);
+            }
+
+            return classReturn;
+        }
+
 
         internal static List<Card> GetCards(List<string> cardsToGet)
         {

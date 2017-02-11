@@ -16,6 +16,9 @@ namespace Assets.Scripts
         public enum Turn { MyTurn, AITurn };
         public Turn turn = Turn.MyTurn;
 
+        public Image playerPortrait;
+        public Text playerLifeText;
+
         public Image monsterPortrait;
         public Text monsterLifeText;
 
@@ -32,6 +35,7 @@ namespace Assets.Scripts
         public List<GameObject> AITableCards = new List<GameObject>();
 
         public EnemyManager enemy;
+        public Player player;
 
         void Awake()
         {
@@ -43,11 +47,29 @@ namespace Assets.Scripts
         // Use this for initialization
         void Start()
         {
-
-            monsterLifeText.text = "Life: " + enemy.MonsterHP;
-            monsterPortrait.sprite = enemy.MonsterImage;
+            //Sets opponent profile images and texts.
+            SetOpponents();
 
             //Organize the cards into the correct lists.
+            PutCardsInLists();
+
+            //Draw our starting hand
+            DrawStartingHands();
+
+            UpdateGame();
+        }
+
+        private void DrawStartingHands()
+        {
+            for (var i = 0; i < 3; i++)
+            {
+                DrawCardFromDeck(CardManager.Team.My);
+                DrawCardFromDeck(CardManager.Team.AI);
+            }
+        }
+
+        private void PutCardsInLists()
+        {
             foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
             {
                 //CardObject.GetComponent<Rigidbody>().isKinematic = true;
@@ -64,17 +86,15 @@ namespace Assets.Scripts
                     AIDeckCards.Add(CardObject);
                 }
             }
+        }
 
-            //Draw our starting hand
+        private void SetOpponents()
+        {
+            monsterLifeText.text = "Life: " + enemy.life;
+            monsterPortrait.sprite = enemy.monsterImage;
 
-
-            for (var i = 0; i < 3; i++)
-            {
-                DrawCardFromDeck(CardManager.Team.My);
-                DrawCardFromDeck(CardManager.Team.AI);
-            }
-
-            UpdateGame();
+            playerLifeText.text = "Life: " + player.life;
+            playerPortrait.sprite = player.playerImage;
         }
 
         internal void ApplyDamage(int value, CardManager.Team team)
@@ -85,10 +105,10 @@ namespace Assets.Scripts
             }
             else
             {
-                GameManager.instance.LoseLife(value);
-               
-            }
+                player.LoseLife(value);
 
+            }
+            UpdateGame();
 
 
         }
@@ -98,9 +118,18 @@ namespace Assets.Scripts
             //MyManaText.text = MyMana.ToString() + "/" + maxMana;
             //AIManaText.text = AIMana.ToString() + "/" + maxMana;
 
-            
-            if (enemy.MonsterHP <= 0)
-                EndGame();
+            bool win;
+
+            if (player.life <= 0)
+            {
+                win = false;
+                EndGame(win);
+            }
+            else if (enemy.life <= 0)
+            {
+                win = true;
+                EndGame(win);
+            }
 
             foreach (GameObject Card in MyHandCards)
             {
@@ -123,7 +152,7 @@ namespace Assets.Scripts
 
         }
 
-        private void EndGame()
+        private void EndGame(bool win)
         {
             this.gameObject.SetActive(false);
             GameManager.instance.ReturnFromCardgame();
