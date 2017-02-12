@@ -90,10 +90,10 @@ namespace Assets.Scripts
 
         private void SetOpponents()
         {
-            monsterLifeText.text = "Life: " + enemy.life;
+            enemy.UpdateLife();
             monsterPortrait.sprite = enemy.monsterImage;
 
-            playerLifeText.text = "Life: " + player.life;
+            player.UpdateLife();
             playerPortrait.sprite = player.playerImage;
         }
 

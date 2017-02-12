@@ -14,7 +14,8 @@ namespace Assets.Scripts
 
         public PlayerClass playerClass;
 
-        public int lifeHolder= 30;
+        public int maxLife=30;
+        public int lifeHolder=30;
         public Text lifeTextBoard;                      //UI Text to display current player life total.
        
         

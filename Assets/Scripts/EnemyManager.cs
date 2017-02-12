@@ -11,6 +11,7 @@ namespace Assets.Scripts
 
         public Enemy enemy;
         public int life;
+        public int maxLife;
         public int MonsterLevel;
 
         public GameObject EnemyObject;
@@ -30,6 +31,7 @@ namespace Assets.Scripts
             int HPperlevel = enemy.BaseEnemyHP / 10;
             int HPbonus = HPperlevel*(MonsterLevel-enemy.BaseEnemyLevel);
             life = enemy.BaseEnemyHP+(HPperlevel*HPbonus);
+            maxLife = life;
 
             var transformer = transform;
 
@@ -62,7 +64,7 @@ namespace Assets.Scripts
 
         internal void UpdateLife()
         {
-            CardgameManager.instance.monsterLifeText.text =  " Life: " + life;
+            CardgameManager.instance.monsterLifeText.text =  "Life: " + maxLife + "/" + life;
             
 
         }

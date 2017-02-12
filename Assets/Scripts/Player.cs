@@ -12,6 +12,7 @@ namespace Assets.Scripts
 
 
         public int life;
+        public int maxLife;
 
         public PlayerClass playerClass;
         public Sprite playerImage;
@@ -38,7 +39,8 @@ namespace Assets.Scripts
 
             //Set the player properties.
             PopulatePlayer();
-            
+            UpdateLife();
+
             //Call the Start function of the MovingObject base class.
             base.Start();
         }
@@ -46,6 +48,7 @@ namespace Assets.Scripts
         public void PopulatePlayer()
         {
             life = GameManager.instance.lifeHolder;
+            maxLife = GameManager.instance.maxLife;
             playerClass = GameManager.instance.playerClass;
             playerImage = sprites[playerClass.SpriteIcon];
 
@@ -53,6 +56,7 @@ namespace Assets.Scripts
             var imageComponent = imageObj.GetComponent<SpriteRenderer>();
             imageComponent.sprite = playerImage;
 
+            
         }
 
         public void LoseLife(int loss)
@@ -68,10 +72,11 @@ namespace Assets.Scripts
 
         //CheckIfGameOver checks if the player is out of food points and if so, ends the game.
 
-        private void UpdateLife()
+        public void UpdateLife()
         {
-            CardgameManager.instance.playerLifeText.text = " Life: " + life;
-            
+            CardgameManager.instance.playerLifeText.text = "Life: " + maxLife + "/" + life;
+            GameManager.instance.lifeTextBoard.text = "Life: " + maxLife + "/" + life;
+
         }
 
 
