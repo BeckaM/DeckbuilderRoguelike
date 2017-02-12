@@ -10,6 +10,7 @@ namespace Assets.Scripts
     public class CardManager : MonoBehaviour
     {
                 
+        
         public Sprite[] sprites;
         public Card card;
 
@@ -19,7 +20,8 @@ namespace Assets.Scripts
         public enum Team { My, AI };
         public Team team = Team.My;
 
-        public Boolean Playable = false;
+        public bool isPlayable = false;
+        public bool isDragable = false;
 
         public void SetCardStatus(CardStatus status)
         {
@@ -53,9 +55,17 @@ namespace Assets.Scripts
              
         internal void ApplyEffect(CardEffect cardEffect)
         {
-            if(CardEffect.Effect.DealDamage.Equals(cardEffect.effect)) {
+            if(CardEffect.Effect.DealDamage.Equals(cardEffect.effect))
+            {
 
                 CardgameManager.instance.ApplyDamage(cardEffect.Value, team);
+
+            }
+
+            else if (CardEffect.Effect.Heal.Equals(cardEffect.effect))
+            {
+
+                CardgameManager.instance.ApplyHealing(cardEffect.Value, team);
 
             }
 

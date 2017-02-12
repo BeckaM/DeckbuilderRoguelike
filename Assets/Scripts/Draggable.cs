@@ -16,6 +16,10 @@ namespace Assets.Scripts
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+
+            var card = GetComponent<CardManager>();
+            if (!card.isDragable) return;
+            
             Debug.Log("OnBeginDrag");
 
             placeholder = new GameObject();
@@ -37,6 +41,10 @@ namespace Assets.Scripts
 
         public void OnDrag(PointerEventData eventData)
         {
+
+            var card = GetComponent<CardManager>();
+            if (!card.isDragable) return;
+
             //Debug.Log ("OnDrag");
 
             this.transform.position = eventData.position;
@@ -66,6 +74,9 @@ namespace Assets.Scripts
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            var card = GetComponent<CardManager>();
+            if (!card.isDragable) return;
+
             Debug.Log("OnEndDrag");
             this.transform.SetParent(parentToReturnTo);
             this.transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());

@@ -153,8 +153,12 @@ namespace Assets.Scripts
         }
 
 
-        public void ReturnFromCardgame()
+        public void ReturnFromCardgame(bool win)
         {
+            if( win == false)
+            {
+                GameOver();
+            }
             doingSetup = false;
         }
 

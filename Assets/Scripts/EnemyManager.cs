@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -7,11 +8,14 @@ namespace Assets.Scripts
     public class EnemyManager : MonoBehaviour
     {
 
-        
-
         public Enemy enemy;
+
         public int life;
         public int maxLife;
+
+        public int mana = 1;
+        public int maxMana = 1;
+
         public int MonsterLevel;
 
         public GameObject EnemyObject;
@@ -26,7 +30,7 @@ namespace Assets.Scripts
 
             enemy = enemytoget;
 
-            MonsterLevel = Random.Range(enemy.BaseEnemyLevel, Level+1);
+            MonsterLevel = UnityEngine.Random.Range(enemy.BaseEnemyLevel, Level+1);
 
             int HPperlevel = enemy.BaseEnemyHP / 10;
             int HPbonus = HPperlevel*(MonsterLevel-enemy.BaseEnemyLevel);
@@ -63,13 +67,21 @@ namespace Assets.Scripts
         }
 
         internal void UpdateLife()
-        {
-            CardgameManager.instance.monsterLifeText.text =  "Life: " + maxLife + "/" + life;
+        {   
+            if (life > maxLife)
+            {
+                life = maxLife;
+            }
+            CardgameManager.instance.monsterLifeText.text =  "Life:" + life + "/" + maxLife;
             
 
         }
-                    
-                  
-        
+
+        internal void GainLife(int gain)
+        {
+            life += gain;
+            CardgameManager.instance.monsterLifeText.text = "+" + gain;
+            Invoke("UpdateLife", 1f);
+        }
     }
 }

@@ -14,6 +14,9 @@ namespace Assets.Scripts
         public int life;
         public int maxLife;
 
+        public int mana =1 ;
+        public int maxMana = 1;
+
         public PlayerClass playerClass;
         public Sprite playerImage;
         public Sprite[] sprites;
@@ -70,12 +73,23 @@ namespace Assets.Scripts
 
         }
 
+        internal void GainLife(int gain)
+        {
+            life += gain;
+            CardgameManager.instance.playerLifeText.text = "+" + gain;
+            Invoke("UpdateLife", 1f);
+        }
+
         //CheckIfGameOver checks if the player is out of food points and if so, ends the game.
 
         public void UpdateLife()
         {
-            CardgameManager.instance.playerLifeText.text = "Life: " + maxLife + "/" + life;
-            GameManager.instance.lifeTextBoard.text = "Life: " + maxLife + "/" + life;
+            if (life > maxLife)
+            {
+                life = maxLife;
+            }
+            CardgameManager.instance.playerLifeText.text = "Life:" + life + "/" + maxLife;
+            GameManager.instance.lifeTextBoard.text = "Life:" + life + "/" + maxLife;
 
         }
 
@@ -158,8 +172,10 @@ namespace Assets.Scripts
             }
         }
 
-            //AttemptMove overrides the AttemptMove function in the base class MovingObject
-            protected override void AttemptMove(int xDir, int yDir)
+       
+
+        //AttemptMove overrides the AttemptMove function in the base class MovingObject
+        protected override void AttemptMove(int xDir, int yDir)
         {
            
         

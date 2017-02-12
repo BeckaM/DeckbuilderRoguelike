@@ -18,14 +18,12 @@ namespace Assets.Scripts
 
         public Image playerPortrait;
         public Text playerLifeText;
+        public Text playerManaText;
 
         public Image monsterPortrait;
         public Text monsterLifeText;
-
-        int maxMana = 1;
-        public int MyMana = 1;
-        public int AIMana = 1;
-
+        public Text monsterManaText;
+               
         public List<GameObject> MyDeckCards = new List<GameObject>();
         public List<GameObject> MyHandCards = new List<GameObject>();
         public List<GameObject> MyTableCards = new List<GameObject>();
@@ -68,6 +66,7 @@ namespace Assets.Scripts
             }
         }
 
+       
         private void PutCardsInLists()
         {
             foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
@@ -107,17 +106,39 @@ namespace Assets.Scripts
             {
                 player.LoseLife(value);
 
-            }
-            UpdateGame();
-
+            }           
 
         }
 
-        public void UpdateGame()
+        internal void ApplyHealing(int value, CardManager.Team team)
         {
-            //MyManaText.text = MyMana.ToString() + "/" + maxMana;
-            //AIManaText.text = AIMana.ToString() + "/" + maxMana;
+            if (team == CardManager.Team.My)
+            {
+                player.GainLife(value);
+            }
+            else
+            {
+                enemy.GainLife(value);
 
+            }
+            
+        }
+
+        public void UpdateGame()
+        {   
+            //Update Mana text
+            playerManaText.text = "Mana:" + player.mana + "/" +  player.maxMana;
+            monsterManaText.text = "Mana" + enemy.mana + "/" + enemy.maxMana;
+
+            //Check if player or monster has reached 0 life
+            CheckWinConditions();
+
+            // Set cards as playable and/or draggable.
+            SetPlayableDraggable();
+        }
+
+        private void CheckWinConditions()
+        {
             bool win;
 
             if (player.life <= 0)
@@ -130,32 +151,50 @@ namespace Assets.Scripts
                 win = true;
                 EndGame(win);
             }
+        }
 
-            foreach (GameObject Card in MyHandCards)
+        private void SetPlayableDraggable()
+        {
+            if (turn == Turn.MyTurn)
             {
-                CardManager c = Card.GetComponent<CardManager>();
-                if (c.card.Cost <= MyMana && turn == Turn.MyTurn)
+                foreach (GameObject Card in MyHandCards)
                 {
-                    c.Playable = true;
 
+                    CardManager c = Card.GetComponent<CardManager>();
+                    c.isDragable = true;
+                    if (c.card.Cost <= player.mana)
+                    {
+                        c.isPlayable = true;
+
+                    }
+                    else
+                    {
+                        c.isPlayable = false;
+                    }
                 }
             }
-            foreach (GameObject Card in AIHandCards)
+            else
             {
-                CardManager c = Card.GetComponent<CardManager>();
-                if (c.card.Cost <= AIMana && turn == Turn.AITurn)
+                foreach (GameObject Card in AIHandCards)
                 {
-                    c.Playable = true;
+                    CardManager c = Card.GetComponent<CardManager>();
+                    if (c.card.Cost <= enemy.mana)
+                    {
+                        c.isPlayable = true;
 
+                    }
+                    else
+                    {
+                        c.isPlayable = false;
+                    }
                 }
             }
-
         }
 
         private void EndGame(bool win)
         {
             this.gameObject.SetActive(false);
-            GameManager.instance.ReturnFromCardgame();
+            GameManager.instance.ReturnFromCardgame(win);
         }
 
 
@@ -174,6 +213,8 @@ namespace Assets.Scripts
                 turn = Turn.AITurn;
             }
 
+            player.mana = player.maxMana;
+            enemy.mana = enemy.maxMana;
             UpdateGame();
         }
 
@@ -212,8 +253,17 @@ namespace Assets.Scripts
         public void PlaceCard(CardManager card)
         {
 
+            if(card.team == CardManager.Team.My)
+            {
+                player.mana = player.mana - card.card.Cost;
+            }
+            else
+            {
+                enemy.mana = enemy.mana - card.card.Cost;
+            }
 
             card.SetCardStatus(CardManager.CardStatus.OnTable);
+
             //PlaySound(cardDrop);
 
             MyHandCards.Remove(card.gameObject);
@@ -230,7 +280,7 @@ namespace Assets.Scripts
 
             //   CheckTriggers(CardEffect.Trigger.OnPlayCard, card.team);
 
-
+            UpdateGame();
 
 
         }

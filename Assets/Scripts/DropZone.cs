@@ -39,7 +39,7 @@ namespace Assets.Scripts
 
         public void OnDrop(PointerEventData eventData)
         {
-            Debug.Log(eventData.pointerDrag.name + " was dropped on " + gameObject.name);
+            
             
             Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
             if (d != null)
@@ -48,10 +48,12 @@ namespace Assets.Scripts
 
                 CardManager card = eventData.pointerDrag.GetComponent<CardManager>();
                 
-                if (card.Playable == true)
+                if (card.isPlayable)
                 {
                     d.parentToReturnTo = this.transform;
                     CardgameManager.instance.PlaceCard(card);
+
+                    Debug.Log(eventData.pointerDrag.name + " was dropped on " + gameObject.name);
                 }
 
 
