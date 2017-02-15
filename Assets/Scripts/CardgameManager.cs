@@ -19,18 +19,24 @@ namespace Assets.Scripts
         public Image playerPortrait;
         public Text playerLifeText;
         public Text playerManaText;
+        public Text playerDeckCount;
+        public Text playerDiscardCount;
 
         public Image monsterPortrait;
         public Text monsterLifeText;
         public Text monsterManaText;
-               
+        public Text monsterDeckCount;
+        public Text monsterDiscardCount;
+
         public List<GameObject> MyDeckCards = new List<GameObject>();
         public List<GameObject> MyHandCards = new List<GameObject>();
         public List<GameObject> MyTableCards = new List<GameObject>();
+        public List<GameObject> MyDiscardCards = new List<GameObject>();
 
         public List<GameObject> AIDeckCards = new List<GameObject>();
         public List<GameObject> AIHandCards = new List<GameObject>();
         public List<GameObject> AITableCards = new List<GameObject>();
+        public List<GameObject> AIDiscardCards = new List<GameObject>();
 
         public EnemyManager enemy;
         public Player player;
@@ -77,6 +83,7 @@ namespace Assets.Scripts
                 if (c.team == CardManager.Team.My)
                 {
                     MyDeckCards.Add(CardObject);
+                    
                 }
 
 
@@ -85,6 +92,10 @@ namespace Assets.Scripts
                     AIDeckCards.Add(CardObject);
                 }
             }
+            playerDeckCount.text = MyDeckCards.Count.ToString();
+            monsterDeckCount.text = AIDeckCards.Count.ToString();
+            playerDiscardCount.text = MyDiscardCards.Count.ToString();
+            monsterDiscardCount.text = AIDiscardCards.Count.ToString();
         }
 
         private void SetOpponents()
@@ -234,6 +245,7 @@ namespace Assets.Scripts
 
                 MyDeckCards.Remove(tempCard);
                 MyHandCards.Add(tempCard);
+                playerDeckCount.text = MyDeckCards.Count.ToString();
             }
 
             if (team == CardManager.Team.AI && AIDeckCards.Count != 0 && AIHandCards.Count < 10)
@@ -247,12 +259,14 @@ namespace Assets.Scripts
 
                 AIDeckCards.Remove(tempCard);
                 AIHandCards.Add(tempCard);
+                monsterDeckCount.text = AIDeckCards.Count.ToString();
             }
         }
 
         public void PlaceCard(CardManager card)
         {
 
+            //Pay the mana cost.
             if(card.team == CardManager.Team.My)
             {
                 player.mana = player.mana - card.card.Cost;
@@ -260,15 +274,11 @@ namespace Assets.Scripts
             else
             {
                 enemy.mana = enemy.mana - card.card.Cost;
-            }
+            }           
 
-            card.SetCardStatus(CardManager.CardStatus.OnTable);
-
-            //PlaySound(cardDrop);
-
-            MyHandCards.Remove(card.gameObject);
-            MyTableCards.Add(card.gameObject);
-
+            //PlaySound(cardDrop);          
+            
+            //Apply the cards effects if they are instant.
             foreach (CardEffect effect in card.card.Effects)
             {
                 if (effect.trigger == CardEffect.Trigger.Instant)
@@ -277,9 +287,23 @@ namespace Assets.Scripts
                 }
             }
 
+            //Move the card to it's onwers table if it has a duration, otherwise discard it. 
+            MyHandCards.Remove(card.gameObject);
+            if (card.card.CardDuration > 0)
+            {
+                card.SetCardStatus(CardManager.CardStatus.OnTable);
+                MyTableCards.Add(card.gameObject);
+            }
+            else
+            {
+                card.SetCardStatus(CardManager.CardStatus.InDiscard);
+                MyDiscardCards.Add(card.gameObject);
+                playerDiscardCount.text = MyDiscardCards.Count.ToString();
+            }
 
+            //Check for cards in play that trigger on playing a card.
             //   CheckTriggers(CardEffect.Trigger.OnPlayCard, card.team);
-
+                        
             UpdateGame();
 
 
