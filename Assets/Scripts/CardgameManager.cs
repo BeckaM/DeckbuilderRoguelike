@@ -212,7 +212,9 @@ namespace Assets.Scripts
 
         private void EndGame(bool win)
         {
+            DeckManager.instance.Cleanup();
             this.gameObject.SetActive(false);
+
             GameManager.instance.ReturnFromCardgame(win);
         }
 
@@ -305,6 +307,8 @@ namespace Assets.Scripts
                 {
                     card.SetCardStatus(CardManager.CardStatus.OnTable);
                     MyTableCards.Add(card.gameObject);
+                    
+
                 }
                 else 
                 {
