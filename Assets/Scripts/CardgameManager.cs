@@ -83,7 +83,7 @@ namespace Assets.Scripts
                 if (c.team == CardManager.Team.My)
                 {
                     MyDeckCards.Add(CardObject);
-                    
+
                 }
 
 
@@ -92,6 +92,11 @@ namespace Assets.Scripts
                     AIDeckCards.Add(CardObject);
                 }
             }
+            
+        }
+
+        private void UpdateDeckDiscardText()
+        {
             playerDeckCount.text = MyDeckCards.Count.ToString();
             monsterDeckCount.text = AIDeckCards.Count.ToString();
             playerDiscardCount.text = MyDiscardCards.Count.ToString();
@@ -137,15 +142,18 @@ namespace Assets.Scripts
 
         public void UpdateGame()
         {   
-            //Update Mana text
+            //Update Mana text in UI.
             playerManaText.text = "Mana:" + player.mana + "/" +  player.maxMana;
             monsterManaText.text = "Mana" + enemy.mana + "/" + enemy.maxMana;
-
-            //Check if player or monster has reached 0 life
-            CheckWinConditions();
+           
+            //Update Deck and Discard text in UI.            
+            UpdateDeckDiscardText();
 
             // Set cards as playable and/or draggable.
             SetPlayableDraggable();
+
+            //Check if player or monster has reached 0 life
+            CheckWinConditions();
         }
 
         private void CheckWinConditions()
@@ -245,7 +253,7 @@ namespace Assets.Scripts
 
                 MyDeckCards.Remove(tempCard);
                 MyHandCards.Add(tempCard);
-                playerDeckCount.text = MyDeckCards.Count.ToString();
+                
             }
 
             if (team == CardManager.Team.AI && AIDeckCards.Count != 0 && AIHandCards.Count < 10)
@@ -259,8 +267,9 @@ namespace Assets.Scripts
 
                 AIDeckCards.Remove(tempCard);
                 AIHandCards.Add(tempCard);
-                monsterDeckCount.text = AIDeckCards.Count.ToString();
+                
             }
+            UpdateGame();
         }
 
         public void PlaceCard(CardManager card)
@@ -287,18 +296,37 @@ namespace Assets.Scripts
                 }
             }
 
-            //Move the card to it's onwers table if it has a duration, otherwise discard it. 
+            //Move the card to it's onwers table section if it has a duration, otherwise discard it. 
             MyHandCards.Remove(card.gameObject);
-            if (card.card.CardDuration > 0)
+            if (card.team == CardManager.Team.My)               
             {
-                card.SetCardStatus(CardManager.CardStatus.OnTable);
-                MyTableCards.Add(card.gameObject);
+
+                if (card.card.CardDuration > 0)
+                {
+                    card.SetCardStatus(CardManager.CardStatus.OnTable);
+                    MyTableCards.Add(card.gameObject);
+                }
+                else 
+                {
+                    card.SetCardStatus(CardManager.CardStatus.InDiscard);
+                    MyDiscardCards.Add(card.gameObject);
+                    playerDiscardCount.text = MyDiscardCards.Count.ToString();
+                }
             }
             else
             {
-                card.SetCardStatus(CardManager.CardStatus.InDiscard);
-                MyDiscardCards.Add(card.gameObject);
-                playerDiscardCount.text = MyDiscardCards.Count.ToString();
+
+                if (card.card.CardDuration > 0)
+                {
+                    card.SetCardStatus(CardManager.CardStatus.OnTable);
+                    AITableCards.Add(card.gameObject);
+                }
+                else
+                {
+                    card.SetCardStatus(CardManager.CardStatus.InDiscard);
+                    AIDiscardCards.Add(card.gameObject);
+                    monsterDiscardCount.text = AIDiscardCards.Count.ToString();
+                }
             }
 
             //Check for cards in play that trigger on playing a card.
