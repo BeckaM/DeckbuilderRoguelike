@@ -19,9 +19,7 @@ namespace Assets.Scripts
         public int CardDuration;
 
         public List<CardEffect> Effects;
-
-        public void test() { }
-
+                
     }
 
     [Serializable]

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Collections;
 
 namespace Assets.Scripts
 {
@@ -22,6 +23,23 @@ namespace Assets.Scripts
 
         public bool isPlayable = false;
         public bool isDragable = false;
+
+        public float moveTime = 0.001f;
+        private float inverseMoveTime;
+               
+        private Rigidbody2D rb2D;
+
+        protected void Start()
+        {
+            
+            //Get a component reference to this object's Rigidbody2D
+            rb2D = GetComponent<Rigidbody2D>();
+
+            //By storing the reciprocal of the move time we can use it by multiplying instead of dividing, this is more efficient.
+            inverseMoveTime = 1f / moveTime;
+            
+        }
+
 
         public void SetCardStatus(CardStatus status)
         {
@@ -83,21 +101,72 @@ namespace Assets.Scripts
             //trigger CardGameManager.DrawCard(Value)
 
 
+            StartCoroutine(EffectAnimation());
+
 
             
         }
 
 
 
-        // Use this for initialization
-        void Start()
-        {
+        private IEnumerator EffectAnimation()
+                    {
+            Color whateverColor =  Color.black; 
+            for (var n = 0; n < 3; n++)
+            {
+                GetComponent<Image>().color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                GetComponent<Image>().color = whateverColor;
+                yield return new WaitForSeconds(.1f);
+            }
+            GetComponent<Image>().color = Color.white;
+
+          
+
         }
 
-        // Update is called once per frame
-        void Update()
-        {
 
+
+        internal void Move(GameObject MoveTo)
+        {
+            //Store start position to move from, based on objects current transform position.
+            Vector2 start = transform.position;
+
+            // Calculate end position based on the direction parameters passed in when calling Move.
+            Vector2 end = MoveTo.transform.position;           
+                                       
+            //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
+             StartCoroutine(SmoothMovement(end));
+                       
+                
+            }
+
+
+        protected IEnumerator SmoothMovement(Vector3 end)
+        {
+            //Calculate the remaining distance to move based on the square magnitude of the difference between current position and end parameter. 
+            //Square magnitude is used instead of magnitude because it's computationally cheaper.
+            float sqrRemainingDistance = (transform.position - end).sqrMagnitude;
+
+            //While that distance is greater than a very small amount (Epsilon, almost zero):
+            while (sqrRemainingDistance > float.Epsilon)
+            {
+                var scaleRate = -0.02f;
+
+                transform.localScale += Vector3.one * scaleRate;
+
+                //Find a new position proportionally closer to the end, based on the moveTime
+                Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime * Time.deltaTime);
+
+                //Call MovePosition on attached Rigidbody2D and move it to the calculated position.
+                rb2D.MovePosition(newPostion);
+
+                //Recalculate the remaining distance after moving.
+                sqrRemainingDistance = (transform.position - end).sqrMagnitude;
+
+                //Return and loop until sqrRemainingDistance is close enough to zero to end the function
+                yield return null;
+            }
         }
     }
 }

@@ -149,6 +149,7 @@ namespace Assets.Scripts
             
             //Enable the card game Canvas, which also starts the CardgameManager script.          
             CardGameCanvas.SetActive(true);
+            CardgameManager.instance.Setup();
                       
         }
 

@@ -39,41 +39,27 @@ namespace Assets.Scripts
 
         public void OnDrop(PointerEventData eventData)
         {
-            
-            
+
+
             Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
             if (d != null)
             {
-                
+
 
                 CardManager card = eventData.pointerDrag.GetComponent<CardManager>();
-                
-                if (card.isPlayable)
+
+                if (card.isPlayable && card.isDragable)
                 {
                     d.parentToReturnTo = this.transform;
                     CardgameManager.instance.PlaceCard(card);
 
-                    Debug.Log(eventData.pointerDrag.name + " was dropped on " + gameObject.name);
+                    //Debug.Log(eventData.pointerDrag.name + " was dropped on " + gameObject.name);
                 }
-
-
-
 
             }
 
 
-
-
         }
-        //void OnTriggerEnter(Collider Obj)
-        //{
-        //    CardManager card = Obj.GetComponent<CardManager>();
-        //    if (card)
-        //    {
-        //        card.PlaceCard();
-        //    }
-
-        //}
 
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine random number generator.
 using UnityEngine.UI;
+using System.Collections;
 
 namespace Assets.Scripts
 {
@@ -21,6 +22,15 @@ namespace Assets.Scripts
         public Text playerManaText;
         public Text playerDeckCount;
         public Text playerDiscardCount;
+
+        public GameObject playerDiscard;
+        public GameObject monsterDiscard;
+
+        public GameObject playerTable;
+        public GameObject monsterTable;
+
+        public GameObject playerHand;
+        public GameObject monsterHand;
 
         public Image monsterPortrait;
         public Text monsterLifeText;
@@ -49,7 +59,7 @@ namespace Assets.Scripts
 
 
         // Use this for initialization
-        void Start()
+        public void Setup()
         {
             //Sets opponent profile images and texts.
             SetOpponents();
@@ -60,6 +70,7 @@ namespace Assets.Scripts
             //Draw our starting hand
             DrawStartingHands();
 
+            
             UpdateGame();
         }
 
@@ -105,11 +116,17 @@ namespace Assets.Scripts
 
         private void SetOpponents()
         {
+
+            player.mana = player.maxMana;
+            enemy.mana = enemy.maxMana;
+
             enemy.UpdateLife();
             monsterPortrait.sprite = enemy.monsterImage;
 
             player.UpdateLife();
             playerPortrait.sprite = player.playerImage;
+
+
         }
 
         internal void ApplyDamage(int value, CardManager.Team team)
@@ -212,6 +229,17 @@ namespace Assets.Scripts
 
         private void EndGame(bool win)
         {
+
+            MyDeckCards.Clear();
+            MyHandCards.Clear();
+            MyDiscardCards.Clear();
+            MyTableCards.Clear();
+
+            AIDeckCards.Clear();
+            AIHandCards.Clear();
+            AIDiscardCards.Clear();
+            AITableCards.Clear();
+
             DeckManager.instance.Cleanup();
             this.gameObject.SetActive(false);
 
@@ -249,8 +277,8 @@ namespace Assets.Scripts
                 GameObject tempCard = MyDeckCards[random];
 
 
-                var hand = GameObject.Find("Hand").transform;
-                tempCard.transform.SetParent(hand);
+                
+                tempCard.transform.SetParent(playerHand.transform);
                 tempCard.GetComponent<CardManager>().SetCardStatus(CardManager.CardStatus.InHand);
 
                 MyDeckCards.Remove(tempCard);
@@ -262,9 +290,8 @@ namespace Assets.Scripts
             {
                 int random = Random.Range(0, AIDeckCards.Count);
                 GameObject tempCard = AIDeckCards[random];
-
-                var AIhand = GameObject.Find("AIHand").transform;
-                tempCard.transform.SetParent(AIhand);
+                               
+                tempCard.transform.SetParent(monsterHand.transform);
                 tempCard.GetComponent<CardManager>().SetCardStatus(CardManager.CardStatus.InHand);
 
                 AIDeckCards.Remove(tempCard);
@@ -278,43 +305,61 @@ namespace Assets.Scripts
         {
 
             //Pay the mana cost.
-            if(card.team == CardManager.Team.My)
+            if (card.team == CardManager.Team.My)
             {
                 player.mana = player.mana - card.card.Cost;
             }
             else
             {
                 enemy.mana = enemy.mana - card.card.Cost;
-            }           
-
-            //PlaySound(cardDrop);          
-            
-            //Apply the cards effects if they are instant.
-            foreach (CardEffect effect in card.card.Effects)
-            {
-                if (effect.trigger == CardEffect.Trigger.Instant)
-                {
-                    card.ApplyEffect(effect);
-                }
             }
 
+            UpdateGame();
+
+            //PlaySound(cardDrop);          
+
+            StartCoroutine(ResolveCard(card));       
+                       
+        }
+
+        private IEnumerator ResolveCard(CardManager card)
+        {
+            Debug.Log("Playing a new card");
+            yield return StartCoroutine(ApplyEffects(card));
+                       
+            yield return StartCoroutine(CheckTriggers(CardEffect.Trigger.OnPlayCard, card.team));
+                        
+            yield return StartCoroutine(MoveCard(card));
+            Debug.Log("Done playing the card");
+
+        }
+
+        private IEnumerator MoveCard(CardManager card)
+        {
+            Debug.Log("Start moving card");
             //Move the card to it's onwers table section if it has a duration, otherwise discard it. 
             MyHandCards.Remove(card.gameObject);
-            if (card.team == CardManager.Team.My)               
+            if (card.team == CardManager.Team.My)
             {
 
-                if (card.card.CardDuration > 0)
+                if (card.card.CardDuration != 0)
                 {
                     card.SetCardStatus(CardManager.CardStatus.OnTable);
                     MyTableCards.Add(card.gameObject);
+                    card.Move(playerTable);
+                    yield return new WaitForSeconds(1.5f);
+                    card.transform.SetParent(playerTable.transform);
                     
-
                 }
-                else 
+                else
                 {
                     card.SetCardStatus(CardManager.CardStatus.InDiscard);
                     MyDiscardCards.Add(card.gameObject);
-                    playerDiscardCount.text = MyDiscardCards.Count.ToString();
+                    card.Move(playerDiscard);
+                    yield return new WaitForSeconds(1.5f);
+                    playerDiscardCount.text = MyDiscardCards.Count.ToString();                    
+                    card.transform.SetParent(DeckManager.instance.playerDiscard.transform);
+                    
                 }
             }
             else
@@ -332,18 +377,35 @@ namespace Assets.Scripts
                     monsterDiscardCount.text = AIDiscardCards.Count.ToString();
                 }
             }
-
-            //Check for cards in play that trigger on playing a card.
-            //   CheckTriggers(CardEffect.Trigger.OnPlayCard, card.team);
-                        
+            card.transform.localScale = Vector3.one;
+            Debug.Log("Stop moving card");
             UpdateGame();
-
-
+            
         }
 
-        private void CheckTriggers(CardEffect.Trigger triggertype, CardManager.Team team)
+        private IEnumerator ApplyEffects(CardManager card)
         {
-            throw new NotImplementedException();
+            Debug.Log("Start Applying Card effects");
+            //Apply the cards effects if they are instant.
+            foreach (CardEffect effect in card.card.Effects)
+            {
+                if (effect.trigger == CardEffect.Trigger.Instant)
+                {
+                    card.ApplyEffect(effect);
+                    
+                    yield return new WaitForSeconds(1f);
+                }
+            }
+
+            Debug.Log("Stop applying Card effects");
+        }
+
+        private IEnumerator CheckTriggers(CardEffect.Trigger triggertype, CardManager.Team team)
+        {
+            Debug.Log("Start checking for triggers");
+            yield return new WaitForSeconds(3F);
+            Debug.Log("Stop checking for triggers");
+
         }
     }
 }
