@@ -4,60 +4,85 @@ using System.Collections.Generic;
 using Assets.Scripts;
 using System.IO;
 using Assets.Scripts.DAL;
+using UnityEngine.SceneManagement;
+using System;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
 
     public class DeckManager : MonoBehaviour
     {
-        public static DeckManager instance = null;              //Static instance of DeckManager which allows it to be accessed by any other script.
+        public static DeckManager player = null;
+        public static DeckManager monster = null;
         CardManager cardManager;
         public GameObject cardObject;
-        public GameObject playerDeckHolder;
-        public GameObject enemyDeckHolder;
-        public GameObject playerDiscard;
-        public GameObject enemyDiscard;
-        
+        public static CardManager.Team team;
+        public List<GameObject> cardsInDeck = new List<GameObject>();
+        //public GameObject playerDeckHolder;
+        //public GameObject enemyDeckHolder;
+        //public GameObject playerDiscard;
+        //public GameObject enemyDiscard;
+
         // Use this for initialization
         void Awake()
         {
-            if (instance == null)
+            name = this.gameObject.name;
+            if (name == "PlayerDeck(Clone)") {
 
                 //if not, set instance to this
-                instance = this;
-
-            //If instance already exists and it's not this:
-            else if (instance != this)
-
-                //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a DeckManager.
-                Destroy(gameObject);
-
-            //Sets this to not be destroyed when reloading scene
-            DontDestroyOnLoad(gameObject);
-                      
-        }
-
-
-        public void Cleanup()
-        {
-            foreach(GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
-            { 
-                CardManager card = CardObject.GetComponent<CardManager>();
-            
-                if (card.team == CardManager.Team.My)
-                {
-                    card.transform.SetParent(playerDeckHolder.transform);
-                    card.SetCardStatus(CardManager.CardStatus.InDeck);
-
-                }
-
-
-                else
-                {
-                    Destroy(CardObject);
-                }
+                player = this;
+                team = CardManager.Team.My;
+                DontDestroyOnLoad(gameObject);
             }
+            //If instance already exists and it's not this:
+            else
+            {
+                monster = this;
+                team = CardManager.Team.AI;
+            }
+    
         }
+
+        void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnLevelFinishedLoading;
+                       
+        }
+
+        private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+        {
+           
+        }
+
+        void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+           
+
+        }
+
+
+        ////public void Cleanup()
+        ////{
+        ////    foreach(GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
+        ////    { 
+        ////        CardManager card = CardObject.GetComponent<CardManager>();
+
+        ////        if (card.team == CardManager.Team.My)
+        ////        {
+        ////            card.transform.SetParent(playerDeckHolder.transform);
+        ////            card.SetCardStatus(CardManager.CardStatus.InDeck);
+
+        ////        }
+
+
+        ////        else
+        ////        {
+        ////            Destroy(CardObject);
+        ////        }
+        ////    }
+        ////}
 
 
 
@@ -68,11 +93,11 @@ namespace Assets.Scripts
             
         }
 
-        public void AddCardtoDeck(List<string> cardsToCreate, string team = "My")
+        public void AddCardtoDeck(List<string> cardsToCreate)
         {
             var cardobjects = ObjectDAL.GetCards(cardsToCreate);
             var deck = this.transform;
-            
+
 
             foreach (Card card in cardobjects)
             {
@@ -80,24 +105,47 @@ namespace Assets.Scripts
                 GameObject instance = Instantiate(cardObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
                 cardManager = instance.GetComponent<CardManager>();
 
-                if (team == "My")
-                {
-                    cardManager.team = CardManager.Team.My;
-                    instance.transform.SetParent(playerDeckHolder.transform);
-                }
-                else
-                {
-                    cardManager.team = CardManager.Team.AI;
-                    instance.transform.SetParent(enemyDeckHolder.transform);
-                }
 
-
-
+                cardManager.team = team;
+                cardsInDeck.Add(cardManager.gameObject);
+                instance.transform.SetParent(this.transform);
 
                 cardManager.PopulateCard(card);
             }
         }
 
+        public void Draw()
+        {
+            if (cardsInDeck.Count != 0)
+            {
+                int random = Random.Range(0, cardsInDeck.Count);
+                GameObject tempCard = cardsInDeck[random];
+                CardManager manager = tempCard.GetComponent<CardManager>();
+                manager.SetCardStatus(CardManager.CardStatus.InHand);
+
+
+                // tempCard.transform.SetParent(playerHand.transform);
+
+                EventManager.Instance.QueueEvent(new MoveCardEvent(tempCard.gameObject, CardgameManager.instance.playerDeckCount.gameObject, CardgameManager.instance.playerHand.gameObject));
+                EventManager.Instance.TriggerEvent(new DrawCardEvent(tempCard.GetComponent<CardManager>().team));
+                //if (team == CardManager.Team.My)
+                //{
+
+
+                //    //EventManager.QueueEvent("PlayerDrawResolve");
+                //    EventManager.TriggerEvent("PlayerDrawTrigger");
+                //}
+                //else
+                //{
+
+                //    EventManager.QueueEvent("MonsterDrawResolve");
+                //    EventManager.TriggerEvent("MonsterDrawTrigger");
+                //}
+            }
+        }
+
+       
     }
+
 
 }

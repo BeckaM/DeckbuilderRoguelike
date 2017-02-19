@@ -26,7 +26,10 @@ namespace Assets.Scripts
 
         public float moveTime = 0.001f;
         private float inverseMoveTime;
-               
+
+        private GameObject startPoint;
+        private GameObject endPoint;
+
         private Rigidbody2D rb2D;
 
         protected void Start()
@@ -43,7 +46,20 @@ namespace Assets.Scripts
 
         public void SetCardStatus(CardStatus status)
         {
+            var oldstatus = cardStatus;
             cardStatus = status;
+
+            if (oldstatus == CardStatus.InDeck)
+            {
+                startPoint = CardgameManager.instance.playerDeckCount.gameObject;
+                endPoint = CardgameManager.instance.playerHand;
+
+
+
+                EventManager.Instance.AddListener<MoveCardEvent>(Move);
+
+            }                       
+            
         }
 
 
@@ -127,19 +143,26 @@ namespace Assets.Scripts
 
 
 
-        internal void Move(GameObject MoveTo)
+        internal void Move(MoveCardEvent move)
         {
-            //Store start position to move from, based on objects current transform position.
-            Vector2 start = transform.position;
+            if (move.movingCard == this.gameObject)
+            {
+                transform.SetParent(startPoint.transform);
+                //Store start position to move from, based on objects current transform position.
+                Vector2 start = move.startPoint.transform.position;
 
-            // Calculate end position based on the direction parameters passed in when calling Move.
-            Vector2 end = MoveTo.transform.position;           
-                                       
-            //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-             StartCoroutine(SmoothMovement(end));
-                       
-                
+                this.transform.position = start;
+
+                // Calculate end position based on the direction parameters passed in when calling Move.
+                Vector2 end = move.endPoint.transform.position;
+
+                //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
+                StartCoroutine(SmoothMovement(end));
+
+
+                EventManager.Instance.RemoveListener<MoveCardEvent>(Move);
             }
+        }
 
 
         protected IEnumerator SmoothMovement(Vector3 end)
@@ -153,7 +176,7 @@ namespace Assets.Scripts
             {
                 var scaleRate = -0.02f;
 
-                transform.localScale += Vector3.one * scaleRate;
+               // transform.localScale += Vector3.one * scaleRate;
 
                 //Find a new position proportionally closer to the end, based on the moveTime
                 Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime * Time.deltaTime);
@@ -167,6 +190,8 @@ namespace Assets.Scripts
                 //Return and loop until sqrRemainingDistance is close enough to zero to end the function
                 yield return null;
             }
+            transform.SetParent(endPoint.transform);
+            EventManager.Instance.processingQueue = false;
         }
     }
 }

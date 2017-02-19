@@ -27,6 +27,7 @@ namespace Assets.Scripts
         public bool playersTurn = true;     //Boolean to check if it's players turn, hidden in inspector but public.
         
         private Text levelText;                                 //Text to display current level number.
+        public GameObject monsterDeck;
         private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.                 
         private GameObject CardGameCanvas;
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
@@ -109,7 +110,7 @@ namespace Assets.Scripts
             Invoke("HideLevelImage", levelStartDelay);
 
             //Initialize the starting deck and create the cards.
-            DeckManager.instance.StartingDeck(playerClass.Startingdeck);
+            DeckManager.player.StartingDeck(playerClass.Startingdeck);
 
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             boardScript.SetupScene(level);
@@ -135,6 +136,7 @@ namespace Assets.Scripts
         {
             //Create the monster deck and instantiate the cards.
             var enemyManager = monster.gameObject.GetComponent<EnemyManager>();
+            Instantiate(monsterDeck);
             enemyManager.InitMonsterDeck();
 
             //Send in the Player and Monster to the card game.

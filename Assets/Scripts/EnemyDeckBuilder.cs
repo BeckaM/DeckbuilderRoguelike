@@ -25,9 +25,8 @@ namespace Assets.Scripts
                 }
             }
 
-            string team = "AI";
-            
-            DeckManager.instance.AddCardtoDeck(FinalList, team);
+
+            DeckManager.monster.AddCardtoDeck(FinalList);
 
         }
     }
