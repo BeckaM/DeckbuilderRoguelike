@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     [Serializable]
-    public class Card 
+    public class Card
     {
         public string CardName;
         public string CardText;
@@ -19,8 +19,8 @@ namespace Assets.Scripts
         public int CardDuration;
 
         public List<CardEffect> Effects;
-
-     }
+                
+    }
 
     [Serializable]
     public class CardWrapper
