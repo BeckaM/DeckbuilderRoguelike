@@ -122,9 +122,9 @@ namespace Assets.Scripts
                 GameObject tempCard = cardsInDeck[random];
                 CardManager manager = tempCard.GetComponent<CardManager>();
                 manager.SetCardStatus(CardManager.CardStatus.InHand);
+                cardsInDeck.Remove(tempCard);
 
 
-                // tempCard.transform.SetParent(playerHand.transform);
 
                 EventManager.Instance.QueueEvent(new MoveCardEvent(tempCard.gameObject, CardgameManager.instance.playerDeckCount.gameObject, CardgameManager.instance.playerHand.gameObject));
                 EventManager.Instance.TriggerEvent(new DrawCardEvent(tempCard.GetComponent<CardManager>().team));

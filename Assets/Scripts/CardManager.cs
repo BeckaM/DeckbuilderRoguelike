@@ -160,7 +160,7 @@ namespace Assets.Scripts
                 StartCoroutine(SmoothMovement(end));
 
 
-                EventManager.Instance.RemoveListener<MoveCardEvent>(Move);
+                
             }
         }
 
@@ -191,7 +191,9 @@ namespace Assets.Scripts
                 yield return null;
             }
             transform.SetParent(endPoint.transform);
+            EventManager.Instance.RemoveListener<MoveCardEvent>(Move);
             EventManager.Instance.processingQueue = false;
+            
         }
     }
 }
