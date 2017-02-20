@@ -126,8 +126,8 @@ namespace Assets.Scripts
 
 
 
-                EventManager.Instance.QueueEvent(new MoveCardEvent(tempCard.gameObject, CardgameManager.instance.playerDeckCount.gameObject, CardgameManager.instance.playerHand.gameObject));
-                EventManager.Instance.TriggerEvent(new DrawCardEvent(tempCard.GetComponent<CardManager>().team));
+                EventManager.Instance.QueueSequentialEvent(new MoveCardEvent(tempCard.gameObject, CardgameManager.instance.playerDeckCount.gameObject, CardgameManager.instance.playerHand.gameObject));
+                EventManager.Instance.QueueFastEvent(new DrawCardEvent(tempCard.GetComponent<CardManager>().team));
                 //if (team == CardManager.Team.My)
                 //{
 

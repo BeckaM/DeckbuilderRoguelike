@@ -10,7 +10,8 @@ namespace Assets.Scripts
         public bool LimitQueueProcesing = false;
         public float QueueProcessTime = 0.0f;
         private static EventManager s_Instance = null;
-        private Queue m_eventQueue = new Queue();
+        private Queue fast_eventQueue = new Queue();
+        private Queue seq_eventQueue = new Queue();
 
         public delegate void EventDelegate<T>(T e) where T : GameEvent;
         private delegate void EventDelegate(GameEvent e);
@@ -109,7 +110,7 @@ namespace Assets.Scripts
             return delegateLookup.ContainsKey(del);
         }
 
-        public void TriggerEvent(GameEvent e)
+        private void TriggerEvent(GameEvent e)
         {
             
             EventDelegate del;
@@ -140,8 +141,8 @@ namespace Assets.Scripts
             }
         }
 
-        //Inserts the event into the current queue.
-        public bool QueueEvent(GameEvent evt)
+        //Inserts the event into the fast queue. Tries to trigger same frame. Should be used for logic triggers. 
+        public bool QueueFastEvent(GameEvent evt)
         {
             if (!delegates.ContainsKey(evt.GetType()))
             {
@@ -149,59 +150,55 @@ namespace Assets.Scripts
                 return false;
             }
 
-            m_eventQueue.Enqueue(evt);
+            fast_eventQueue.Enqueue(evt);
             return true;
         }
 
-        public void LazyTriggerEvent(GameEvent e)
+        //Inserts the event into the sequential queue. Triggers event in order and waits for execution. Should be used for GUI events. 
+        public bool QueueSequentialEvent(GameEvent evt)
         {
-            processingQueue = true;
-            EventDelegate del;
-            if (delegates.TryGetValue(e.GetType(), out del))
+            if (!delegates.ContainsKey(evt.GetType()))
             {
-                del.Invoke(e);
-                
-
-                // remove listeners which should only be called once
-                foreach (EventDelegate k in delegates[e.GetType()].GetInvocationList())
-                {
-                    if (onceLookups.ContainsKey(k))
-                    {
-                        delegates[e.GetType()] -= k;
-
-                        if (delegates[e.GetType()] == null)
-                        {
-                            delegates.Remove(e.GetType());
-                        }
-
-                        delegateLookup.Remove(onceLookups[k]);
-                        onceLookups.Remove(k);
-                    }
-                }
+                Debug.LogWarning("EventManager: QueueEvent failed due to no listeners for event: " + evt.GetType());
+                return false;
             }
-            else
-            {
-                Debug.LogWarning("Event: " + e.GetType() + " has no listeners");
-            }
+
+            seq_eventQueue.Enqueue(evt);
+            return true;
         }
-
-
-
+        
+       
 
         //Every update cycle the queue is processed, if the queue processing is limited,
         //a maximum processing time per update can be set after which the events will have
         //to be processed next update loop.
         void Update()
         {
-            
-            if (m_eventQueue.Count > 0 && processingQueue == false)
+            float timer = 0.0f;
+            while (fast_eventQueue.Count > 0)
             {
-              
+                if (LimitQueueProcesing)
+                {
+                    if (timer > QueueProcessTime)
+                        return;
+                }
 
-                GameEvent evt = m_eventQueue.Dequeue() as GameEvent;
-                LazyTriggerEvent(evt);
+                GameEvent evt = fast_eventQueue.Dequeue() as GameEvent;
+                TriggerEvent(evt);
+
+                if (LimitQueueProcesing)
+                    timer += Time.deltaTime;
+            }
+
+
+
+            if (seq_eventQueue.Count > 0 && processingQueue == false)
+            {
                 processingQueue = true;
 
+                GameEvent evt = seq_eventQueue.Dequeue() as GameEvent;
+                TriggerEvent(evt);
+                processingQueue = true;
                
             }
         }
@@ -209,7 +206,8 @@ namespace Assets.Scripts
         public void OnApplicationQuit()
         {
             RemoveAll();
-            m_eventQueue.Clear();
+            fast_eventQueue.Clear();
+            seq_eventQueue.Clear();
             s_Instance = null;
         }
     }
