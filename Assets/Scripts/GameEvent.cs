@@ -12,14 +12,11 @@ namespace Assets.Scripts {
     public class MoveCardEvent : GameEvent
     {
         public GameObject movingCard { get; private set; }
-        public GameObject startPoint { get; private set; }
-        public GameObject endPoint { get; private set; }
-
-        public MoveCardEvent(GameObject movingCard, GameObject startPoint, GameObject endPoint)
+       
+        public MoveCardEvent(GameObject movingCard)
         {
             this.movingCard = movingCard;
-            this.startPoint = startPoint;
-            this.endPoint = endPoint;
+            
         }
     }
 

@@ -198,7 +198,7 @@ namespace Assets.Scripts
 
                 GameEvent evt = seq_eventQueue.Dequeue() as GameEvent;
                 TriggerEvent(evt);
-                processingQueue = true;
+                
                
             }
         }

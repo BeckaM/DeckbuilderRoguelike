@@ -285,40 +285,7 @@ namespace Assets.Scripts
             enemy.mana = enemy.maxMana;
             UpdateGame();
         }
-
-        //Draw card function, Team indicates who draws.
-        public void DrawCardFromDeck(CardManager.Team team)
-        {
-
-            if (team == CardManager.Team.My && MyDeckCards.Count != 0 && MyHandCards.Count < 10)
-            {
-                int random = Random.Range(0, MyDeckCards.Count);
-                GameObject tempCard = MyDeckCards[random];
-
-
-                
-                tempCard.transform.SetParent(playerHand.transform);
-                tempCard.GetComponent<CardManager>().SetCardStatus(CardManager.CardStatus.InHand);
-
-                MyDeckCards.Remove(tempCard);
-                MyHandCards.Add(tempCard);
-                
-            }
-
-            if (team == CardManager.Team.AI && AIDeckCards.Count != 0 && AIHandCards.Count < 10)
-            {
-                int random = Random.Range(0, AIDeckCards.Count);
-                GameObject tempCard = AIDeckCards[random];
-                               
-                tempCard.transform.SetParent(monsterHand.transform);
-                tempCard.GetComponent<CardManager>().SetCardStatus(CardManager.CardStatus.InHand);
-
-                AIDeckCards.Remove(tempCard);
-                AIHandCards.Add(tempCard);
-                
-            }
-            UpdateGame();
-        }
+              
 
         public void PlaceCard(CardManager card)
         {

@@ -118,29 +118,22 @@ namespace Assets.Scripts
         {
             if (cardsInDeck.Count != 0)
             {
+
+                //Draw card logic.
                 int random = Random.Range(0, cardsInDeck.Count);
                 GameObject tempCard = cardsInDeck[random];
+
                 CardManager manager = tempCard.GetComponent<CardManager>();
-                manager.SetCardStatus(CardManager.CardStatus.InHand);
+                manager.SetCardPosition(CardManager.CardStatus.InHand);
+
                 cardsInDeck.Remove(tempCard);
 
+                //Queue up a move card animation.
+                EventManager.Instance.QueueSequentialEvent(new MoveCardEvent(tempCard.gameObject));
 
-
-                EventManager.Instance.QueueSequentialEvent(new MoveCardEvent(tempCard.gameObject, CardgameManager.instance.playerDeckCount.gameObject, CardgameManager.instance.playerHand.gameObject));
+                //Check for objects that trigger on draw card.
                 EventManager.Instance.QueueFastEvent(new DrawCardEvent(tempCard.GetComponent<CardManager>().team));
-                //if (team == CardManager.Team.My)
-                //{
-
-
-                //    //EventManager.QueueEvent("PlayerDrawResolve");
-                //    EventManager.TriggerEvent("PlayerDrawTrigger");
-                //}
-                //else
-                //{
-
-                //    EventManager.QueueEvent("MonsterDrawResolve");
-                //    EventManager.TriggerEvent("MonsterDrawTrigger");
-                //}
+               
             }
         }
 

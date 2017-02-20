@@ -10,8 +10,8 @@ namespace Assets.Scripts
 
     public class CardManager : MonoBehaviour
     {
-                
-        
+
+
         public Sprite[] sprites;
         public Card card;
 
@@ -34,17 +34,17 @@ namespace Assets.Scripts
 
         protected void Start()
         {
-            
+
             //Get a component reference to this object's Rigidbody2D
             rb2D = GetComponent<Rigidbody2D>();
 
             //By storing the reciprocal of the move time we can use it by multiplying instead of dividing, this is more efficient.
             inverseMoveTime = 1f / moveTime;
-            
+
         }
 
 
-        public void SetCardStatus(CardStatus status)
+        public void SetCardPosition(CardStatus status)
         {
             var oldstatus = cardStatus;
             cardStatus = status;
@@ -54,12 +54,9 @@ namespace Assets.Scripts
                 startPoint = CardgameManager.instance.playerDeckCount.gameObject;
                 endPoint = CardgameManager.instance.playerHand;
 
+            }
+            EventManager.Instance.AddListener<MoveCardEvent>(Move);
 
-
-                EventManager.Instance.AddListener<MoveCardEvent>(Move);
-
-            }                       
-            
         }
 
 
@@ -86,10 +83,10 @@ namespace Assets.Scripts
             var DescComponent = cardDesc.GetComponent<Text>();
             DescComponent.text = card.CardText;
         }
-             
+
         internal void ApplyEffect(CardEffect cardEffect)
         {
-            if(CardEffect.Effect.DealDamage.Equals(cardEffect.effect))
+            if (CardEffect.Effect.DealDamage.Equals(cardEffect.effect))
             {
 
                 CardgameManager.instance.ApplyDamage(cardEffect.Value, team);
@@ -120,14 +117,14 @@ namespace Assets.Scripts
             StartCoroutine(EffectAnimation());
 
 
-            
+
         }
 
 
 
         private IEnumerator EffectAnimation()
-                    {
-            Color whateverColor =  Color.black; 
+        {
+            Color whateverColor = Color.black;
             for (var n = 0; n < 3; n++)
             {
                 GetComponent<Image>().color = Color.white;
@@ -137,7 +134,7 @@ namespace Assets.Scripts
             }
             GetComponent<Image>().color = Color.white;
 
-          
+
 
         }
 
@@ -147,20 +144,23 @@ namespace Assets.Scripts
         {
             if (move.movingCard == this.gameObject)
             {
+                ////Store start position to move from, based on objects current transform position.
                 transform.SetParent(startPoint.transform);
-                //Store start position to move from, based on objects current transform position.
-                Vector2 start = move.startPoint.transform.position;
 
-                this.transform.position = start;
+                Vector3 start = startPoint.transform.position;
+
+
 
                 // Calculate end position based on the direction parameters passed in when calling Move.
-                Vector2 end = move.endPoint.transform.position;
+               // transform.SetParent(endPoint.transform);
+                Vector3 end = endPoint.transform.position;
 
+                // transform.SetParent(startPoint.transform);
+                this.transform.position = start;
                 //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
                 StartCoroutine(SmoothMovement(end));
 
 
-                
             }
         }
 
@@ -172,11 +172,11 @@ namespace Assets.Scripts
             float sqrRemainingDistance = (transform.position - end).sqrMagnitude;
 
             //While that distance is greater than a very small amount (Epsilon, almost zero):
-            while (sqrRemainingDistance > float.Epsilon)
+            while (sqrRemainingDistance > 0.001f)
             {
                 var scaleRate = -0.02f;
 
-               // transform.localScale += Vector3.one * scaleRate;
+                // transform.localScale += Vector3.one * scaleRate;
 
                 //Find a new position proportionally closer to the end, based on the moveTime
                 Vector3 newPostion = Vector3.MoveTowards(rb2D.position, end, inverseMoveTime * Time.deltaTime);
@@ -189,11 +189,12 @@ namespace Assets.Scripts
 
                 //Return and loop until sqrRemainingDistance is close enough to zero to end the function
                 yield return null;
+
             }
-            transform.SetParent(endPoint.transform);
             EventManager.Instance.RemoveListener<MoveCardEvent>(Move);
+            transform.SetParent(endPoint.transform);
             EventManager.Instance.processingQueue = false;
-            
+
         }
     }
 }
