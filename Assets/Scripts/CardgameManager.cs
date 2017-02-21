@@ -38,15 +38,17 @@ namespace Assets.Scripts
         public Text monsterDeckCount;
         public Text monsterDiscardCount;
 
-        public List<GameObject> MyDeckCards = new List<GameObject>();
-        public List<GameObject> MyHandCards = new List<GameObject>();
-        public List<GameObject> MyTableCards = new List<GameObject>();
-        public List<GameObject> MyDiscardCards = new List<GameObject>();
+ 
 
-        public List<GameObject> AIDeckCards = new List<GameObject>();
+//  public List<GameObject> MyDeckCards = new List<GameObject>();
+public List<GameObject> MyHandCards = new List<GameObject>();
+        public List<GameObject> MyTableCards = new List<GameObject>();
+        //   public List<GameObject> MyDiscardCards = new List<GameObject>();
+
+        //   public List<GameObject> AIDeckCards = new List<GameObject>();
         public List<GameObject> AIHandCards = new List<GameObject>();
         public List<GameObject> AITableCards = new List<GameObject>();
-        public List<GameObject> AIDiscardCards = new List<GameObject>();
+        // public List<GameObject> AIDiscardCards = new List<GameObject>();
 
         public EnemyManager enemy;
         public Player player;
@@ -57,19 +59,15 @@ namespace Assets.Scripts
 
         }
 
-        //void OnEnable()
-        //{
-        //    EventManager.StartListening("DrawCardPlayer", DrawCardFromDeck(CardManager.Team.My);
-        //    EventManager.StartListening("Spawn",);
-        //    EventManager.StartListening("Destroy", SomeThirdFunction);
-        //}
+        void OnEnable()
+        {
+            EventManager.Instance.AddListener<UpdateDeckTexts>(UpdateDeckDiscardText);
+        }
 
-        //void OnDisable()
-        //{
-        //    EventManager.StopListening("test", someListener);
-        //    EventManager.StopListening("Spawn", SomeOtherFunction);
-        //    EventManager.StopListening("Destroy", SomeThirdFunction);
-        //}
+        void OnDisable()
+        {
+            EventManager.Instance.RemoveListener<UpdateDeckTexts>(UpdateDeckDiscardText);
+        }
 
 
 
@@ -80,57 +78,72 @@ namespace Assets.Scripts
             //Sets opponent profile images and texts.
             SetOpponents();
 
-            //Organize the cards into the correct lists.
-            PutCardsInLists();
+            //FindLevelObjects();
 
             //Draw our starting hand
             DrawStartingHands();
 
-            
+
             UpdateGame();
         }
+
+        //private void FindLevelObjects()
+        //{
+        //    //DungeonCanvas = GameObject.Find("Canvas(Board)");
+        //    myDeck = GameObject.Find("MyDeck(Clone").GetComponent<DeckManager>();
+        //    AIDeck = GameObject.Find("AIDeck(Clone)").GetComponent<DeckManager>();
+        //}
+
+
 
         private void DrawStartingHands()
         {
             for (var i = 0; i < 3; i++)
             {
 
-                DeckManager.player.Draw();
-                DeckManager.monster.Draw();
+                GameManager.instance.myDeck.Draw();
+                GameManager.instance.AIDeck.Draw();
 
 
             }
         }
 
-       
-        private void PutCardsInLists()
+
+        //private void PutCardsInLists()
+        //{
+        //    foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
+        //    {
+        //        //CardObject.GetComponent<Rigidbody>().isKinematic = true;
+        //        CardManager c = CardObject.GetComponent<CardManager>();
+
+        //        if (c.team == CardManager.Team.My)
+        //        {
+        //            MyDeckCards.Add(CardObject);
+
+        //        }
+
+
+        //        else
+        //        {
+        //            AIDeckCards.Add(CardObject);
+        //        }
+        //    }
+
+        //}
+
+        private void UpdateDeckDiscardText(UpdateDeckTexts updates)
         {
-            foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
+            if (updates.team == CardManager.Team.My)
             {
-                //CardObject.GetComponent<Rigidbody>().isKinematic = true;
-                CardManager c = CardObject.GetComponent<CardManager>();
-
-                if (c.team == CardManager.Team.My)
-                {
-                    MyDeckCards.Add(CardObject);
-
-                }
-
-
-                else
-                {
-                    AIDeckCards.Add(CardObject);
-                }
+                playerDeckCount.text = updates.decktext.ToString();
+                playerDiscardCount.text = updates.discardtext.ToString();
             }
-            
-        }
-
-        private void UpdateDeckDiscardText()
-        {
-            playerDeckCount.text = MyDeckCards.Count.ToString();
-            monsterDeckCount.text = AIDeckCards.Count.ToString();
-            playerDiscardCount.text = MyDiscardCards.Count.ToString();
-            monsterDiscardCount.text = AIDiscardCards.Count.ToString();
+            else
+            {
+                monsterDeckCount.text = updates.decktext.ToString();
+                monsterDiscardCount.text = updates.discardtext.ToString();
+            }
+            EventManager.Instance.processingQueue = false;
         }
 
         private void SetOpponents()
@@ -139,10 +152,10 @@ namespace Assets.Scripts
             player.mana = player.maxMana;
             enemy.mana = enemy.maxMana;
 
-            enemy.UpdateLife();
+            //enemy.UpdateLife();
             monsterPortrait.sprite = enemy.monsterImage;
 
-            player.UpdateLife();
+           // player.UpdateLife();
             playerPortrait.sprite = player.playerImage;
 
 
@@ -158,7 +171,7 @@ namespace Assets.Scripts
             {
                 player.LoseLife(value);
 
-            }           
+            }
 
         }
 
@@ -173,17 +186,14 @@ namespace Assets.Scripts
                 enemy.GainLife(value);
 
             }
-            
+
         }
 
         public void UpdateGame()
-        {   
+        {
             //Update Mana text in UI.
-            playerManaText.text = "Mana:" + player.mana + "/" +  player.maxMana;
+            playerManaText.text = "Mana:" + player.mana + "/" + player.maxMana;
             monsterManaText.text = "Mana" + enemy.mana + "/" + enemy.maxMana;
-           
-            //Update Deck and Discard text in UI.            
-            UpdateDeckDiscardText();
 
             // Set cards as playable and/or draggable.
             SetPlayableDraggable();
@@ -249,15 +259,15 @@ namespace Assets.Scripts
         private void EndGame(bool win)
         {
 
-            MyDeckCards.Clear();
-            MyHandCards.Clear();
-            MyDiscardCards.Clear();
-            MyTableCards.Clear();
+            //MyDeckCards.Clear();
+            //MyHandCards.Clear();
+            //MyDiscardCards.Clear();
+            //MyTableCards.Clear();
 
-            AIDeckCards.Clear();
-            AIHandCards.Clear();
-            AIDiscardCards.Clear();
-            AITableCards.Clear();
+            //AIDeckCards.Clear();
+            //AIHandCards.Clear();
+            //AIDiscardCards.Clear();
+            //AITableCards.Clear();
 
             //DeckManager.instance.Cleanup();
             this.gameObject.SetActive(false);
@@ -272,12 +282,12 @@ namespace Assets.Scripts
         {
             if (turn == Turn.AITurn)
             {
-                DeckManager.player.Draw();
+                GameManager.instance.myDeck.Draw();
                 turn = Turn.MyTurn;
             }
             else if (turn == Turn.MyTurn)
             {
-                DeckManager.monster.Draw();
+               GameManager.instance.AIDeck.Draw();
                 turn = Turn.AITurn;
             }
 
@@ -285,7 +295,7 @@ namespace Assets.Scripts
             enemy.mana = enemy.maxMana;
             UpdateGame();
         }
-              
+
 
         public void PlaceCard(CardManager card)
         {
@@ -304,70 +314,24 @@ namespace Assets.Scripts
 
             //PlaySound(cardDrop);          
 
-           // StartCoroutine(ResolveCard(card));       
-                       
+            // StartCoroutine(ResolveCard(card));       
+
         }
 
         //private IEnumerator ResolveCard(CardManager card)
         //{
         //    Debug.Log("Playing a new card");
         //    yield return StartCoroutine(ApplyEffects(card));
-                       
+
         //    yield return StartCoroutine(CheckTriggers(CardEffect.Trigger.OnPlayCard, card.team));
-                        
+
         //    yield return StartCoroutine(MoveCard(card));
         //    Debug.Log("Done playing the card");
 
         //}
 
-        //private IEnumerator MoveCard(CardManager card)
-        //{
-        //    Debug.Log("Start moving card");
-        //    //Move the card to it's onwers table section if it has a duration, otherwise discard it. 
-        //    MyHandCards.Remove(card.gameObject);
-        //    if (card.team == CardManager.Team.My)
-        //    {
 
-        //        if (card.card.CardDuration != 0)
-        //        {
-        //            card.SetCardStatus(CardManager.CardStatus.OnTable);
-        //            MyTableCards.Add(card.gameObject);
-        //            card.Move(playerTable);
-        //            yield return new WaitForSeconds(1.5f);
-        //            card.transform.SetParent(playerTable.transform);
-                    
-        //        }
-        //        else
-        //        {
-        //            card.SetCardStatus(CardManager.CardStatus.InDiscard);
-        //            MyDiscardCards.Add(card.gameObject);
-        //            card.Move(playerDiscard);
-        //            yield return new WaitForSeconds(1.5f);
-        //            playerDiscardCount.text = MyDiscardCards.Count.ToString();                    
-        //         //   card.transform.SetParent(DeckManager.instance.playerDiscard.transform);
-                    
-        //        }
-        //    }
-        //    else
-        //    {
 
-        //        if (card.card.CardDuration > 0)
-        //        {
-        //            card.SetCardStatus(CardManager.CardStatus.OnTable);
-        //            AITableCards.Add(card.gameObject);
-        //        }
-        //        else
-        //        {
-        //            card.SetCardStatus(CardManager.CardStatus.InDiscard);
-        //            AIDiscardCards.Add(card.gameObject);
-        //            monsterDiscardCount.text = AIDiscardCards.Count.ToString();
-        //        }
-        //    }
-        //    card.transform.localScale = Vector3.one;
-        //    Debug.Log("Stop moving card");
-        //    UpdateGame();
-            
-        //}
 
         private IEnumerator ApplyEffects(CardManager card)
         {
@@ -378,7 +342,7 @@ namespace Assets.Scripts
                 if (effect.trigger == CardEffect.Trigger.Instant)
                 {
                     card.ApplyEffect(effect);
-                    
+
                     yield return new WaitForSeconds(1f);
                 }
             }

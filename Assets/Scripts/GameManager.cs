@@ -31,7 +31,10 @@ namespace Assets.Scripts
         private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.                 
         private GameObject CardGameCanvas;
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
-       
+        public DeckManager myDeck;
+        public DeckManager AIDeck;
+
+
         private int level = 0;                                  //Current level number, expressed in game as "Level 1".
                 
         internal bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
@@ -91,9 +94,10 @@ namespace Assets.Scripts
         //Initializes the game for each level.
         void InitGame()
         {
+            
             //Prevent player from moving while title card is up.
-            doingSetup = true;
-
+            doingSetup = true;                     
+            
             //Find all the scene objects we need.
             FindLevelObjects();
             
@@ -110,7 +114,7 @@ namespace Assets.Scripts
             Invoke("HideLevelImage", levelStartDelay);
 
             //Initialize the starting deck and create the cards.
-            DeckManager.player.StartingDeck(playerClass.Startingdeck);
+            myDeck.StartingDeck(playerClass.Startingdeck);
 
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             boardScript.SetupScene(level);
@@ -127,6 +131,8 @@ namespace Assets.Scripts
 
             //Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
             levelText = GameObject.Find("LevelText").GetComponent<Text>();
+            myDeck = GameObject.Find("MyDeck").GetComponent<DeckManager>();
+            AIDeck = GameObject.Find("AIDeck").GetComponent<DeckManager>();
             lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
           
 
@@ -136,7 +142,7 @@ namespace Assets.Scripts
         {
             //Create the monster deck and instantiate the cards.
             var enemyManager = monster.gameObject.GetComponent<EnemyManager>();
-            Instantiate(monsterDeck);
+            
             enemyManager.InitMonsterDeck();
 
             //Send in the Player and Monster to the card game.

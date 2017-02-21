@@ -42,7 +42,7 @@ namespace Assets.Scripts
 
             //Set the player properties.
             PopulatePlayer();
-            UpdateLife();
+         //   UpdateLife();
 
             //Call the Start function of the MovingObject base class.
             base.Start();
@@ -82,16 +82,16 @@ namespace Assets.Scripts
 
         //CheckIfGameOver checks if the player is out of food points and if so, ends the game.
 
-        public void UpdateLife()
-        {
-            if (life > maxLife)
-            {
-                life = maxLife;
-            }
-            CardgameManager.instance.playerLifeText.text = "Life:" + life + "/" + maxLife;
-            GameManager.instance.lifeTextBoard.text = "Life:" + life + "/" + maxLife;
+        //public void UpdateLife()
+        //{
+        //    if (life > maxLife)
+        //    {
+        //        life = maxLife;
+        //    }
+        //    CardgameManager.instance.playerLifeText.text = "Life:" + life + "/" + maxLife;
+        //    GameManager.instance.lifeTextBoard.text = "Life:" + life + "/" + maxLife;
 
-        }
+        //}
 
 
 
