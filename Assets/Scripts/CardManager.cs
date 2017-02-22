@@ -19,11 +19,38 @@ namespace Assets.Scripts
         public enum CardStatus { InDeck, InHand, OnTable, InDiscard };
         public CardStatus cardStatus = CardStatus.InDeck;
 
-        public enum Team { My, AI };
-        public Team team = Team.My;
+        public CardgameManager.Team owner;
 
-        public bool isPlayable = false;
-        public bool isDragable = false;
+
+        public bool isPlayable
+        {
+            get
+            {
+                if (CardgameManager.instance.turn == owner && CardgameManager.instance.player.mana >= card.cost)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public bool isDragable
+        {
+            get
+            {
+                if (owner == CardgameManager.Team.My)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
 
         public float moveTime = 1f;
         private float inverseMoveTime;
@@ -31,7 +58,7 @@ namespace Assets.Scripts
         private GameObject startPoint;
         private GameObject endPoint;
         private Vector3 startSize;
-                
+
         private Rigidbody2D rb2D;
 
         protected void Start()
@@ -53,7 +80,7 @@ namespace Assets.Scripts
 
             if (oldstatus == CardStatus.InDeck)
             {
-                if (team == Team.My)
+                if (owner == CardgameManager.Team.My)
                 {
                     startPoint = CardgameManager.instance.playerDeckCount.gameObject;
                     endPoint = CardgameManager.instance.playerHand;
@@ -66,7 +93,7 @@ namespace Assets.Scripts
                     startSize = new Vector3(0.3f, 0.3f, 0.3f);
                 }
             }
-            EventManager.Instance.AddListener<MoveCardEvent>(Move);
+            EventManager.Instance.AddListener<MoveCard_AnimEvent>(Move);
 
         }
 
@@ -82,17 +109,17 @@ namespace Assets.Scripts
             //Set Image
             var imageObj = transformer.GetChild(0);
             var imageComponent = imageObj.GetComponent<Image>();
-            imageComponent.sprite = sprites[card.SpriteIcon];
+            imageComponent.sprite = sprites[card.spriteIcon];
 
             //Set Card Title
             var cardTitle = transformer.GetChild(1);
             var titleComponent = cardTitle.GetComponent<Text>();
-            titleComponent.text = card.CardName;
+            titleComponent.text = card.cardName;
 
             //Set Card Description
             var cardDesc = transformer.GetChild(2);
             var DescComponent = cardDesc.GetComponent<Text>();
-            DescComponent.text = card.CardText;
+            DescComponent.text = card.cardText;
         }
 
         internal void ApplyEffect(CardEffect cardEffect)
@@ -100,14 +127,14 @@ namespace Assets.Scripts
             if (CardEffect.Effect.DealDamage.Equals(cardEffect.effect))
             {
 
-                CardgameManager.instance.ApplyDamage(cardEffect.Value, team);
+                CardgameManager.instance.ApplyDamage(cardEffect.value, owner);
 
             }
 
             else if (CardEffect.Effect.Heal.Equals(cardEffect.effect))
             {
 
-                CardgameManager.instance.ApplyHealing(cardEffect.Value, team);
+                CardgameManager.instance.ApplyHealing(cardEffect.value, owner);
 
             }
 
@@ -151,7 +178,7 @@ namespace Assets.Scripts
 
 
 
-        internal void Move(MoveCardEvent move)
+        internal void Move(MoveCard_AnimEvent move)
         {
             if (move.movingCard == this.gameObject)
             {
@@ -188,17 +215,17 @@ namespace Assets.Scripts
 
                 this.GetComponent<CanvasGroup>().alpha = (0f);
                 transform.SetParent(CardgameManager.instance.transform);
-                this.transform.localScale = Vector3.one;               
-                var lastChild = endPoint.transform.GetChild(endPoint.transform.childCount-1);
+                this.transform.localScale = Vector3.one;
+                var lastChild = endPoint.transform.GetChild(endPoint.transform.childCount - 1);
                 endpos = lastChild.transform.position;
                 endsize = lastChild.transform.localScale;
-               
+
 
             }
             //if we have no cards at this position, make a test place and get the new position from that.
             else
             {
-                               
+
                 this.GetComponent<CanvasGroup>().alpha = (0f);
                 transform.SetParent(endPoint.transform);
                 this.transform.localScale = Vector3.one;
@@ -206,11 +233,11 @@ namespace Assets.Scripts
                 yield return new WaitForEndOfFrame();
                 endsize = this.transform.localScale;
                 endpos = this.transform.position;
-                
+
 
 
             }
-          
+
             this.transform.position = startPoint.transform.position;
             this.transform.localScale = startSize;
             Debug.Log("start size" + startSize);
@@ -230,15 +257,15 @@ namespace Assets.Scripts
             {
                 var scaleRate = 0.02f;
 
-                if (startSize.x < endsize.x  && transform.localScale.x < endsize.x)
+                if (startSize.x < endsize.x && transform.localScale.x < endsize.x)
                 {
                     transform.localScale += endsize * scaleRate;
                 }
-                else if (startSize.x > endsize.x   && transform.localScale.x > endsize.x)
+                else if (startSize.x > endsize.x && transform.localScale.x > endsize.x)
                 {
-                   
-                        transform.localScale -= endsize * scaleRate;
-                    
+
+                    transform.localScale -= endsize * scaleRate;
+
                 }
 
                 //Find a new position proportionally closer to the end, based on the moveTime
@@ -257,13 +284,14 @@ namespace Assets.Scripts
 
             }
 
-            
+
             this.transform.localScale = endsize;
-            EventManager.Instance.RemoveListener<MoveCardEvent>(Move);
+            EventManager.Instance.RemoveListener<MoveCard_AnimEvent>(Move);
             transform.SetParent(endPoint.transform);
-            
+
             yield return new WaitForSeconds(0.3f);
             EventManager.Instance.processingQueue = false;
+
 
         }
     }

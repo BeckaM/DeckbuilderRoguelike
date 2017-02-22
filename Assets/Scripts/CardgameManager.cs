@@ -14,8 +14,8 @@ namespace Assets.Scripts
         public static CardgameManager instance;
 
 
-        public enum Turn { MyTurn, AITurn };
-        public Turn turn = Turn.MyTurn;
+        public enum Team { My, AI };
+        public Team turn = Team.My;
 
         public Image playerPortrait;
         public Text playerLifeText;
@@ -38,10 +38,10 @@ namespace Assets.Scripts
         public Text monsterDeckCount;
         public Text monsterDiscardCount;
 
- 
 
-//  public List<GameObject> MyDeckCards = new List<GameObject>();
-public List<GameObject> MyHandCards = new List<GameObject>();
+
+        //  public List<GameObject> MyDeckCards = new List<GameObject>();
+        public List<GameObject> MyHandCards = new List<GameObject>();
         public List<GameObject> MyTableCards = new List<GameObject>();
         //   public List<GameObject> MyDiscardCards = new List<GameObject>();
 
@@ -61,12 +61,12 @@ public List<GameObject> MyHandCards = new List<GameObject>();
 
         void OnEnable()
         {
-            EventManager.Instance.AddListener<UpdateDeckTexts>(UpdateDeckDiscardText);
+            EventManager.Instance.AddListener<UpdateDeckTexts_AnimEvent>(UpdateDeckDiscardText);
         }
 
         void OnDisable()
         {
-            EventManager.Instance.RemoveListener<UpdateDeckTexts>(UpdateDeckDiscardText);
+            EventManager.Instance.RemoveListener<UpdateDeckTexts_AnimEvent>(UpdateDeckDiscardText);
         }
 
 
@@ -101,8 +101,8 @@ public List<GameObject> MyHandCards = new List<GameObject>();
             for (var i = 0; i < 3; i++)
             {
 
-                GameManager.instance.myDeck.Draw();
-                GameManager.instance.AIDeck.Draw();
+                DeckManager.player.Draw();
+                DeckManager.monster.Draw();
 
 
             }
@@ -131,9 +131,9 @@ public List<GameObject> MyHandCards = new List<GameObject>();
 
         //}
 
-        private void UpdateDeckDiscardText(UpdateDeckTexts updates)
+        private void UpdateDeckDiscardText(UpdateDeckTexts_AnimEvent updates)
         {
-            if (updates.team == CardManager.Team.My)
+            if (updates.team == Team.My)
             {
                 playerDeckCount.text = updates.decktext.ToString();
                 playerDiscardCount.text = updates.discardtext.ToString();
@@ -155,15 +155,15 @@ public List<GameObject> MyHandCards = new List<GameObject>();
             //enemy.UpdateLife();
             monsterPortrait.sprite = enemy.monsterImage;
 
-           // player.UpdateLife();
+            // player.UpdateLife();
             playerPortrait.sprite = player.playerImage;
 
 
         }
 
-        internal void ApplyDamage(int value, CardManager.Team team)
+        internal void ApplyDamage(int value, Team team)
         {
-            if (team == CardManager.Team.My)
+            if (team == Team.My)
             {
                 enemy.LoseLife(value);
             }
@@ -175,9 +175,9 @@ public List<GameObject> MyHandCards = new List<GameObject>();
 
         }
 
-        internal void ApplyHealing(int value, CardManager.Team team)
+        internal void ApplyHealing(int value, Team team)
         {
-            if (team == CardManager.Team.My)
+            if (team == Team.My)
             {
                 player.GainLife(value);
             }
@@ -196,7 +196,7 @@ public List<GameObject> MyHandCards = new List<GameObject>();
             monsterManaText.text = "Mana" + enemy.mana + "/" + enemy.maxMana;
 
             // Set cards as playable and/or draggable.
-            SetPlayableDraggable();
+            //SetPlayableDraggable();
 
             //Check if player or monster has reached 0 life
             CheckWinConditions();
@@ -218,43 +218,43 @@ public List<GameObject> MyHandCards = new List<GameObject>();
             }
         }
 
-        private void SetPlayableDraggable()
-        {
-            if (turn == Turn.MyTurn)
-            {
-                foreach (GameObject Card in MyHandCards)
-                {
+        //private void SetPlayableDraggable()
+        //{
+        //    if (turn == Team.My)
+        //    {
+        //        foreach (GameObject Card in MyHandCards)
+        //        {
 
-                    CardManager c = Card.GetComponent<CardManager>();
-                    c.isDragable = true;
-                    if (c.card.Cost <= player.mana)
-                    {
-                        c.isPlayable = true;
+        //            CardManager c = Card.GetComponent<CardManager>();
+        //            c.isDragable = true;
+        //            if (c.card.cost <= player.mana)
+        //            {
+        //                c.isPlayable = true;
 
-                    }
-                    else
-                    {
-                        c.isPlayable = false;
-                    }
-                }
-            }
-            else
-            {
-                foreach (GameObject Card in AIHandCards)
-                {
-                    CardManager c = Card.GetComponent<CardManager>();
-                    if (c.card.Cost <= enemy.mana)
-                    {
-                        c.isPlayable = true;
+        //            }
+        //            else
+        //            {
+        //                c.isPlayable = false;
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        foreach (GameObject Card in AIHandCards)
+        //        {
+        //            CardManager c = Card.GetComponent<CardManager>();
+        //            if (c.card.cost <= enemy.mana)
+        //            {
+        //                c.isPlayable = true;
 
-                    }
-                    else
-                    {
-                        c.isPlayable = false;
-                    }
-                }
-            }
-        }
+        //            }
+        //            else
+        //            {
+        //                c.isPlayable = false;
+        //            }
+        //        }
+        //    }
+        //}
 
         private void EndGame(bool win)
         {
@@ -280,15 +280,15 @@ public List<GameObject> MyHandCards = new List<GameObject>();
         //Triggered by end turn button.
         public void EndTurn()
         {
-            if (turn == Turn.AITurn)
+            if (turn == Team.AI)
             {
-                GameManager.instance.myDeck.Draw();
-                turn = Turn.MyTurn;
+                DeckManager.player.Draw();
+                turn = Team.My;
             }
-            else if (turn == Turn.MyTurn)
+            else if (turn == Team.My)
             {
-               GameManager.instance.AIDeck.Draw();
-                turn = Turn.AITurn;
+                DeckManager.monster.Draw();
+                turn = Team.AI;
             }
 
             player.mana = player.maxMana;
@@ -301,13 +301,17 @@ public List<GameObject> MyHandCards = new List<GameObject>();
         {
 
             //Pay the mana cost.
-            if (card.team == CardManager.Team.My)
+            if (card.owner == Team.My)
             {
-                player.mana = player.mana - card.card.Cost;
+                player.mana = player.mana - card.card.cost;
+
+
+
+
             }
             else
             {
-                enemy.mana = enemy.mana - card.card.Cost;
+                enemy.mana = enemy.mana - card.card.cost;
             }
 
             UpdateGame();
@@ -337,7 +341,7 @@ public List<GameObject> MyHandCards = new List<GameObject>();
         {
             Debug.Log("Start Applying Card effects");
             //Apply the cards effects if they are instant.
-            foreach (CardEffect effect in card.card.Effects)
+            foreach (CardEffect effect in card.card.effects)
             {
                 if (effect.trigger == CardEffect.Trigger.Instant)
                 {
@@ -350,12 +354,12 @@ public List<GameObject> MyHandCards = new List<GameObject>();
             Debug.Log("Stop applying Card effects");
         }
 
-        private IEnumerator CheckTriggers(CardEffect.Trigger triggertype, CardManager.Team team)
-        {
-            Debug.Log("Start checking for triggers");
-            yield return new WaitForSeconds(3F);
-            Debug.Log("Stop checking for triggers");
+        //private IEnumerator CheckTriggers(CardEffect.Trigger triggertype, CardManager.Team team)
+        //{
+        //    Debug.Log("Start checking for triggers");
+        //    yield return new WaitForSeconds(3F);
+        //    Debug.Log("Stop checking for triggers");
 
-        }
+        //}
     }
 }

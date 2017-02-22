@@ -35,7 +35,7 @@ namespace Assets.Scripts.DAL
             
             foreach (string cardToGet in cardsToGet)
             {
-                var card = cards.CardItems.Find(item => item.CardName.Equals(cardToGet));
+                var card = cards.cardItems.Find(item => item.cardName.Equals(cardToGet));
                 cardReturn.Add(card);
             }
 

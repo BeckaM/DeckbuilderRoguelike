@@ -9,22 +9,22 @@ namespace Assets.Scripts
     [Serializable]
     public class Card
     {
-        public string CardName;
-        public string CardText;
-        public int SpriteIcon;
+        public string cardName;
+        public string cardText;
+        public int spriteIcon;
 
-        public int Cost;
+        public int cost;
 
         //Permanent = -1, Until end of turn = 0. 
-        public int CardDuration;
+        public int cardDuration;
 
-        public List<CardEffect> Effects;
+        public List<CardEffect> effects;
                 
     }
 
     [Serializable]
     public class CardWrapper
     {
-        public List<Card> CardItems;
+        public List<Card> cardItems;
     }
 }

@@ -31,8 +31,8 @@ namespace Assets.Scripts
         private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.                 
         private GameObject CardGameCanvas;
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
-        public DeckManager myDeck;
-        public DeckManager AIDeck;
+        //public DeckManager myDeck;
+        //public DeckManager AIDeck;
 
 
         private int level = 0;                                  //Current level number, expressed in game as "Level 1".
@@ -114,7 +114,7 @@ namespace Assets.Scripts
             Invoke("HideLevelImage", levelStartDelay);
 
             //Initialize the starting deck and create the cards.
-            myDeck.StartingDeck(playerClass.Startingdeck);
+            DeckManager.player.StartingDeck(playerClass.Startingdeck);
 
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             boardScript.SetupScene(level);
@@ -131,8 +131,7 @@ namespace Assets.Scripts
 
             //Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
             levelText = GameObject.Find("LevelText").GetComponent<Text>();
-            myDeck = GameObject.Find("MyDeck").GetComponent<DeckManager>();
-            AIDeck = GameObject.Find("AIDeck").GetComponent<DeckManager>();
+           
             lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
           
 
@@ -140,6 +139,9 @@ namespace Assets.Scripts
 
         public void InitCardgame(Collider2D monster, Player player)
         {
+
+            doingSetup = true;
+            CardGameCanvas.SetActive(true);
             //Create the monster deck and instantiate the cards.
             var enemyManager = monster.gameObject.GetComponent<EnemyManager>();
             

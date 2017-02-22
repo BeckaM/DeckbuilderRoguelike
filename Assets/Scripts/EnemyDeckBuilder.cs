@@ -26,7 +26,7 @@ namespace Assets.Scripts
             }
 
 
-            GameManager.instance.AIDeck.AddCardtoDeck(FinalList);
+            DeckManager.monster.AddCardtoDeck(FinalList);
 
         }
     }

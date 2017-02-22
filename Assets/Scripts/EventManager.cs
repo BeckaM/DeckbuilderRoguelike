@@ -142,7 +142,7 @@ namespace Assets.Scripts
         }
 
         //Inserts the event into the fast queue. Tries to trigger same frame. Should be used for logic triggers. 
-        public bool QueueFastEvent(GameEvent evt)
+        public bool QueueTrigger(GameEvent evt)
         {
             if (!delegates.ContainsKey(evt.GetType()))
             {
@@ -155,7 +155,7 @@ namespace Assets.Scripts
         }
 
         //Inserts the event into the sequential queue. Triggers event in order and waits for execution. Should be used for GUI events. 
-        public bool QueueSequentialEvent(GameEvent evt)
+        public bool QueueAnimation(GameEvent evt)
         {
             if (!delegates.ContainsKey(evt.GetType()))
             {

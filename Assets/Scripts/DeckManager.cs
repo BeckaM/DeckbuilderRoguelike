@@ -13,11 +13,12 @@ namespace Assets.Scripts
 
     public class DeckManager : MonoBehaviour
     {
-        
+        public static DeckManager player = null;
+        public static DeckManager monster = null;
         CardManager cardManager;
         public string instancename;
         public GameObject cardObject;
-        public CardManager.Team team;
+        public CardgameManager.Team team;
         public List<GameObject> cardsInDeck = new List<GameObject>();
         public List<GameObject> cardsInDiscard = new List<GameObject>();
         public int cardsInDeckCount
@@ -47,19 +48,23 @@ namespace Assets.Scripts
         void Awake()
         {
             name = this.gameObject.name;
-            if (name == "MyDeck") {
+            if (name == "PlayerDeck(Clone)") {
 
 
                 instancename = "Me";
-                team = CardManager.Team.My;
+                player = this;
+                team = CardgameManager.Team.My;
                 DontDestroyOnLoad(gameObject);
                 
             }
             //If instance already exists and it's not this:
-            else if (name == "AIDeck")
+            else if (name == "MonsterDeck")
             {
                 instancename = "AI";
-                team = CardManager.Team.AI;
+                monster = this;
+              
+                team = CardgameManager.Team.AI;
+
             }
     
         }
@@ -126,7 +131,7 @@ namespace Assets.Scripts
                 cardManager = instance.GetComponent<CardManager>();
 
 
-                cardManager.team = team;
+                cardManager.owner = team;
                 cardsInDeck.Add(cardManager.gameObject);
                 instance.transform.SetParent(this.transform);
 
@@ -149,10 +154,10 @@ namespace Assets.Scripts
                 cardsInDeck.Remove(tempCard);
 
                 //Queue up a move card animation.
-                EventManager.Instance.QueueSequentialEvent(new MoveCardEvent(tempCard.gameObject));
-                EventManager.Instance.QueueSequentialEvent(new UpdateDeckTexts(cardsInDeckCount, cardsInDiscardCount, team));
+                EventManager.Instance.QueueAnimation(new MoveCard_AnimEvent(tempCard.gameObject));
+                EventManager.Instance.QueueAnimation(new UpdateDeckTexts_AnimEvent(cardsInDeckCount, cardsInDiscardCount, team));
                 //Check for objects that trigger on draw card.
-                EventManager.Instance.QueueFastEvent(new DrawCardEvent(tempCard.GetComponent<CardManager>().team));
+                EventManager.Instance.QueueTrigger(new DrawCard_TriggEvent(tempCard.GetComponent<CardManager>().owner));
                
             }
         }
