@@ -20,13 +20,13 @@ namespace Assets.Scripts
         public CardStatus cardStatus = CardStatus.InDeck;
 
         public CardgameManager.Team owner;
-
+        
 
         public bool isPlayable
         {
             get
             {
-                if (CardgameManager.instance.turn == owner && CardgameManager.instance.player.mana >= card.cost)
+                if (CardgameManager.instance.turn == owner && CardgameManager.instance.player.mana >= card.cost && cardStatus == CardStatus.InHand)
                 {
                     return true;
                 }
@@ -41,7 +41,7 @@ namespace Assets.Scripts
         {
             get
             {
-                if (owner == CardgameManager.Team.My)
+                if (owner == CardgameManager.Team.My && cardStatus == CardStatus.InHand)
                 {
                     return true;
                 }
@@ -55,9 +55,12 @@ namespace Assets.Scripts
         public float moveTime = 1f;
         private float inverseMoveTime;
 
-        private GameObject startPoint;
+      
         private GameObject endPoint;
+
         private Vector3 startSize;
+        private Vector3 endSize;
+        public GameObject startPoint;
 
         private Rigidbody2D rb2D;
 
@@ -71,34 +74,51 @@ namespace Assets.Scripts
             inverseMoveTime = 1f / moveTime;
 
         }
-
-
+        
         public void SetCardPosition(CardStatus status)
-        {
-            var oldstatus = cardStatus;
-            cardStatus = status;
-
-            if (oldstatus == CardStatus.InDeck)
+        {            
+            if (status == CardStatus.InHand)
             {
+                startSize = new Vector3(0.3f, 0.3f, 0.3f);
+
                 if (owner == CardgameManager.Team.My)
                 {
-                    startPoint = CardgameManager.instance.playerDeckCount.gameObject;
                     endPoint = CardgameManager.instance.playerHand;
-                    startSize = new Vector3(0.3f, 0.3f, 0.3f);
                 }
                 else
                 {
-                    startPoint = CardgameManager.instance.monsterDeckCount.gameObject;
                     endPoint = CardgameManager.instance.monsterHand;
-                    startSize = new Vector3(0.3f, 0.3f, 0.3f);
                 }
             }
-            EventManager.Instance.AddListener<MoveCard_AnimEvent>(Move);
+            else if (status == CardStatus.InDiscard)
+            {
+                endSize = new Vector3(0.3f, 0.3f, 0.3f);
+                if (owner == CardgameManager.Team.My)
+                {
+                    endPoint = CardgameManager.instance.playerDiscardCount.gameObject;                    
+                }
+                else
+                {
+                    endPoint = CardgameManager.instance.monsterDiscardCount.gameObject;                    
+                }
+            }
+            else if (status == CardStatus.OnTable)
+            {
+                endSize = new Vector3(0.3f, 0.3f, 0.3f);
+                if (owner == CardgameManager.Team.My)
+                {
+                    endPoint = CardgameManager.instance.playerTable;                    
+                }
+                else
+                {
+                    endPoint = CardgameManager.instance.monsterTable;                    
+                }
+            }
+            
+            EventManager.Instance.AddListener<MoveCard_GUI>(Move);
 
         }
-
-
-
+        
         public void PopulateCard(Card card)
         {
 
@@ -178,9 +198,9 @@ namespace Assets.Scripts
 
 
 
-        internal void Move(MoveCard_AnimEvent move)
+        internal void Move(MoveCard_GUI move)
         {
-            if (move.movingCard == this.gameObject)
+            if (move.movingCard == this)
             {
                 ////Store start position to move from, based on objects current transform position.
                 //transform.SetParent(startPoint.transform);
@@ -209,23 +229,11 @@ namespace Assets.Scripts
             Vector3 endpos = new Vector3();
             Vector3 endsize = new Vector3();
 
+                       
+
             //If we already have a card at that position, place it where the last card is.
-            if (endPoint.transform.childCount > 0)
+            if (endPoint.transform.childCount == 0)
             {
-
-                this.GetComponent<CanvasGroup>().alpha = (0f);
-                transform.SetParent(CardgameManager.instance.transform);
-                this.transform.localScale = Vector3.one;
-                var lastChild = endPoint.transform.GetChild(endPoint.transform.childCount - 1);
-                endpos = lastChild.transform.position;
-                endsize = lastChild.transform.localScale;
-
-
-            }
-            //if we have no cards at this position, make a test place and get the new position from that.
-            else
-            {
-
                 this.GetComponent<CanvasGroup>().alpha = (0f);
                 transform.SetParent(endPoint.transform);
                 this.transform.localScale = Vector3.one;
@@ -233,13 +241,28 @@ namespace Assets.Scripts
                 yield return new WaitForEndOfFrame();
                 endsize = this.transform.localScale;
                 endpos = this.transform.position;
+                
+
+
+            }
+            //if we have no cards at this position, make a test place and get the new position from that.
+            else
+            {
+
+                
+
+                this.GetComponent<CanvasGroup>().alpha = (0f);
+                var lastChild = endPoint.transform.GetChild(endPoint.transform.childCount - 1);
+                endpos = lastChild.transform.position;
+                endsize = lastChild.transform.localScale;
 
 
 
             }
 
-            this.transform.position = startPoint.transform.position;
-            this.transform.localScale = startSize;
+
+            this.transform.SetParent(startPoint.transform);
+            
             Debug.Log("start size" + startSize);
             GetComponent<CanvasGroup>().alpha = (1f);
 
@@ -286,11 +309,12 @@ namespace Assets.Scripts
 
 
             this.transform.localScale = endsize;
-            EventManager.Instance.RemoveListener<MoveCard_AnimEvent>(Move);
+            EventManager.Instance.RemoveListener<MoveCard_GUI>(Move);
             transform.SetParent(endPoint.transform);
 
             yield return new WaitForSeconds(0.3f);
             EventManager.Instance.processingQueue = false;
+
 
 
         }

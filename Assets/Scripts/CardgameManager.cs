@@ -32,6 +32,9 @@ namespace Assets.Scripts
         public GameObject playerHand;
         public GameObject monsterHand;
 
+        public GameObject playerDeck;
+        public GameObject monsterDeck;
+
         public Image monsterPortrait;
         public Text monsterLifeText;
         public Text monsterManaText;
@@ -61,12 +64,17 @@ namespace Assets.Scripts
 
         void OnEnable()
         {
-            EventManager.Instance.AddListener<UpdateDeckTexts_AnimEvent>(UpdateDeckDiscardText);
+            EventManager.Instance.AddListener<UpdateManaText_GUI>(GUIUpdateMana);
+            EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(UpdateDeckDiscardText);
         }
+
+       
 
         void OnDisable()
         {
-            EventManager.Instance.RemoveListener<UpdateDeckTexts_AnimEvent>(UpdateDeckDiscardText);
+            EventManager.Instance.RemoveListener<UpdateManaText_GUI>(GUIUpdateMana);
+            EventManager.Instance.RemoveListener<UpdateDeckTexts_GUI>(UpdateDeckDiscardText);
+
         }
 
 
@@ -131,7 +139,7 @@ namespace Assets.Scripts
 
         //}
 
-        private void UpdateDeckDiscardText(UpdateDeckTexts_AnimEvent updates)
+        private void UpdateDeckDiscardText(UpdateDeckTexts_GUI updates)
         {
             if (updates.team == Team.My)
             {
@@ -144,6 +152,13 @@ namespace Assets.Scripts
                 monsterDiscardCount.text = updates.discardtext.ToString();
             }
             EventManager.Instance.processingQueue = false;
+        }
+
+        private void GUIUpdateMana(UpdateManaText_GUI e)
+        {
+            //Update Mana text in UI.
+            playerManaText.text = "Mana:" + player.mana + "/" + player.maxMana;
+            monsterManaText.text = "Mana" + enemy.mana + "/" + enemy.maxMana;
         }
 
         private void SetOpponents()
@@ -191,9 +206,7 @@ namespace Assets.Scripts
 
         public void UpdateGame()
         {
-            //Update Mana text in UI.
-            playerManaText.text = "Mana:" + player.mana + "/" + player.maxMana;
-            monsterManaText.text = "Mana" + enemy.mana + "/" + enemy.maxMana;
+            
 
             // Set cards as playable and/or draggable.
             //SetPlayableDraggable();
@@ -301,24 +314,51 @@ namespace Assets.Scripts
         {
 
             //Pay the mana cost.
+            Debug.Log("Playing a new card: " + card.card.cardName);
             if (card.owner == Team.My)
             {
                 player.mana = player.mana - card.card.cost;
-
-
-
-
+                EventManager.Instance.QueueAnimation(new UpdateManaText_GUI(player.mana, card.owner));
             }
             else
             {
                 enemy.mana = enemy.mana - card.card.cost;
+                EventManager.Instance.QueueAnimation(new UpdateManaText_GUI(enemy.mana, card.owner));
             }
 
-            UpdateGame();
 
-            //PlaySound(cardDrop);          
 
-            // StartCoroutine(ResolveCard(card));       
+            //Check for triggers from playing a card.
+            Debug.Log("Start checking for triggers on play card");
+            EventManager.Instance.QueueTrigger(new PlayCard_Trigger(card.owner));
+            Debug.Log("Done checking for triggers");
+
+            //Apply the cards effects if they are instant.
+            Debug.Log("Start Applying Card effects");
+
+            foreach (CardEffect effect in card.card.effects)
+            {
+                if (effect.trigger == CardEffect.Trigger.Instant)
+                {
+                    card.ApplyEffect(effect);
+
+                }
+            }
+            Debug.Log("Done applying Card effects");
+
+
+            //Set the new card position.
+            if (card.card.cardDuration == 0)
+            {
+                card.SetCardPosition(CardManager.CardStatus.InDiscard);
+            }
+            else
+            {
+                card.SetCardPosition(CardManager.CardStatus.OnTable);
+            }
+
+            //Queue up a move card event to move the card to it's final destination.
+            EventManager.Instance.QueueAnimation(new MoveCard_GUI(card));
 
         }
 
@@ -334,25 +374,6 @@ namespace Assets.Scripts
 
         //}
 
-
-
-
-        private IEnumerator ApplyEffects(CardManager card)
-        {
-            Debug.Log("Start Applying Card effects");
-            //Apply the cards effects if they are instant.
-            foreach (CardEffect effect in card.card.effects)
-            {
-                if (effect.trigger == CardEffect.Trigger.Instant)
-                {
-                    card.ApplyEffect(effect);
-
-                    yield return new WaitForSeconds(1f);
-                }
-            }
-
-            Debug.Log("Stop applying Card effects");
-        }
 
         //private IEnumerator CheckTriggers(CardEffect.Trigger triggertype, CardManager.Team team)
         //{

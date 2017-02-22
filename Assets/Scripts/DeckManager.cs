@@ -17,6 +17,24 @@ namespace Assets.Scripts
         public static DeckManager monster = null;
         CardManager cardManager;
         public string instancename;
+
+        public GameObject deckholder
+        {
+            get
+            {
+                if (team == CardgameManager.Team.My)
+                {
+                    return CardgameManager.instance.playerDeck;
+                }
+                else 
+                {
+                    return CardgameManager.instance.monsterDeck;
+
+                
+                }
+            }
+        }
+
         public GameObject cardObject;
         public CardgameManager.Team team;
         public List<GameObject> cardsInDeck = new List<GameObject>();
@@ -153,11 +171,14 @@ namespace Assets.Scripts
 
                 cardsInDeck.Remove(tempCard);
 
+                manager.transform.SetParent(deckholder.transform);
+                manager.startPoint = deckholder;
+
                 //Queue up a move card animation.
-                EventManager.Instance.QueueAnimation(new MoveCard_AnimEvent(tempCard.gameObject));
-                EventManager.Instance.QueueAnimation(new UpdateDeckTexts_AnimEvent(cardsInDeckCount, cardsInDiscardCount, team));
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager));
+                EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeckCount, cardsInDiscardCount, team));
                 //Check for objects that trigger on draw card.
-                EventManager.Instance.QueueTrigger(new DrawCard_TriggEvent(tempCard.GetComponent<CardManager>().owner));
+                EventManager.Instance.QueueTrigger(new DrawCard_Trigger(tempCard.GetComponent<CardManager>().owner));
                
             }
         }
