@@ -62,17 +62,7 @@ namespace Assets.Scripts
             
         }
 
-        public void LoseLife(int loss)
-        {
-
-            //Subtract lost life points from the players total.
-            life -= loss;
-            CardgameManager.instance.playerLifeText.text = "-" + loss;
-            Invoke("UpdateLife", 1f);
-
-
-        }
-
+        
         internal void GainLife(int gain)
         {
             life += gain;

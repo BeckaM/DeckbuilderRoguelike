@@ -34,6 +34,22 @@ namespace Assets.Scripts
                 }
             }
         }
+        public GameObject hand
+        {
+            get
+            {
+                if (team == CardgameManager.Team.My)
+                {
+                    return CardgameManager.instance.playerHand;
+                }
+                else
+                {
+                    return CardgameManager.instance.monsterHand;
+
+
+                }
+            }
+        }
 
         public GameObject cardObject;
         public CardgameManager.Team team;
@@ -166,13 +182,15 @@ namespace Assets.Scripts
                 int random = Random.Range(0, cardsInDeck.Count);
                 GameObject tempCard = cardsInDeck[random];
 
+                //Prepare the card for being moved
                 CardManager manager = tempCard.GetComponent<CardManager>();
                 manager.SetCardPosition(CardManager.CardStatus.InHand);
+                manager.startPoint = deckholder;
+                manager.endPoint = hand;
 
                 cardsInDeck.Remove(tempCard);
-
-                manager.transform.SetParent(deckholder.transform);
-                manager.startPoint = deckholder;
+                                
+                
 
                 //Queue up a move card animation.
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager));

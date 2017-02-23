@@ -35,6 +35,8 @@ namespace Assets.Scripts
         public GameObject playerDeck;
         public GameObject monsterDeck;
 
+        public GameObject tabletop;
+
         public Image monsterPortrait;
         public Text monsterLifeText;
         public Text monsterManaText;
@@ -64,7 +66,8 @@ namespace Assets.Scripts
 
         void OnEnable()
         {
-            EventManager.Instance.AddListener<UpdateManaText_GUI>(GUIUpdateMana);
+            EventManager.Instance.AddListener<UpdateMana_GUI>(GUIUpdateMana);
+            EventManager.Instance.AddListener<UpdateLife_GUI>(GUIUpdateLife);
             EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(UpdateDeckDiscardText);
         }
 
@@ -72,7 +75,8 @@ namespace Assets.Scripts
 
         void OnDisable()
         {
-            EventManager.Instance.RemoveListener<UpdateManaText_GUI>(GUIUpdateMana);
+            EventManager.Instance.RemoveListener<UpdateMana_GUI>(GUIUpdateMana);
+            EventManager.Instance.RemoveListener<UpdateLife_GUI>(GUIUpdateLife);
             EventManager.Instance.RemoveListener<UpdateDeckTexts_GUI>(UpdateDeckDiscardText);
 
         }
@@ -154,11 +158,34 @@ namespace Assets.Scripts
             EventManager.Instance.processingQueue = false;
         }
 
-        private void GUIUpdateMana(UpdateManaText_GUI e)
+        private void GUIUpdateMana(UpdateMana_GUI e)
         {
             //Update Mana text in UI.
-            playerManaText.text = "Mana:" + player.mana + "/" + player.maxMana;
-            monsterManaText.text = "Mana" + enemy.mana + "/" + enemy.maxMana;
+            if (e.team == Team.My)
+            {
+                playerManaText.text = "Mana:" + e.mana + "/" + player.maxMana;
+            }
+            else
+            {
+                monsterManaText.text = "Mana:" + e.mana + "/" + enemy.maxMana;
+            }
+
+            EventManager.Instance.processingQueue = false;
+        }
+
+        private void GUIUpdateLife(UpdateLife_GUI e)
+        {
+            //Update Mana text in UI.
+            if (e.team == Team.My)
+            {
+                playerLifeText.text = "Life:" + e.life + "/" + player.maxLife;
+            }
+            else
+            {
+                monsterLifeText.text = "Life:" + e.life + "/" + enemy.maxLife;
+            }
+            
+            EventManager.Instance.processingQueue = false;
         }
 
         private void SetOpponents()
@@ -180,13 +207,16 @@ namespace Assets.Scripts
         {
             if (team == Team.My)
             {
-                enemy.LoseLife(value);
+                enemy.life -= value;
+                                
+                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, Team.AI));
             }
             else
             {
-                player.LoseLife(value);
+                player.life -= value;
+                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, Team.My));
 
-            }
+            }            
 
         }
 
@@ -306,7 +336,7 @@ namespace Assets.Scripts
 
             player.mana = player.maxMana;
             enemy.mana = enemy.maxMana;
-            UpdateGame();
+          //  UpdateGame();
         }
 
 
@@ -318,14 +348,13 @@ namespace Assets.Scripts
             if (card.owner == Team.My)
             {
                 player.mana = player.mana - card.card.cost;
-                EventManager.Instance.QueueAnimation(new UpdateManaText_GUI(player.mana, card.owner));
+                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, card.owner));
             }
             else
             {
                 enemy.mana = enemy.mana - card.card.cost;
-                EventManager.Instance.QueueAnimation(new UpdateManaText_GUI(enemy.mana, card.owner));
+                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, card.owner));
             }
-
 
 
             //Check for triggers from playing a card.
@@ -348,15 +377,22 @@ namespace Assets.Scripts
 
 
             //Set the new card position.
+            Debug.Log("Start moving the card.");
             if (card.card.cardDuration == 0)
             {
+                Debug.Log("Duration = 0, startpoint tabletop endpoint discard");
                 card.SetCardPosition(CardManager.CardStatus.InDiscard);
+                card.startPoint = tabletop;
+                card.endPoint = playerDiscard;
             }
             else
             {
                 card.SetCardPosition(CardManager.CardStatus.OnTable);
+                card.startPoint = tabletop;
+                card.endPoint = playerTable;
             }
-
+                 
+           
             //Queue up a move card event to move the card to it's final destination.
             EventManager.Instance.QueueAnimation(new MoveCard_GUI(card));
 

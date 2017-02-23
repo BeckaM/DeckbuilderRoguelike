@@ -17,8 +17,8 @@ namespace Assets.Scripts
         public int maxLife=30;
         public int lifeHolder=30;
         public Text lifeTextBoard;                      //UI Text to display current player life total.
+
        
-        
         public float levelStartDelay = 2f;                      //Time to wait before starting level, in seconds.
         public float turnDelay = 0.2f;							//Delay between each Player turn.
         
@@ -125,7 +125,9 @@ namespace Assets.Scripts
         {
             //DungeonCanvas = GameObject.Find("Canvas(Board)");
             CardGameCanvas = GameObject.Find("Canvas(CardGame)");
-            
+
+           
+
             //Get a reference to our image LevelImage by finding it by name.
             levelImage = GameObject.Find("LevelImage");
 
@@ -153,6 +155,7 @@ namespace Assets.Scripts
 
             //Remove the monster from game view. Either it dies or the player does.
             monster.gameObject.SetActive(false);
+            player.gameObject.SetActive(false);
 
             //Prevent player from moving while in card game.
             doingSetup = true;
