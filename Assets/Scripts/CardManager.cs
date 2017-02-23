@@ -15,15 +15,10 @@ namespace Assets.Scripts
 
         public Sprite[] sprites;
         public Card card;
-        public GameObject cardEffectDescription
-        {
-            get
-            {
-                var text = this.transform.GetChild(2);
-                var t = text.gameObject;
-                return t;
-            }
-        }
+        public GameObject cardDescription;
+        public GameObject cardImage;
+        public GameObject cardName;
+        public GameObject cardEffectText;
 
         public enum CardStatus { InDeck, InHand, OnTable, InDiscard };
         public CardStatus cardStatus = CardStatus.InDeck;
@@ -127,24 +122,23 @@ namespace Assets.Scripts
 
             var transformer = this.transform;
 
-            //Set Image
-            var imageObj = transformer.GetChild(0);
-            var imageComponent = imageObj.GetComponent<Image>();
+            //Set Image            
+            var imageComponent = cardImage.GetComponent<Image>();
             imageComponent.sprite = sprites[card.spriteIcon];
 
             //Set Card Title
-            var cardTitle = transformer.GetChild(1);
-            var titleComponent = cardTitle.GetComponent<Text>();
+
+            var titleComponent = cardName.GetComponent<Text>();
             titleComponent.text = card.cardName;
 
             //Set Card Description
-            var cardtext = cardEffectDescription.GetComponent <Text> ();            
+            var cardtext = cardDescription.GetComponent<Text>();
             cardtext.text = card.cardText;
 
             //Set Card Background.
-            var background = GetComponent<Image> ();
+            var background = GetComponent<Image>();
             background.color = card.backgroundColor;
-           
+
         }
 
         internal void ApplyEffect(CardEffect cardEffect)
@@ -191,14 +185,30 @@ namespace Assets.Scripts
 
         private void DealDamageAnimation(DealDamage_GUI damage)
         {
+            var text = cardEffectText.GetComponent<Text>();
 
-            StartCoroutine(EffectText());
+
+            text.text = "" + damage.damage + " Damage!";
+
+            StartCoroutine(EffectText(Color.red));
 
         }
 
-        private IEnumerator EffectText()
+        private IEnumerator EffectText(Color color)
         {
-            return null;
+            var text = cardEffectText.GetComponent<Text>();
+            text.color = color;
+            cardEffectText.SetActive(true);
+
+            for (var n = 0; n < 3; n++)
+            {
+               text.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                text.color = color;
+                yield return new WaitForSeconds(.1f);
+            }
+
+            cardEffectText.SetActive(false);
 
             //Color whateverColor = Color.black;
             //for (var n = 0; n < 3; n++)
@@ -209,6 +219,7 @@ namespace Assets.Scripts
             //    yield return new WaitForSeconds(.1f);
             //}
             //GetComponent<Image>().color = Color.white;
+            EventManager.Instance.processingQueue = false;
         }
 
         internal void Move(MoveCard_GUI move)
@@ -231,7 +242,7 @@ namespace Assets.Scripts
 
             transform.SetParent(startPoint.transform);
             this.transform.localScale = Vector3.one;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForEndOfFrame();
             Vector3 startpos = new Vector3();
             startpos = this.transform.position;
 
@@ -262,7 +273,7 @@ namespace Assets.Scripts
 
 
             GetComponent<CanvasGroup>().alpha = (1f);
-            yield return new WaitForSeconds(1f);
+            //  yield return new WaitForSeconds(1f);
 
             //Calculate the remaining distance to move based on the square magnitude of the difference between current position and end parameter. 
             //Square magnitude is used instead of magnitude because it's computationally cheaper.
@@ -316,11 +327,11 @@ namespace Assets.Scripts
 
             if (showDescription)
             {
-                cardEffectDescription.SetActive(true);
+                cardDescription.SetActive(true);
             }
             else
             {
-                cardEffectDescription.SetActive(false);
+                cardDescription.SetActive(false);
             }
 
             yield return new WaitForSeconds(0.3f);
