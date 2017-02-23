@@ -12,6 +12,7 @@ namespace Assets.Scripts
         public string cardName;
         public string cardText;
         public int spriteIcon;
+        public Color backgroundColor;
 
         public int cost;
 

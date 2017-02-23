@@ -68,7 +68,7 @@ namespace Assets.Scripts
         {
             EventManager.Instance.AddListener<UpdateMana_GUI>(GUIUpdateMana);
             EventManager.Instance.AddListener<UpdateLife_GUI>(GUIUpdateLife);
-            EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(UpdateDeckDiscardText);
+            EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
         }
 
        
@@ -77,7 +77,7 @@ namespace Assets.Scripts
         {
             EventManager.Instance.RemoveListener<UpdateMana_GUI>(GUIUpdateMana);
             EventManager.Instance.RemoveListener<UpdateLife_GUI>(GUIUpdateLife);
-            EventManager.Instance.RemoveListener<UpdateDeckTexts_GUI>(UpdateDeckDiscardText);
+            EventManager.Instance.RemoveListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
 
         }
 
@@ -143,7 +143,7 @@ namespace Assets.Scripts
 
         //}
 
-        private void UpdateDeckDiscardText(UpdateDeckTexts_GUI updates)
+        private void GUIUpdateDeckDiscardText(UpdateDeckTexts_GUI updates)
         {
             if (updates.team == Team.My)
             {
@@ -224,11 +224,21 @@ namespace Assets.Scripts
         {
             if (team == Team.My)
             {
-                player.GainLife(value);
+                player.life += value;
+                if (player.life > player.maxLife)
+                {
+                    player.life = player.maxLife;
+                }
+                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, Team.My));
             }
             else
             {
-                enemy.GainLife(value);
+                enemy.life += value;
+                if (enemy.life > enemy.maxLife)
+                {
+                    enemy.life = enemy.maxLife;
+                }
+                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, Team.AI));
 
             }
 

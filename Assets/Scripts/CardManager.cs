@@ -15,11 +15,36 @@ namespace Assets.Scripts
 
         public Sprite[] sprites;
         public Card card;
+        public GameObject cardEffectDescription
+        {
+            get
+            {
+                var text = this.transform.GetChild(2);
+                var t = text.gameObject;
+                return t;
+            }
+        }
 
         public enum CardStatus { InDeck, InHand, OnTable, InDiscard };
         public CardStatus cardStatus = CardStatus.InDeck;
 
         public CardgameManager.Team owner;
+
+        public bool showDescription
+        {
+            get
+            {
+                if (cardStatus == CardStatus.InHand)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
         public DeckManager deckManager
         {
             get
@@ -91,46 +116,8 @@ namespace Assets.Scripts
 
         public void SetCardPosition(CardStatus status)
         {
-            //if (status == CardStatus.InHand)
-            //{
-            //    startSize = new Vector3(0.3f, 0.3f, 0.3f);
-
-            //    if (owner == CardgameManager.Team.My)
-            //    {
-            //        endPoint = CardgameManager.instance.playerHand;
-            //    }
-            //    else
-            //    {
-            //        endPoint = CardgameManager.instance.monsterHand;
-            //    }
-            //}
-            //else if (status == CardStatus.InDiscard)
-            //{
-            //    endSize = new Vector3(0.3f, 0.3f, 0.3f);
-            //    if (owner == CardgameManager.Team.My)
-            //    {
-            //        endPoint = CardgameManager.instance.playerDiscardCount.gameObject;                    
-            //    }
-            //    else
-            //    {
-            //        endPoint = CardgameManager.instance.monsterDiscardCount.gameObject;                    
-            //    }
-            //}
-            //else if (status == CardStatus.OnTable)
-            //{
-            //    endSize = new Vector3(0.3f, 0.3f, 0.3f);
-            //    if (owner == CardgameManager.Team.My)
-            //    {
-            //        endPoint = CardgameManager.instance.playerTable;                    
-            //    }
-            //    else
-            //    {
-            //        endPoint = CardgameManager.instance.monsterTable;                    
-            //    }
-            //}
             cardStatus = status;
             EventManager.Instance.AddListener<MoveCard_GUI>(Move);
-
         }
 
         public void PopulateCard(Card card)
@@ -151,29 +138,38 @@ namespace Assets.Scripts
             titleComponent.text = card.cardName;
 
             //Set Card Description
-            var cardDesc = transformer.GetChild(2);
-            var DescComponent = cardDesc.GetComponent<Text>();
-            DescComponent.text = card.cardText;
+            var cardtext = cardEffectDescription.GetComponent <Text> ();            
+            cardtext.text = card.cardText;
+
+            //Set Card Background.
+            var background = GetComponent<Image> ();
+            background.color = card.backgroundColor;
+           
         }
 
         internal void ApplyEffect(CardEffect cardEffect)
         {
             if (CardEffect.Effect.DealDamage.Equals(cardEffect.effect))
             {
+                EventManager.Instance.AddListener<DealDamage_GUI>(DealDamageAnimation);
                 EventManager.Instance.QueueAnimation(new DealDamage_GUI(cardEffect.value, owner, this));
 
                 CardgameManager.instance.ApplyDamage(cardEffect.value, owner);
 
-                
+
                 EventManager.Instance.QueueTrigger(new DealDamage_Trigger(owner));
-                
 
             }
 
             else if (CardEffect.Effect.Heal.Equals(cardEffect.effect))
             {
 
-              //  CardgameManager.instance.ApplyHealing(cardEffect.value, owner);
+                EventManager.Instance.QueueAnimation(new Heal_GUI(cardEffect.value, owner, this));
+
+                CardgameManager.instance.ApplyHealing(cardEffect.value, owner);
+
+
+                EventManager.Instance.QueueTrigger(new Heal_Trigger(owner));
 
             }
 
@@ -188,28 +184,31 @@ namespace Assets.Scripts
             //trigger CardGameManager.Heal(Value)
 
             //else if DrawCard
-            //trigger CardGameManager.DrawCard(Value)
-
-
-            //StartCoroutine(EffectAnimation());
-
-
-
+            //trigger CardGameManager.DrawCard(Value)           
         }
 
 
 
-        private IEnumerator EffectAnimation()
+        private void DealDamageAnimation(DealDamage_GUI damage)
         {
-            Color whateverColor = Color.black;
-            for (var n = 0; n < 3; n++)
-            {
-                GetComponent<Image>().color = Color.white;
-                yield return new WaitForSeconds(.1f);
-                GetComponent<Image>().color = whateverColor;
-                yield return new WaitForSeconds(.1f);
-            }
-            GetComponent<Image>().color = Color.white;
+
+            StartCoroutine(EffectText());
+
+        }
+
+        private IEnumerator EffectText()
+        {
+            return null;
+
+            //Color whateverColor = Color.black;
+            //for (var n = 0; n < 3; n++)
+            //{
+            //    GetComponent<Image>().color = Color.white;
+            //    yield return new WaitForSeconds(.1f);
+            //    GetComponent<Image>().color = whateverColor;
+            //    yield return new WaitForSeconds(.1f);
+            //}
+            //GetComponent<Image>().color = Color.white;
         }
 
         internal void Move(MoveCard_GUI move)
@@ -217,7 +216,7 @@ namespace Assets.Scripts
             if (move.movingCard == this)
             {
                 Debug.Log("Card " + card.cardName + " recieved a move trigger");
-               
+
                 StartCoroutine(SmoothMovement());
 
 
@@ -228,13 +227,14 @@ namespace Assets.Scripts
         {
             Debug.Log("Starting move card animation");
             Vector3 endpos = new Vector3();
-           // Vector3 endsize = new Vector3();
+            // Vector3 endsize = new Vector3();
 
             transform.SetParent(startPoint.transform);
             this.transform.localScale = Vector3.one;
             yield return new WaitForSeconds(1f);
             Vector3 startpos = new Vector3();
             startpos = this.transform.position;
+
             //if we have no cards at this position, make a test place and get the new position from that.
             if (endPoint.transform.childCount == 0)
             {
@@ -250,17 +250,17 @@ namespace Assets.Scripts
             //If we already have a card at that position, place it where the last card is.
             else
             {
-                                
+
                 this.GetComponent<CanvasGroup>().alpha = (0f);
                 var lastChild = endPoint.transform.GetChild(endPoint.transform.childCount - 1);
                 endpos = lastChild.transform.position;
-              //  endsize = lastChild.transform.localScale;
+                //  endsize = lastChild.transform.localScale;
 
             }
             this.transform.SetParent(startPoint.transform);
             yield return new WaitForEndOfFrame();
 
-            
+
             GetComponent<CanvasGroup>().alpha = (1f);
             yield return new WaitForSeconds(1f);
 
@@ -271,18 +271,18 @@ namespace Assets.Scripts
             //While that distance is greater than a very small amount (Epsilon, almost zero):
             while (sqrRemainingDistance > 0.001f)
             {
-            //    var scaleRate = 0.02f;
+                //    var scaleRate = 0.02f;
 
-            //    if (startSize.x < endsize.x && transform.localScale.x < endsize.x)
-            //    {
-            //        transform.localScale += endsize * scaleRate;
-            //    }
-            //    else if (startSize.x > endsize.x && transform.localScale.x > endsize.x)
-            //    {
+                //    if (startSize.x < endsize.x && transform.localScale.x < endsize.x)
+                //    {
+                //        transform.localScale += endsize * scaleRate;
+                //    }
+                //    else if (startSize.x > endsize.x && transform.localScale.x > endsize.x)
+                //    {
 
-            //        transform.localScale -= endsize * scaleRate;
+                //        transform.localScale -= endsize * scaleRate;
 
-            //    }
+                //    }
 
                 //Find a new position proportionally closer to the end, based on the moveTime
                 Vector3 newPostion = Vector3.MoveTowards(rb2D.position, endpos, inverseMoveTime * Time.deltaTime);
@@ -310,8 +310,17 @@ namespace Assets.Scripts
                 transform.SetParent(deckManager.transform);
             }
             else
-            {                
+            {
                 transform.SetParent(endPoint.transform);
+            }
+
+            if (showDescription)
+            {
+                cardEffectDescription.SetActive(true);
+            }
+            else
+            {
+                cardEffectDescription.SetActive(false);
             }
 
             yield return new WaitForSeconds(0.3f);

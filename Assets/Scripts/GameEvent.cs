@@ -81,6 +81,32 @@ namespace Assets.Scripts
 
         }
     }
+    public class Heal_GUI : GameEvent
+    {
+        public int healing { get; private set; }
+        public CardgameManager.Team team { get; private set; }
+        public CardManager card { get; private set; }
+
+
+        public Heal_GUI(int damage, CardgameManager.Team team, CardManager card)
+        {
+            this.card = card;
+            this.healing = healing;
+            this.team = team;
+
+        }
+    }
+    public class Heal_Trigger : GameEvent
+    {
+        public CardgameManager.Team team { get; private set; }
+
+
+        public Heal_Trigger(CardgameManager.Team team)
+        {
+            this.team = team;
+
+        }
+    }
     public class UpdateMana_GUI : GameEvent
     {
         public int mana { get; private set; }
