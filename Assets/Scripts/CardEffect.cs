@@ -7,16 +7,16 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     [Serializable]
-    public class CardEffect 
+    public class CardEffect
     {
 
         public enum Effect { DealDamage, DrawCard, ReduceDamage, Heal, AddMaxMana };
         public Effect effect;
-
         public int value;
 
-        public enum Trigger { Instant, Passive, StartOfTurn, EndOfTurn, OnTakeDamage, OnDealDamage, OnDraw, OnPlayCard };
+        public enum Trigger { Instant, Passive, StartOfTurn, EndOfTurn, OnTakeDamage, OnDealDamage, OnDraw, OnPlayCard, OnHeal };
         public Trigger trigger;
+        public CardgameManager.Team triggeredBy;
 
     }
 

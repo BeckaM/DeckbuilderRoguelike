@@ -110,7 +110,7 @@ namespace Assets.Scripts
             return delegateLookup.ContainsKey(del);
         }
 
-        private void TriggerEvent(GameEvent e)
+        public void TriggerEvent(GameEvent e)
         {
             
             EventDelegate del;

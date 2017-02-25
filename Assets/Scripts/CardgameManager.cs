@@ -14,8 +14,8 @@ namespace Assets.Scripts
         public static CardgameManager instance;
 
 
-        public enum Team { My, AI };
-        public Team turn = Team.My;
+        public enum Team { Me, Opponent };
+        public Team turn = Team.Me;
 
         public Image playerPortrait;
         public Text playerLifeText;
@@ -90,23 +90,16 @@ namespace Assets.Scripts
             //Sets opponent profile images and texts.
             SetOpponents();
 
-            //FindLevelObjects();
+            //Update life and mana in the GUI.
+            EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
+            EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
+            EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
+            EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
 
             //Draw our starting hand
             DrawStartingHands();
 
-
-            UpdateGame();
         }
-
-        //private void FindLevelObjects()
-        //{
-        //    //DungeonCanvas = GameObject.Find("Canvas(Board)");
-        //    myDeck = GameObject.Find("MyDeck(Clone").GetComponent<DeckManager>();
-        //    AIDeck = GameObject.Find("AIDeck(Clone)").GetComponent<DeckManager>();
-        //}
-
-
 
         private void DrawStartingHands()
         {
@@ -116,36 +109,12 @@ namespace Assets.Scripts
                 DeckManager.player.Draw();
                 DeckManager.monster.Draw();
 
-
             }
         }
 
-
-        //private void PutCardsInLists()
-        //{
-        //    foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
-        //    {
-        //        //CardObject.GetComponent<Rigidbody>().isKinematic = true;
-        //        CardManager c = CardObject.GetComponent<CardManager>();
-
-        //        if (c.team == CardManager.Team.My)
-        //        {
-        //            MyDeckCards.Add(CardObject);
-
-        //        }
-
-
-        //        else
-        //        {
-        //            AIDeckCards.Add(CardObject);
-        //        }
-        //    }
-
-        //}
-
         private void GUIUpdateDeckDiscardText(UpdateDeckTexts_GUI updates)
         {
-            if (updates.team == Team.My)
+            if (updates.team == Team.Me)
             {
                 playerDeckCount.text = updates.decktext.ToString();
                 playerDiscardCount.text = updates.discardtext.ToString();
@@ -161,7 +130,7 @@ namespace Assets.Scripts
         private void GUIUpdateMana(UpdateMana_GUI e)
         {
             //Update Mana text in UI.
-            if (e.team == Team.My)
+            if (e.team == Team.Me)
             {
                 playerManaText.text = "Mana:" + e.mana + "/" + player.maxMana;
             }
@@ -176,7 +145,7 @@ namespace Assets.Scripts
         private void GUIUpdateLife(UpdateLife_GUI e)
         {
             //Update Mana text in UI.
-            if (e.team == Team.My)
+            if (e.team == Team.Me)
             {
                 playerLifeText.text = "Life:" + e.life + "/" + player.maxLife;
             }
@@ -205,48 +174,48 @@ namespace Assets.Scripts
 
         internal void IncreaseMaxMana(int value, Team team)
         {
-            if (team == Team.My)
+            if (team == Team.Me)
             {
                 player.maxMana += value;
 
-                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.My));
+                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
             }
             else
             {
                 enemy.maxMana += value;
-                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.AI));
+                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
 
             }
 
         }
         internal void IncreaseDamageReduction(int value, Team team)
         {
-            if (team == Team.My)
+            if (team == Team.Me)
             {
                 player.ward += value;
 
-             //   EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.My));
+                //   EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.My));
             }
             else
             {
                 enemy.ward += value;
-               // EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.AI));
+                // EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.AI));
 
             }
 
         }
         internal void ApplyDamage(int value, Team team)
         {
-            if (team == Team.My)
+            if (team == Team.Me)
             {
                 enemy.life -= value;
 
-                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, Team.AI));
+                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
             }
             else
             {
                 player.life -= value;
-                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, Team.My));
+                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
 
             }
 
@@ -254,14 +223,14 @@ namespace Assets.Scripts
 
         internal void ApplyHealing(int value, Team team)
         {
-            if (team == Team.My)
+            if (team == Team.Me)
             {
                 player.life += value;
                 if (player.life > player.maxLife)
                 {
                     player.life = player.maxLife;
                 }
-                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, Team.My));
+                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             }
             else
             {
@@ -270,7 +239,7 @@ namespace Assets.Scripts
                 {
                     enemy.life = enemy.maxLife;
                 }
-                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, Team.AI));
+                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, player.maxLife, Team.Opponent));
 
             }
 
@@ -303,44 +272,6 @@ namespace Assets.Scripts
             }
         }
 
-        //private void SetPlayableDraggable()
-        //{
-        //    if (turn == Team.My)
-        //    {
-        //        foreach (GameObject Card in MyHandCards)
-        //        {
-
-        //            CardManager c = Card.GetComponent<CardManager>();
-        //            c.isDragable = true;
-        //            if (c.card.cost <= player.mana)
-        //            {
-        //                c.isPlayable = true;
-
-        //            }
-        //            else
-        //            {
-        //                c.isPlayable = false;
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        foreach (GameObject Card in AIHandCards)
-        //        {
-        //            CardManager c = Card.GetComponent<CardManager>();
-        //            if (c.card.cost <= enemy.mana)
-        //            {
-        //                c.isPlayable = true;
-
-        //            }
-        //            else
-        //            {
-        //                c.isPlayable = false;
-        //            }
-        //        }
-        //    }
-        //}
-
         private void EndGame(bool win)
         {
 
@@ -360,25 +291,28 @@ namespace Assets.Scripts
             GameManager.instance.ReturnFromCardgame(win);
         }
 
-
-
         //Triggered by end turn button.
         public void EndTurn()
         {
-            if (turn == Team.AI)
+            EventManager.Instance.TriggerEvent(new TableCard_Trigger(turn, CardEffect.Trigger.EndOfTurn));
+
+            if (turn == Team.Opponent)
             {
+                
                 DeckManager.player.Draw();
-                turn = Team.My;
+                turn = Team.Me;
+                player.mana = player.maxMana;
+                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
             }
-            else if (turn == Team.My)
+            else if (turn == Team.Me)
             {
                 DeckManager.monster.Draw();
-                turn = Team.AI;
+                turn = Team.Opponent;
+                enemy.mana = enemy.maxMana;
+                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
             }
 
-            player.mana = player.maxMana;
-            enemy.mana = enemy.maxMana;
-            //  UpdateGame();
+
         }
 
 
@@ -387,7 +321,7 @@ namespace Assets.Scripts
 
             //Pay the mana cost.
             Debug.Log("Playing a new card: " + card.card.cardName);
-            if (card.owner == Team.My)
+            if (card.owner == Team.Me)
             {
                 player.mana = player.mana - card.card.cost;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, card.owner));
@@ -401,12 +335,12 @@ namespace Assets.Scripts
 
             //Check for triggers from playing a card.
             Debug.Log("Start checking for triggers on play card");
-            EventManager.Instance.QueueTrigger(new PlayCard_Trigger(card.owner));
+            EventManager.Instance.TriggerEvent(new TableCard_Trigger(card.owner, CardEffect.Trigger.OnPlayCard));
             Debug.Log("Done checking for triggers");
 
             //Apply the cards effects if they are instant.
             Debug.Log("Start Applying Card effects");
-          
+
 
             foreach (CardEffect effect in card.card.effects)
             {
@@ -440,26 +374,5 @@ namespace Assets.Scripts
             EventManager.Instance.QueueAnimation(new MoveCard_GUI(card));
 
         }
-
-        //private IEnumerator ResolveCard(CardManager card)
-        //{
-        //    Debug.Log("Playing a new card");
-        //    yield return StartCoroutine(ApplyEffects(card));
-
-        //    yield return StartCoroutine(CheckTriggers(CardEffect.Trigger.OnPlayCard, card.team));
-
-        //    yield return StartCoroutine(MoveCard(card));
-        //    Debug.Log("Done playing the card");
-
-        //}
-
-
-        //private IEnumerator CheckTriggers(CardEffect.Trigger triggertype, CardManager.Team team)
-        //{
-        //    Debug.Log("Start checking for triggers");
-        //    yield return new WaitForSeconds(3F);
-        //    Debug.Log("Stop checking for triggers");
-
-        //}
     }
 }

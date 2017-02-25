@@ -22,7 +22,7 @@ namespace Assets.Scripts
         {
             get
             {
-                if (team == CardgameManager.Team.My)
+                if (team == CardgameManager.Team.Me)
                 {
                     return CardgameManager.instance.playerDeck;
                 }
@@ -38,7 +38,7 @@ namespace Assets.Scripts
         {
             get
             {
-                if (team == CardgameManager.Team.My)
+                if (team == CardgameManager.Team.Me)
                 {
                     return CardgameManager.instance.playerHand;
                 }
@@ -87,7 +87,7 @@ namespace Assets.Scripts
 
                 instancename = "Me";
                 player = this;
-                team = CardgameManager.Team.My;
+                team = CardgameManager.Team.Me;
                 DontDestroyOnLoad(gameObject);
                 
             }
@@ -97,7 +97,7 @@ namespace Assets.Scripts
                 instancename = "AI";
                 monster = this;
               
-                team = CardgameManager.Team.AI;
+                team = CardgameManager.Team.Opponent;
 
             }
     

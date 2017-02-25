@@ -95,14 +95,16 @@ namespace Assets.Scripts
         }
     }
     public class UpdateLife_GUI : GameEvent
-    {
+    {        
         public int life { get; private set; }
+        public int maxLife { get; private set; }
         public CardgameManager.Team team { get; private set; }
 
 
-        public UpdateLife_GUI(int health, CardgameManager.Team team)
-        {
-            this.life = health;
+        public UpdateLife_GUI(int life, int maxLife, CardgameManager.Team team)
+        {            
+            this.life = life;
+            this.maxLife = maxLife;
             this.team = team;
 
         }
@@ -122,6 +124,19 @@ namespace Assets.Scripts
             this.value = value;
             this.team = team;
             this.type = type;
+
+        }
+    }
+
+    public class TableCard_Trigger : GameEvent
+    {
+        public CardgameManager.Team team { get; private set; }
+        public CardEffect.Trigger effect{ get; private set; }
+
+        public TableCard_Trigger(CardgameManager.Team team, CardEffect.Trigger effect)
+        {
+            this.team = team;
+            this.effect = effect;
 
         }
     }
