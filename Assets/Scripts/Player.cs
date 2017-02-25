@@ -13,6 +13,7 @@ namespace Assets.Scripts
 
         public int life;
         public int maxLife;
+        public int ward=0;
 
         public int mana =1 ;
         public int maxMana = 1;

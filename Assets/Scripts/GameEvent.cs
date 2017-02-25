@@ -55,21 +55,7 @@ namespace Assets.Scripts
 
         }
     }
-    public class DealDamage_GUI : GameEvent
-    {
-        public int damage { get; private set; }
-        public CardgameManager.Team team { get; private set; }
-        public CardManager card { get; private set; }
-
-
-        public DealDamage_GUI(int damage, CardgameManager.Team team, CardManager card)
-        {
-            this.card = card;
-            this.damage = damage;
-            this.team = team;
-
-        }
-    }
+   
     public class DealDamage_Trigger : GameEvent
     {
         public CardgameManager.Team team { get; private set; }
@@ -81,21 +67,7 @@ namespace Assets.Scripts
 
         }
     }
-    public class Heal_GUI : GameEvent
-    {
-        public int healing { get; private set; }
-        public CardgameManager.Team team { get; private set; }
-        public CardManager card { get; private set; }
-
-
-        public Heal_GUI(int damage, CardgameManager.Team team, CardManager card)
-        {
-            this.card = card;
-            this.healing = healing;
-            this.team = team;
-
-        }
-    }
+    
     public class Heal_Trigger : GameEvent
     {
         public CardgameManager.Team team { get; private set; }
@@ -110,12 +82,14 @@ namespace Assets.Scripts
     public class UpdateMana_GUI : GameEvent
     {
         public int mana { get; private set; }
+        public int maxMana { get; private set; }
         public CardgameManager.Team team { get; private set; }
 
 
-        public UpdateMana_GUI(int mana, CardgameManager.Team team)
+        public UpdateMana_GUI(int mana, int maxMana, CardgameManager.Team team)
         {
             this.mana = mana;
+            this.maxMana = maxMana;
             this.team = team;
 
         }
@@ -133,6 +107,23 @@ namespace Assets.Scripts
 
         }
     }
+    public class CardEffect_GUI : GameEvent
+    {
+        public int value { get; private set; }
+        public CardEffect.Effect type { get; private set; }
+        public CardgameManager.Team team { get; private set; }
+        public CardManager card { get; private set; }
 
+
+        public CardEffect_GUI(int value, CardgameManager.Team team, CardManager card, CardEffect.Effect type)
+        {
+
+            this.card = card;
+            this.value = value;
+            this.team = team;
+            this.type = type;
+
+        }
+    }
 
 }

@@ -8,10 +8,8 @@ using System.Collections.Generic;
 namespace Assets.Scripts
 {
 
-
     public class CardManager : MonoBehaviour
     {
-
 
         public Sprite[] sprites;
         public Card card;
@@ -94,7 +92,7 @@ namespace Assets.Scripts
 
         //private Vector3 startSize;
         //private Vector3 endSize;
-
+        private int effectCounter;
 
         private Rigidbody2D rb2D;
 
@@ -143,56 +141,75 @@ namespace Assets.Scripts
 
         internal void ApplyEffect(CardEffect cardEffect)
         {
+            EventManager.Instance.AddListener<CardEffect_GUI>(CardEffectAnimation);
+            effectCounter++;
+
+            EventManager.Instance.QueueAnimation(new CardEffect_GUI(cardEffect.value, owner, this, cardEffect.effect));
+
             if (CardEffect.Effect.DealDamage.Equals(cardEffect.effect))
             {
-                EventManager.Instance.AddListener<DealDamage_GUI>(DealDamageAnimation);
-                EventManager.Instance.QueueAnimation(new DealDamage_GUI(cardEffect.value, owner, this));
-
                 CardgameManager.instance.ApplyDamage(cardEffect.value, owner);
 
-
                 EventManager.Instance.QueueTrigger(new DealDamage_Trigger(owner));
-
             }
 
             else if (CardEffect.Effect.Heal.Equals(cardEffect.effect))
             {
-
-                EventManager.Instance.QueueAnimation(new Heal_GUI(cardEffect.value, owner, this));
-
                 CardgameManager.instance.ApplyHealing(cardEffect.value, owner);
 
-
                 EventManager.Instance.QueueTrigger(new Heal_Trigger(owner));
-
             }
 
+            else if (CardEffect.Effect.AddMaxMana.Equals(cardEffect.effect))
+            {
+                CardgameManager.instance.IncreaseMaxMana(cardEffect.value, owner);
+            }
 
-            //if effect is damage
-            // deal "value"
-            // trigger CardGameManager.DealDamage(Value)
-
-            //else if is heal 
-
-            // heal "value"
-            //trigger CardGameManager.Heal(Value)
-
-            //else if DrawCard
-            //trigger CardGameManager.DrawCard(Value)           
+            else if (CardEffect.Effect.ReduceDamage.Equals(cardEffect.effect))
+            {
+                CardgameManager.instance.IncreaseDamageReduction(cardEffect.value, owner);
+            }
+            else
+            {
+                Debug.LogError("Card Effct not Implemented yet!");
+            }
         }
 
-
-
-        private void DealDamageAnimation(DealDamage_GUI damage)
+        public void CardEffectAnimation(CardEffect_GUI e)
         {
-            var text = cardEffectText.GetComponent<Text>();
+            if (e.type == CardEffect.Effect.AddMaxMana)
+            {
+                var text = cardEffectText.GetComponent<Text>();
 
+                text.text = "Max Mana Increased +" + e.value + "!";
 
-            text.text = "" + damage.damage + " Damage!";
+                StartCoroutine(EffectText(Color.blue));
+            }
+            else if (e.type == CardEffect.Effect.DealDamage)
+            {
+                var text = cardEffectText.GetComponent<Text>();
 
-            StartCoroutine(EffectText(Color.red));
+                text.text = "" + e.value + " Damage!";
 
-        }
+                StartCoroutine(EffectText(Color.red));
+            }
+            else if (e.type == CardEffect.Effect.Heal)
+            {
+                var text = cardEffectText.GetComponent<Text>();
+
+                text.text = "" + e.value + " Life Restored!";
+
+                StartCoroutine(EffectText(Color.green));
+            }
+            else if (e.type == CardEffect.Effect.ReduceDamage)
+            {
+                var text = cardEffectText.GetComponent<Text>();
+
+                text.text = "+" + e.value + " Damage Reduction!";
+
+                StartCoroutine(EffectText(Color.grey));
+            }
+        }               
 
         private IEnumerator EffectText(Color color)
         {
@@ -200,25 +217,21 @@ namespace Assets.Scripts
             text.color = color;
             cardEffectText.SetActive(true);
 
-            for (var n = 0; n < 3; n++)
+            for (var n = 0; n < 5; n++)
             {
-               text.color = Color.white;
+                text.color = Color.white;
                 yield return new WaitForSeconds(.1f);
                 text.color = color;
                 yield return new WaitForSeconds(.1f);
             }
 
             cardEffectText.SetActive(false);
-
-            //Color whateverColor = Color.black;
-            //for (var n = 0; n < 3; n++)
-            //{
-            //    GetComponent<Image>().color = Color.white;
-            //    yield return new WaitForSeconds(.1f);
-            //    GetComponent<Image>().color = whateverColor;
-            //    yield return new WaitForSeconds(.1f);
-            //}
-            //GetComponent<Image>().color = Color.white;
+                        
+            effectCounter--;
+            if (effectCounter == 0)
+            {
+                EventManager.Instance.RemoveListener<CardEffect_GUI>(CardEffectAnimation);
+            }
             EventManager.Instance.processingQueue = false;
         }
 

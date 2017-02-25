@@ -71,7 +71,7 @@ namespace Assets.Scripts
             EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
         }
 
-       
+
 
         void OnDisable()
         {
@@ -184,7 +184,7 @@ namespace Assets.Scripts
             {
                 monsterLifeText.text = "Life:" + e.life + "/" + enemy.maxLife;
             }
-            
+
             EventManager.Instance.processingQueue = false;
         }
 
@@ -203,12 +203,44 @@ namespace Assets.Scripts
 
         }
 
+        internal void IncreaseMaxMana(int value, Team team)
+        {
+            if (team == Team.My)
+            {
+                player.maxMana += value;
+
+                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.My));
+            }
+            else
+            {
+                enemy.maxMana += value;
+                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.AI));
+
+            }
+
+        }
+        internal void IncreaseDamageReduction(int value, Team team)
+        {
+            if (team == Team.My)
+            {
+                player.ward += value;
+
+             //   EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.My));
+            }
+            else
+            {
+                enemy.ward += value;
+               // EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.AI));
+
+            }
+
+        }
         internal void ApplyDamage(int value, Team team)
         {
             if (team == Team.My)
             {
                 enemy.life -= value;
-                                
+
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, Team.AI));
             }
             else
@@ -216,7 +248,7 @@ namespace Assets.Scripts
                 player.life -= value;
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, Team.My));
 
-            }            
+            }
 
         }
 
@@ -246,7 +278,7 @@ namespace Assets.Scripts
 
         public void UpdateGame()
         {
-            
+
 
             // Set cards as playable and/or draggable.
             //SetPlayableDraggable();
@@ -346,7 +378,7 @@ namespace Assets.Scripts
 
             player.mana = player.maxMana;
             enemy.mana = enemy.maxMana;
-          //  UpdateGame();
+            //  UpdateGame();
         }
 
 
@@ -358,12 +390,12 @@ namespace Assets.Scripts
             if (card.owner == Team.My)
             {
                 player.mana = player.mana - card.card.cost;
-                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, card.owner));
+                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, card.owner));
             }
             else
             {
                 enemy.mana = enemy.mana - card.card.cost;
-                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, card.owner));
+                EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, card.owner));
             }
 
 
@@ -374,10 +406,11 @@ namespace Assets.Scripts
 
             //Apply the cards effects if they are instant.
             Debug.Log("Start Applying Card effects");
+          
 
             foreach (CardEffect effect in card.card.effects)
             {
-                if (effect.trigger == CardEffect.Trigger.Instant)
+                if (effect.trigger == CardEffect.Trigger.Instant || effect.trigger == CardEffect.Trigger.Passive)
                 {
                     card.ApplyEffect(effect);
 
@@ -401,8 +434,8 @@ namespace Assets.Scripts
                 card.startPoint = tabletop;
                 card.endPoint = playerTable;
             }
-                 
-           
+
+
             //Queue up a move card event to move the card to it's final destination.
             EventManager.Instance.QueueAnimation(new MoveCard_GUI(card));
 
