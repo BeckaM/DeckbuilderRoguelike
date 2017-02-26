@@ -41,20 +41,8 @@ namespace Assets.Scripts
         public Text monsterLifeText;
         public Text monsterManaText;
         public Text monsterDeckCount;
-        public Text monsterDiscardCount;
-
-
-
-        //  public List<GameObject> MyDeckCards = new List<GameObject>();
-        public List<GameObject> MyHandCards = new List<GameObject>();
-        public List<GameObject> MyTableCards = new List<GameObject>();
-        //   public List<GameObject> MyDiscardCards = new List<GameObject>();
-
-        //   public List<GameObject> AIDeckCards = new List<GameObject>();
-        public List<GameObject> AIHandCards = new List<GameObject>();
-        public List<GameObject> AITableCards = new List<GameObject>();
-        // public List<GameObject> AIDiscardCards = new List<GameObject>();
-
+        public Text monsterDiscardCount;      
+                      
         public EnemyManager enemy;
         public Player player;
 
@@ -310,6 +298,7 @@ namespace Assets.Scripts
                 turn = Team.Opponent;
                 enemy.mana = enemy.maxMana;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
+                enemy.initAI();
             }
 
 
@@ -359,19 +348,19 @@ namespace Assets.Scripts
             {
                 Debug.Log("Duration = 0, startpoint tabletop endpoint discard");
                 card.SetCardPosition(CardManager.CardStatus.InDiscard);
-                card.startPoint = tabletop;
-                card.endPoint = playerDiscard;
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.discard));
+              
             }
             else
             {
                 card.SetCardPosition(CardManager.CardStatus.OnTable);
-                card.startPoint = tabletop;
-                card.endPoint = playerTable;
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.table));
+               
             }
 
 
             //Queue up a move card event to move the card to it's final destination.
-            EventManager.Instance.QueueAnimation(new MoveCard_GUI(card));
+            
 
         }
     }

@@ -55,29 +55,9 @@ namespace Assets.Scripts
         public CardgameManager.Team team;
         public List<GameObject> cardsInDeck = new List<GameObject>();
         public List<GameObject> cardsInDiscard = new List<GameObject>();
-        public int cardsInDeckCount
-        {
-            get
-            {
-                var c = cardsInDeck.Count;
-                return c;
-            }
-        }
-
-        public int cardsInDiscardCount
-        {
-            get
-            {
-                var c = cardsInDiscard.Count;
-                return c;
-            }
-        }
-
-        //public GameObject playerDeckHolder;
-        //public GameObject enemyDeckHolder;
-        //public GameObject playerDiscard;
-        //public GameObject enemyDiscard;
-
+        public List<GameObject> cardsOnTable = new List<GameObject>();
+        public List<GameObject> cardsInHand = new List<GameObject>();
+        
         // Use this for initialization
         void Awake()
         {
@@ -185,18 +165,18 @@ namespace Assets.Scripts
                 //Prepare the card for being moved
                 CardManager manager = tempCard.GetComponent<CardManager>();
                 manager.SetCardPosition(CardManager.CardStatus.InHand);
-                manager.startPoint = deckholder;
-                manager.endPoint = hand;
+                //manager.startPoint = deckholder;
+                //manager.endPoint = hand;
 
                 cardsInDeck.Remove(tempCard);
-                                
-                
-
+                cardsInHand.Add(tempCard);
+                               
+                                               
                 //Queue up a move card animation.
-                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager));
-                EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeckCount, cardsInDiscardCount, team));
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, deckholder, hand));
+                EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
                 //Check for objects that trigger on draw card.
-                EventManager.Instance.QueueTrigger(new DrawCard_Trigger(tempCard.GetComponent<CardManager>().owner));
+                EventManager.Instance.TriggerEvent(new TableCard_Trigger(manager.owner, CardEffect.Trigger.OnDraw));
                
             }
         }

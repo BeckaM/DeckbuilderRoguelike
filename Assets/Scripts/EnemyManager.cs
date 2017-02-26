@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -23,8 +24,7 @@ namespace Assets.Scripts
         public Sprite[] sprites;
         public Sprite monsterImage;
 
-
-
+        
         //Gets monster properties from Dungeon Manager and sets them on the enemy object.
         public void PopulateEnemy(Enemy enemytoget, int Level)
         {
@@ -53,20 +53,16 @@ namespace Assets.Scripts
 
             var EnemyDeckBuilder = new EnemyDeckBuilder();
             EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, MonsterLevel);
-
-
-         //   return hungryMonsterScale > 100 ? "Beasty gulp murloc will eat everything" : "Not that hungry Murloc but can swallow a hero or two";
+                                 
         }
 
-       
-
-       
-
-        internal void GainLife(int gain)
+        internal void initAI()
         {
-            life += gain;
-            CardgameManager.instance.monsterLifeText.text = "+" + gain;
-            Invoke("UpdateLife", 1f);
+            MonsterBrain.PlayCards();
+
+            CardgameManager.instance.EndTurn();
+
+
         }
     }
 }

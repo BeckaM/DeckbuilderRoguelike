@@ -10,32 +10,14 @@ namespace Assets.Scripts
     public class MoveCard_GUI : GameEvent
     {
         public CardManager movingCard { get; private set; }
+        public GameObject start { get; private set; }
+        public GameObject end { get; private set; }
 
-        public MoveCard_GUI(CardManager movingCard)
+        public MoveCard_GUI(CardManager movingCard, GameObject start, GameObject end)
         {
             this.movingCard = movingCard;
-
-        }
-    }
-
-    public class DrawCard_Trigger : GameEvent
-    {
-        public CardgameManager.Team team { get; private set; }
-
-        public DrawCard_Trigger(CardgameManager.Team team)
-        {
-            this.team = team;
-
-        }
-    }
-
-    public class PlayCard_Trigger : GameEvent
-    {
-        public CardgameManager.Team team { get; private set; }
-
-        public PlayCard_Trigger(CardgameManager.Team team)
-        {
-            this.team = team;
+            this.start = start;
+            this.end = end;
 
         }
     }
@@ -55,30 +37,7 @@ namespace Assets.Scripts
 
         }
     }
-   
-    public class DealDamage_Trigger : GameEvent
-    {
-        public CardgameManager.Team team { get; private set; }
 
-
-        public DealDamage_Trigger(CardgameManager.Team team)
-        {
-            this.team = team;
-
-        }
-    }
-    
-    public class Heal_Trigger : GameEvent
-    {
-        public CardgameManager.Team team { get; private set; }
-
-
-        public Heal_Trigger(CardgameManager.Team team)
-        {
-            this.team = team;
-
-        }
-    }
     public class UpdateMana_GUI : GameEvent
     {
         public int mana { get; private set; }
@@ -95,14 +54,14 @@ namespace Assets.Scripts
         }
     }
     public class UpdateLife_GUI : GameEvent
-    {        
+    {
         public int life { get; private set; }
         public int maxLife { get; private set; }
         public CardgameManager.Team team { get; private set; }
 
 
         public UpdateLife_GUI(int life, int maxLife, CardgameManager.Team team)
-        {            
+        {
             this.life = life;
             this.maxLife = maxLife;
             this.team = team;
@@ -131,7 +90,7 @@ namespace Assets.Scripts
     public class TableCard_Trigger : GameEvent
     {
         public CardgameManager.Team team { get; private set; }
-        public CardEffect.Trigger effect{ get; private set; }
+        public CardEffect.Trigger effect { get; private set; }
 
         public TableCard_Trigger(CardgameManager.Team team, CardEffect.Trigger effect)
         {

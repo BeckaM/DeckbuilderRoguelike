@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;   //Allows us to use UI.
 using UnityEngine.SceneManagement;
 using System;
+using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
@@ -32,9 +33,7 @@ namespace Assets.Scripts
         private Animator animator;                  //Used to store a reference to the Player's animator component.
                                  
         private Vector2 touchOrigin = -Vector2.one; //Used to store location of screen touch origin for mobile controls.
-
         
-
         //Start overrides the Start function of MovingObject
         protected override void Start()
         {
@@ -64,12 +63,12 @@ namespace Assets.Scripts
         }
 
         
-        internal void GainLife(int gain)
-        {
-            life += gain;
-            CardgameManager.instance.playerLifeText.text = "+" + gain;
-            Invoke("UpdateLife", 1f);
-        }
+        //internal void GainLife(int gain)
+        //{
+        //    life += gain;
+        //    CardgameManager.instance.playerLifeText.text = "+" + gain;
+        //    Invoke("UpdateLife", 1f);
+        //}
 
         //CheckIfGameOver checks if the player is out of food points and if so, ends the game.
 

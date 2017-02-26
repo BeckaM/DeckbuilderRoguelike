@@ -17,27 +17,13 @@ namespace Assets.Scripts
         public GameObject cardImage;
         public GameObject cardName;
         public GameObject cardEffectText;
+        public int duration;
 
         public enum CardStatus { InDeck, InHand, OnTable, InDiscard };
         public CardStatus cardStatus = CardStatus.InDeck;
 
         public CardgameManager.Team owner;
-
-        public bool showDescription
-        {
-            get
-            {
-                if (cardStatus == CardStatus.InHand)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
-
+                
         public DeckManager deckManager
         {
             get
@@ -83,16 +69,46 @@ namespace Assets.Scripts
                 }
             }
         }
+        public GameObject table
+        {
+            get
+            {
+                if (owner == CardgameManager.Team.Me )
+                {
+                    return CardgameManager.instance.playerTable;
+                }
+                else
+                {
+                    return CardgameManager.instance.monsterTable;
+                }
+            }
+        }
+
+        public GameObject discard
+        {
+            get
+            {
+                if (owner == CardgameManager.Team.Me)
+                {
+                    return CardgameManager.instance.playerDiscard;
+                }
+                else
+                {
+                    return CardgameManager.instance.monsterDiscard;
+                }
+            }
+        }
 
         public float moveTime = 1f;
         private float inverseMoveTime;
 
-        public GameObject startPoint;
-        public GameObject endPoint;
+        //public GameObject startPoint;
+        //public GameObject endPoint;
 
         //private Vector3 startSize;
         //private Vector3 endSize;
-        private int effectCounter;
+        public int effectCounter;
+        public int moveCounter;
 
         private Rigidbody2D rb2D;
 
@@ -111,6 +127,7 @@ namespace Assets.Scripts
         {
             cardStatus = status;
             EventManager.Instance.AddListener<MoveCard_GUI>(Move);
+            moveCounter++;
 
             if (status == CardStatus.OnTable)
             {
@@ -125,14 +142,17 @@ namespace Assets.Scripts
             {
                 if (trigger.effect == cardeffect.trigger && trigger.team == cardeffect.triggeredBy)
                 {
+                    
                     ApplyEffect(cardeffect);
                 }
             }
 
             if(trigger.effect == CardEffect.Trigger.EndOfTurn &&  trigger.team == owner)
             {
-                card.cardDuration--;
-                if(card.cardDuration == 0)
+                Debug.Log(card.cardName);
+                duration--;
+               // card.cardName = card.cardName + "second";
+                if( duration == 0)
                 {
                     ExpireCard();
                 }
@@ -165,6 +185,7 @@ namespace Assets.Scripts
             //Set Card Background.
             var background = GetComponent<Image>();
             background.color = card.backgroundColor;
+            duration = card.cardDuration;
 
         }
 
@@ -272,30 +293,30 @@ namespace Assets.Scripts
             if (move.movingCard == this)
             {
                 Debug.Log("Card " + card.cardName + " recieved a move trigger");
-
-                StartCoroutine(SmoothMovement());
+                                
+                StartCoroutine(SmoothMovement(move.start, move.end));
 
 
             }
         }
 
-        protected IEnumerator SmoothMovement()
+        protected IEnumerator SmoothMovement(GameObject start, GameObject end)
         {
             Debug.Log("Starting move card animation");
             Vector3 endpos = new Vector3();
             // Vector3 endsize = new Vector3();
 
-            transform.SetParent(startPoint.transform);
+            transform.SetParent(start.transform);
             this.transform.localScale = Vector3.one;
             yield return new WaitForEndOfFrame();
             Vector3 startpos = new Vector3();
             startpos = this.transform.position;
 
             //if we have no cards at this position, make a test place and get the new position from that.
-            if (endPoint.transform.childCount == 0)
+            if (end.transform.childCount == 0)
             {
                 this.GetComponent<CanvasGroup>().alpha = (0f);
-                transform.SetParent(endPoint.transform);
+                transform.SetParent(end.transform);
                 //this.transform.localScale = Vector3.one;
                 //transform.SetParent(endPoint.transform);
                 yield return new WaitForEndOfFrame();
@@ -308,12 +329,12 @@ namespace Assets.Scripts
             {
 
                 this.GetComponent<CanvasGroup>().alpha = (0f);
-                var lastChild = endPoint.transform.GetChild(endPoint.transform.childCount - 1);
+                var lastChild = end.transform.GetChild(end.transform.childCount - 1);
                 endpos = lastChild.transform.position;
                 //  endsize = lastChild.transform.localScale;
 
             }
-            this.transform.SetParent(startPoint.transform);
+            this.transform.SetParent(start.transform);
             yield return new WaitForEndOfFrame();
 
 
@@ -357,26 +378,32 @@ namespace Assets.Scripts
             }
 
 
+            moveCounter--;
+            if (moveCounter == 0)
+            {
+                EventManager.Instance.RemoveListener<MoveCard_GUI>(Move);
+            }
+           
             //this.transform.localScale = endsize;
-            EventManager.Instance.RemoveListener<MoveCard_GUI>(Move);
+            
             //yield return new WaitForSeconds(3f);
 
-            if (cardStatus == CardStatus.InDiscard)
+            if (end == discard)
             {
                 transform.SetParent(deckManager.transform);
             }
             else
             {
-                transform.SetParent(endPoint.transform);
+                transform.SetParent(end.transform);
             }
 
-            if (showDescription)
+            if (end == table)
             {
-                cardDescription.SetActive(true);
+                cardDescription.SetActive(false);
             }
             else
             {
-                cardDescription.SetActive(false);
+                cardDescription.SetActive(true);
             }
 
             yield return new WaitForSeconds(0.3f);
@@ -389,14 +416,48 @@ namespace Assets.Scripts
         public void ExpireCard()
         {
             SetCardPosition(CardStatus.InDiscard);
-            startPoint = CardgameManager.instance.playerTable;
-            endPoint = CardgameManager.instance.playerDiscard;
+            //startPoint = table;
+            //endPoint = discard;
             EventManager.Instance.RemoveListener<TableCard_Trigger>(CardTrigger);
 
-            EventManager.Instance.QueueAnimation(new MoveCard_GUI(this));
+            foreach (CardEffect cardeffect in card.effects)
+            {
+                if (cardeffect.trigger == CardEffect.Trigger.Passive)
+                {
+                    RemoveEffect(cardeffect);
+                }
+            }
 
+
+            EventManager.Instance.QueueAnimation(new MoveCard_GUI(this, table, discard));
+            moveCounter++;
+
+        }
+        internal void RemoveEffect(CardEffect cardEffect)
+        {
+            EventManager.Instance.AddListener<CardEffect_GUI>(CardEffectAnimation);
+            effectCounter++;
+
+            EventManager.Instance.QueueAnimation(new CardEffect_GUI(cardEffect.value, owner, this, cardEffect.effect));
+            cardEffect.value = cardEffect.value * -1;
+                       
+            if (CardEffect.Effect.AddMaxMana.Equals(cardEffect.effect))
+            {
+                
+                CardgameManager.instance.IncreaseMaxMana(cardEffect.value, owner);
+            }
+
+            else if (CardEffect.Effect.ReduceDamage.Equals(cardEffect.effect))
+            {
+                CardgameManager.instance.IncreaseDamageReduction(cardEffect.value, owner);
+            }
+            else
+            {
+                Debug.LogError("Card Effect not Implemented yet!");
+            }
         }
     }
     
+
 }
 
