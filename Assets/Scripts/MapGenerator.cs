@@ -25,8 +25,11 @@ public class MapGenerator : MonoBehaviour
     {
         GenerateMap();
         PlacePlayer();
+        PlaceExit();
 
     }
+
+    
 
     void Update()
     {
@@ -34,6 +37,7 @@ public class MapGenerator : MonoBehaviour
         {
             GenerateMap();
             PlacePlayer();
+            PlaceExit();
         }
     }
 
@@ -87,6 +91,17 @@ public class MapGenerator : MonoBehaviour
         Vector3 pos1 = CoordToWorldPoint(pos);
 
         player.transform.position = pos1;
+
+    }
+    private void PlaceExit()
+    {
+        var room = rooms[rooms.Count-1];
+
+
+        var pos = room.tiles[room.tiles.Count-1];
+        Vector3 pos1 = CoordToWorldPoint(pos);
+
+        exit.transform.position = pos1;
 
     }
 
@@ -314,7 +329,7 @@ public class MapGenerator : MonoBehaviour
 
     Vector3 CoordToWorldPoint(Coord tile)
     {
-        return new Vector3(-width / 2 + .5f + tile.tileX, -height / 2 + .5f + tile.tileY, 2);
+        return new Vector3(-width / 2 + .5f + tile.tileX, 2, -height / 2 + .5f + tile.tileY);
     }
 
     List<List<Coord>> GetRegions(int tileType)
