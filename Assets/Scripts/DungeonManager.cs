@@ -10,35 +10,15 @@ namespace Assets.Scripts
 
     public class DungeonManager : MonoBehaviour
     {
-        // Using Serializable allows us to embed a class with sub properties in the inspector.
-        [Serializable]
-        public class Count
-        {
-            public int minimum;             //Minimum value for our Count class.
-            public int maximum;             //Maximum value for our Count class.
-
-
-            //Assignment constructor.
-            public Count(int min, int max)
-            {
-                minimum = min;
-                maximum = max;
-            }
-        }
+        
+       
 
 
 
-        public int columns = 8;                                         //Number of columns in our game board.
-        public int rows = 8;											//Number of rows in our game board.
-        public int vector = 90;                                         //Vector thing.
-        public Count wallCount = new Count(5, 9);                       //Lower and upper limit for our random number of walls per level.
-        public Count foodCount = new Count(1, 5);                       //Lower and upper limit for our random number of food items per level.
-        public GameObject exit;                                         //Prefab to spawn for exit.
-        public GameObject[] floorTiles;                                 //Array of floor prefabs.
-        public GameObject[] wallTiles;                                  //Array of wall prefabs.
-        public GameObject[] enemyTiles;                                 //Array of enemies to place.
-        public GameObject enemyPrefab;                                //Enemy prefab.
-        public GameObject[] outerWallTiles;                             //Array of outer tile prefabs.
+                          //Array of wall prefabs.
+       // public GameObject[] enemyTiles;                                 //Array of enemies to place.
+        //public GameObject enemyPrefab;                                //Enemy prefab.
+        //public GameObject[] outerWallTiles;                             //Array of outer tile prefabs.
 
         private Transform DungeonCanvas;
         private MapGenerator mapGen;                                  //A variable to store a reference to the transform of our Board object.

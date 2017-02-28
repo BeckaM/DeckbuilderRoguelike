@@ -9,6 +9,7 @@ namespace Assets.Scripts
     {
 
         public GameObject placeChecker;
+        public List<GameObject> placeCheckers= new List<GameObject>(); 
         public GameObject player;
         public GameObject exit;
         // public LayerMask layerMask = 10;
@@ -83,12 +84,13 @@ namespace Assets.Scripts
 
             FindPlacementSpots();
 
+            Debug.Log("Dungeon has " + rooms.Count + " rooms and " + placementSpots.Count + " placement spots." ) ; 
+
         }
 
         internal void FindPlacementSpots()
         {
-
-
+            
             placementSpots = new List<Coord>();
             foreach (Room room in rooms)
             {
@@ -107,6 +109,10 @@ namespace Assets.Scripts
                     }
 
                 }
+            }
+            foreach(GameObject checker in placeCheckers)
+            {
+                Destroy(checker);
             }
         }
         public bool CheckBounds(Vector3 position, Vector3 boundsSize, int layerMask)
@@ -127,7 +133,8 @@ namespace Assets.Scripts
 
             if (hitColliders.Length == 0)
             {
-                // var checker = Instantiate(placeChecker, position, Quaternion.identity);
+                var checker = Instantiate(placeChecker, position, Quaternion.identity);
+                placeCheckers.Add(checker);
 
                 return (true);
 
@@ -223,7 +230,7 @@ namespace Assets.Scripts
 
             rooms = survivingRooms;
 
-            ConnectClosestRooms(survivingRooms);
+           ConnectClosestRooms(survivingRooms);
         }
 
         void ConnectClosestRooms(List<Room> allRooms, bool forceAccessibilityFromMainRoom = false)
