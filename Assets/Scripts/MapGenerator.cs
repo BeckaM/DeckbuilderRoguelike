@@ -6,12 +6,16 @@ using System;
 public class MapGenerator : MonoBehaviour
 {
 
+    public GameObject placeChecker;
     public GameObject player;
     public GameObject exit;
+   // public LayerMask layerMask = 10;
+
 
     public int width;
     public int height;
     public List<Room> rooms;
+    public List<Coord> placementSpots;
 
     public string seed;
     public bool useRandomSeed;
@@ -24,20 +28,28 @@ public class MapGenerator : MonoBehaviour
     void Start()
     {
         GenerateMap();
-        PlacePlayer();
-        PlaceExit();
+        FindPlacementSpots();
+        PlacePlayerAndExit();
 
     }
 
-    
+
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
+            var gameObjects = GameObject.FindGameObjectsWithTag("Debug");
+
+            for (var i = 0; i < gameObjects.Length; i++)
+            {
+                Destroy(gameObjects[i]);
+            }
+
             GenerateMap();
-            PlacePlayer();
-            PlaceExit();
+            FindPlacementSpots();
+            PlacePlayerAndExit();
+
         }
     }
 
@@ -75,35 +87,107 @@ public class MapGenerator : MonoBehaviour
         meshGen.GenerateMesh(borderedMap, 1);
     }
 
-    internal void PlacePlayer()
+    internal void FindPlacementSpots()
     {
-        Room mainroom = new Room();
 
+        
+    placementSpots = new List<Coord>();
         foreach (Room room in rooms)
         {
-            if (room.isMainRoom)
+            room.placementSpots = new List<Coord>();
+
+
+            foreach (Coord spot in room.nonEdgeTiles)
             {
-                mainroom = room;
+
+                var bounds = placeChecker.transform.lossyScale;
+                if (CheckBounds(CoordToWorldPoint(spot), bounds, LayerMask.GetMask("DungeonCheck")))
+                {
+                    room.placementSpots.Add(spot);
+                    placementSpots.Add(spot);
+
+                }
+                
+            }
+        }
+    }
+    public bool CheckBounds(Vector3 position, Vector3 boundsSize, int layerMask)
+    {
+        Bounds boxBounds = new Bounds(position, boundsSize);
+
+        //float sqrHalfBoxSize = boxBounds.extents.sqrMagnitude;
+        //float overlapingSphereRadius = Mathf.Sqrt(sqrHalfBoxSize + sqrHalfBoxSize);
+
+        /* Hoping I have the previous calculation right, move on to finding the nearby colliders */
+        Collider[] hitColliders = Physics.OverlapSphere(position, 3, layerMask);
+        //foreach (Collider hit in hitColliders)
+        //{
+
+        //    Debug.Log("Hit: " + hit + hit.gameObject.layer);
+            
+        //}
+
+        if (hitColliders.Length == 0)
+        {
+           // var checker = Instantiate(placeChecker, position, Quaternion.identity);
+            
+            return (true);
+
+        }
+        else
+        {
+            return (false);
+        }
+
+       
+
+    }
+
+
+
+    internal void PlacePlayerAndExit()
+    {
+        List<Coord> placeListA = new List<Coord>();
+        List<Coord> placeListB = new List<Coord>();
+
+        foreach (Coord place in placementSpots)
+        {
+            placeListA.Add(place);
+            placeListB.Add(place);
+        }
+
+        int bestDistance = 0;
+        Coord bestSpotA = new Coord();
+        Coord bestSpotB = new Coord();
+
+        foreach (Coord placeA in placeListA)
+        {
+            foreach (Coord placeB in placeListB)
+            {
+
+                int distanceBetweenSpots = (int)(Mathf.Pow(placeA.tileX - placeB.tileX, 2) + Mathf.Pow(placeA.tileY - placeB.tileY, 2));
+
+                if (distanceBetweenSpots > bestDistance)
+                {
+                    bestDistance = distanceBetweenSpots;
+
+                    bestSpotA = placeA;
+                    bestSpotB = placeB;
+
+                }
             }
         }
 
-        var pos = mainroom.tiles[0];
-        Vector3 pos1 = CoordToWorldPoint(pos);
-
-        player.transform.position = pos1;
-
+        player.transform.position = CoordToWorldPoint(bestSpotA);
+        exit.transform.position = CoordToWorldPoint(bestSpotB);
     }
-    private void PlaceExit()
-    {
-        var room = rooms[rooms.Count-1];
 
 
-        var pos = room.tiles[room.tiles.Count-1];
-        Vector3 pos1 = CoordToWorldPoint(pos);
 
-        exit.transform.position = pos1;
 
-    }
+
+
+
 
     void ProcessMap()
     {
@@ -240,7 +324,7 @@ public class MapGenerator : MonoBehaviour
     void CreatePassage(Room roomA, Room roomB, Coord tileA, Coord tileB)
     {
         Room.ConnectRooms(roomA, roomB);
-        Debug.DrawLine (CoordToWorldPoint (tileA), CoordToWorldPoint (tileB), Color.green, 100);
+        Debug.DrawLine(CoordToWorldPoint(tileA), CoordToWorldPoint(tileB), Color.green, 100);
 
         List<Coord> line = GetLine(tileA, tileB);
         foreach (Coord c in line)
@@ -329,7 +413,7 @@ public class MapGenerator : MonoBehaviour
 
     Vector3 CoordToWorldPoint(Coord tile)
     {
-        return new Vector3(-width / 2 + .5f + tile.tileX, 2, -height / 2 + .5f + tile.tileY);
+        return new Vector3(-width / 2 + .5f + tile.tileX, -3.5f, -height / 2 + .5f + tile.tileY);
     }
 
     List<List<Coord>> GetRegions(int tileType)
@@ -462,15 +546,26 @@ public class MapGenerator : MonoBehaviour
         return wallCount;
     }
 
-    public struct Coord
+    public struct Coord : IComparable<Coord>
     {
+        public string comp;
         public int tileX;
         public int tileY;
+
 
         public Coord(int x, int y)
         {
             tileX = x;
             tileY = y;
+            comp = "X:" + tileX + "Y:" + tileY;
+        }
+
+
+        public int CompareTo(Coord otherCoord)
+
+        {
+
+            return otherCoord.comp.CompareTo(comp);
         }
     }
 
@@ -479,10 +574,13 @@ public class MapGenerator : MonoBehaviour
     {
         public List<Coord> tiles;
         public List<Coord> edgeTiles;
+        public List<Coord> nonEdgeTiles;
         public List<Room> connectedRooms;
         public int roomSize;
         public bool isAccessibleFromMainRoom;
         public bool isMainRoom;
+
+        public List<Coord> placementSpots;
 
         public Room()
         {
@@ -493,7 +591,11 @@ public class MapGenerator : MonoBehaviour
             tiles = roomTiles;
             roomSize = tiles.Count;
             connectedRooms = new List<Room>();
-
+            nonEdgeTiles = new List<Coord>();
+            foreach (Coord tile in roomTiles)
+            {
+                nonEdgeTiles.Add(tile);
+            }
             edgeTiles = new List<Coord>();
             foreach (Coord tile in tiles)
             {
@@ -506,6 +608,7 @@ public class MapGenerator : MonoBehaviour
                             if (map[x, y] == 1)
                             {
                                 edgeTiles.Add(tile);
+                                nonEdgeTiles.Remove(tile);
                             }
                         }
                     }
