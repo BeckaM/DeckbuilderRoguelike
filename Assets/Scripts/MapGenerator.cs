@@ -9,7 +9,7 @@ namespace Assets.Scripts
     {
 
         public GameObject placeChecker;
-        public List<GameObject> placeCheckers= new List<GameObject>(); 
+        public List<GameObject> placeCheckers = new List<GameObject>();
         public GameObject player;
         public GameObject exit;
         // public LayerMask layerMask = 10;
@@ -20,14 +20,14 @@ namespace Assets.Scripts
         public List<Room> rooms;
         public List<Coord> placementSpots;
 
-        public string seed;
+        public int seed;
         public bool useRandomSeed;
 
         [Range(0, 100)]
         public int randomFillPercent;
 
         int[,] map;
-               
+
         void Update()
         {
             if (Input.GetMouseButtonDown(0))
@@ -40,9 +40,9 @@ namespace Assets.Scripts
                 }
 
                 GenerateMap();
-                
+
                 PlacePlayerAndExit();
-                
+
 
             }
         }
@@ -84,13 +84,19 @@ namespace Assets.Scripts
 
             FindPlacementSpots();
 
-            Debug.Log("Dungeon has " + rooms.Count + " rooms and " + placementSpots.Count + " placement spots." ) ; 
+            Debug.Log("Dungeon has " + rooms.Count + " rooms and " + placementSpots.Count + " placement spots.");
+
+            if (placementSpots.Count < 5)
+            {
+                Debug.Log("Retrying for more spots");
+                GenerateMap();
+            }
 
         }
 
         internal void FindPlacementSpots()
         {
-            
+
             placementSpots = new List<Coord>();
             foreach (Room room in rooms)
             {
@@ -110,10 +116,13 @@ namespace Assets.Scripts
 
                 }
             }
-            foreach(GameObject checker in placeCheckers)
+            foreach (GameObject checker in placeCheckers)
             {
                 Destroy(checker);
             }
+
+           
+
         }
         public bool CheckBounds(Vector3 position, Vector3 boundsSize, int layerMask)
         {
@@ -183,11 +192,35 @@ namespace Assets.Scripts
             exit.transform.position = CoordToWorldPoint(bestSpotB);
             placementSpots.Remove(bestSpotA);
             placementSpots.Remove(bestSpotB);
+
+            foreach(Room room in rooms)
+            {
+                if(room.placementSpots.Contains(bestSpotA))
+                {
+                    room.placementSpots.Remove(bestSpotA);
+                    room.isPlayerRoom = true;
+                }
+                else if (room.placementSpots.Contains(bestSpotB))
+                {
+                    room.placementSpots.Remove(bestSpotB);
+                    room.isExitRoom =true;
+                }
+
+            }
+
         }
 
-        public void PlaceObjects()
+        public void PlaceObjects(List<GameObject> objects)
         {
-            throw new NotImplementedException();
+            int roomcounter =0;
+            foreach(GameObject thing in objects)
+            {
+                var roomchoice = rooms[roomcounter];
+                var spot = roomchoice.placementSpots[UnityEngine.Random.Range(0, roomchoice.placementSpots.Count)];
+                thing.transform.position = CoordToWorldPoint(spot);
+                placementSpots.Remove(spot);
+
+            }
         }
 
         void ProcessMap()
@@ -230,7 +263,7 @@ namespace Assets.Scripts
 
             rooms = survivingRooms;
 
-           ConnectClosestRooms(survivingRooms);
+            ConnectClosestRooms(survivingRooms);
         }
 
         void ConnectClosestRooms(List<Room> allRooms, bool forceAccessibilityFromMainRoom = false)
@@ -485,7 +518,8 @@ namespace Assets.Scripts
         {
             if (useRandomSeed)
             {
-                seed = Time.time.ToString();
+                seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+                
             }
 
             System.Random pseudoRandom = new System.Random(seed.GetHashCode());
@@ -552,8 +586,7 @@ namespace Assets.Scripts
             public string comp;
             public int tileX;
             public int tileY;
-
-
+            
             public Coord(int x, int y)
             {
                 tileX = x;
@@ -580,6 +613,8 @@ namespace Assets.Scripts
             public int roomSize;
             public bool isAccessibleFromMainRoom;
             public bool isMainRoom;
+            public bool isPlayerRoom =false;
+            public bool isExitRoom =false;
 
             public List<Coord> placementSpots;
 

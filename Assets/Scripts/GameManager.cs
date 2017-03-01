@@ -82,7 +82,7 @@ namespace Assets.Scripts
         //This is called each time a scene is loaded.
         void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name == "Main")
+            if (scene.name == "Scene 3D")
             {
                 //Add one to our level number.
                 level++;
@@ -99,22 +99,22 @@ namespace Assets.Scripts
             doingSetup = true;                     
             
             //Find all the scene objects we need.
-            FindLevelObjects();
+           // FindLevelObjects();
             
             //Hide the cardgame overlay.            
-            CardGameCanvas.SetActive(false);
+           // CardGameCanvas.SetActive(false);
 
             //Set the text of levelText to the string "Level" and append the current level number.
-            levelText.text = "Level " + level;
+           // levelText.text = "Level " + level;
                         
             //Set levelImage to active blocking player's view of the game board during setup.
-            levelImage.SetActive(true);
+          //  levelImage.SetActive(true);
 
             //Call the HideLevelImage function with a delay in seconds of levelStartDelay.
-            Invoke("HideLevelImage", levelStartDelay);
+          //  Invoke("HideLevelImage", levelStartDelay);
 
             //Initialize the starting deck and create the cards.
-            DeckManager.player.StartingDeck(playerClass.Startingdeck);
+           // DeckManager.player.StartingDeck(playerClass.Startingdeck);
 
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             boardScript.SetupScene(level);
