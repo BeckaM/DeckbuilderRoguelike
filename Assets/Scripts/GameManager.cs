@@ -31,6 +31,7 @@ namespace Assets.Scripts
         private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.                 
         private GameObject CardGameCanvas;
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
+        public ModalPanel panel;
         //public DeckManager myDeck;
         //public DeckManager AIDeck;
 
@@ -60,7 +61,7 @@ namespace Assets.Scripts
 
             //Get a component reference to the attached BoardManager script
             boardScript = GetComponent<DungeonManager>();
-
+            panel = ModalPanel.Instance();
 
 
             //Call the InitGame function to initialize the first level 

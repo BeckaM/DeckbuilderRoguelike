@@ -21,6 +21,7 @@ namespace Assets.Scripts
         public bool right = false;
         public GameObject playerimage;
         public float restartLevelDelay = 1f;        //Delay time in seconds to restart level.
+        public 
 
         void Start()
         {
@@ -67,7 +68,13 @@ namespace Assets.Scripts
             {
                 GameManager.instance.InitCardgame(other, this);
             }
+            else if (other.tag == "Chest")
+            {
+                other.GetComponent<ChestManager>().OpenChest();
+            }
         }
+
+
 
 
         //Restart reloads the scene when called.
