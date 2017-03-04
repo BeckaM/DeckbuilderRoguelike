@@ -29,7 +29,7 @@ namespace Assets.Scripts.Menu
             GameManager.instance.playerClass = classchoice;
             
 
-            SceneManager.LoadScene("Main");
+            SceneManager.LoadScene("Scene 3D");
             
         }
 

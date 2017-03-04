@@ -14,7 +14,6 @@ namespace Assets.Scripts
         public GameObject exit;
         // public LayerMask layerMask = 10;
 
-
         public int width;
         public int height;
         public List<Room> rooms;
@@ -28,26 +27,23 @@ namespace Assets.Scripts
 
         int[,] map;
 
-        void Update()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                var gameObjects = GameObject.FindGameObjectsWithTag("Debug");
+        //void Update()
+        //{
+        //    if (Input.GetMouseButtonDown(0))
+        //    {
+        //        var gameObjects = GameObject.FindGameObjectsWithTag("Debug");
 
-                for (var i = 0; i < gameObjects.Length; i++)
-                {
-                    Destroy(gameObjects[i]);
-                }
+        //        for (var i = 0; i < gameObjects.Length; i++)
+        //        {
+        //            Destroy(gameObjects[i]);
+        //        }
 
-                GenerateMap();
+        //        GenerateMap();
 
-                PlacePlayerAndExit();
+        //        PlacePlayerAndExit();
 
-
-            }
-        }
-
-
+        //    }
+        //}
 
         public void GenerateMap()
         {
@@ -86,11 +82,6 @@ namespace Assets.Scripts
 
             Debug.Log("Dungeon has " + rooms.Count + " rooms and " + placementSpots.Count + " placement spots.");
 
-            if (placementSpots.Count < 5)
-            {
-                Debug.Log("Retrying for more spots");
-                GenerateMap();
-            }
 
         }
 
@@ -118,10 +109,12 @@ namespace Assets.Scripts
             }
             foreach (GameObject checker in placeCheckers)
             {
+                var col = checker.GetComponent<CapsuleCollider>();
+                col.enabled = false;
                 Destroy(checker);
             }
 
-           
+
 
         }
         public bool CheckBounds(Vector3 position, Vector3 boundsSize, int layerMask)
@@ -132,7 +125,7 @@ namespace Assets.Scripts
             //float overlapingSphereRadius = Mathf.Sqrt(sqrHalfBoxSize + sqrHalfBoxSize);
 
             /* Hoping I have the previous calculation right, move on to finding the nearby colliders */
-            Collider[] hitColliders = Physics.OverlapSphere(position, 3, layerMask);
+            Collider[] hitColliders = Physics.OverlapSphere(position, 2, layerMask);
             //foreach (Collider hit in hitColliders)
             //{
 
@@ -192,10 +185,12 @@ namespace Assets.Scripts
             exit.transform.position = CoordToWorldPoint(bestSpotB);
             placementSpots.Remove(bestSpotA);
             placementSpots.Remove(bestSpotB);
+            Debug.Log("Placing Player on spot " + bestSpotA.comp + "  " + CoordToWorldPoint(bestSpotA));
+            Debug.Log("Placing Exit on spot " + bestSpotB.comp + "  " + CoordToWorldPoint(bestSpotB));
 
-            foreach(Room room in rooms)
+            foreach (Room room in rooms)
             {
-                if(room.placementSpots.Contains(bestSpotA))
+                if (room.placementSpots.Contains(bestSpotA))
                 {
                     room.placementSpots.Remove(bestSpotA);
                     room.isPlayerRoom = true;
@@ -203,7 +198,7 @@ namespace Assets.Scripts
                 else if (room.placementSpots.Contains(bestSpotB))
                 {
                     room.placementSpots.Remove(bestSpotB);
-                    room.isExitRoom =true;
+                    room.isExitRoom = true;
                 }
 
             }
@@ -212,13 +207,16 @@ namespace Assets.Scripts
 
         public void PlaceObjects(List<GameObject> objects)
         {
-            int roomcounter =0;
-            foreach(GameObject thing in objects)
+            foreach (GameObject thing in objects)
             {
-                var roomchoice = rooms[roomcounter];
-                var spot = roomchoice.placementSpots[UnityEngine.Random.Range(0, roomchoice.placementSpots.Count)];
+
+                var spot = placementSpots[UnityEngine.Random.Range(0, placementSpots.Count)];
                 thing.transform.position = CoordToWorldPoint(spot);
+
+                Debug.Log("Placing " + thing.gameObject.name + " on spot " + spot.comp);
+
                 placementSpots.Remove(spot);
+
 
             }
         }
@@ -447,7 +445,7 @@ namespace Assets.Scripts
 
         Vector3 CoordToWorldPoint(Coord tile)
         {
-            return new Vector3(-width / 2 + .5f + tile.tileX, -3.5f, -height / 2 + .5f + tile.tileY);
+            return new Vector3(-width / 2 + .5f + tile.tileX, -3f, -height / 2 + .5f + tile.tileY);
         }
 
         List<List<Coord>> GetRegions(int tileType)
@@ -519,7 +517,7 @@ namespace Assets.Scripts
             if (useRandomSeed)
             {
                 seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
-                
+
             }
 
             System.Random pseudoRandom = new System.Random(seed.GetHashCode());
@@ -586,7 +584,7 @@ namespace Assets.Scripts
             public string comp;
             public int tileX;
             public int tileY;
-            
+
             public Coord(int x, int y)
             {
                 tileX = x;
@@ -613,8 +611,8 @@ namespace Assets.Scripts
             public int roomSize;
             public bool isAccessibleFromMainRoom;
             public bool isMainRoom;
-            public bool isPlayerRoom =false;
-            public bool isExitRoom =false;
+            public bool isPlayerRoom = false;
+            public bool isExitRoom = false;
 
             public List<Coord> placementSpots;
 

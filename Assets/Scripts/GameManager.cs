@@ -14,18 +14,18 @@ namespace Assets.Scripts
 
         public PlayerClass playerClass;
 
-        public int maxLife=30;
-        public int lifeHolder=30;
+        public int maxLife = 30;
+        public int lifeHolder = 30;
         public Text lifeTextBoard;                      //UI Text to display current player life total.
 
-       
+
         public float levelStartDelay = 2f;                      //Time to wait before starting level, in seconds.
-        public float turnDelay = 0.2f;							//Delay between each Player turn.
-        
+        public float turnDelay = 0.2f;                          //Delay between each Player turn.
+
         public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
-       
+
         public bool playersTurn = true;     //Boolean to check if it's players turn, hidden in inspector but public.
-        
+
         private Text levelText;                                 //Text to display current level number.
         public GameObject monsterDeck;
         private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.                 
@@ -36,9 +36,9 @@ namespace Assets.Scripts
 
 
         private int level = 0;                                  //Current level number, expressed in game as "Level 1".
-                
+
         internal bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
-        
+
         //Awake is always called before any Start functions
         void Awake()
         {
@@ -61,11 +61,11 @@ namespace Assets.Scripts
             //Get a component reference to the attached BoardManager script
             boardScript = GetComponent<DungeonManager>();
 
-            
-            
+
+
             //Call the InitGame function to initialize the first level 
-           // InitGame();
-            
+            // InitGame();
+
         }
 
         void OnEnable()
@@ -74,7 +74,7 @@ namespace Assets.Scripts
         }
         void OnDisable()
         {
-          
+
             SceneManager.sceneLoaded -= OnLevelFinishedLoading;
         }
 
@@ -94,27 +94,27 @@ namespace Assets.Scripts
         //Initializes the game for each level.
         void InitGame()
         {
-            
+
             //Prevent player from moving while title card is up.
-            doingSetup = true;                     
-            
+            doingSetup = true;
+
             //Find all the scene objects we need.
-           // FindLevelObjects();
-            
+            FindLevelObjects();
+
             //Hide the cardgame overlay.            
-           // CardGameCanvas.SetActive(false);
+            CardGameCanvas.SetActive(false);
 
             //Set the text of levelText to the string "Level" and append the current level number.
-           // levelText.text = "Level " + level;
-                        
+            levelText.text = "Level " + level;
+
             //Set levelImage to active blocking player's view of the game board during setup.
-          //  levelImage.SetActive(true);
+            levelImage.SetActive(true);
 
             //Call the HideLevelImage function with a delay in seconds of levelStartDelay.
-          //  Invoke("HideLevelImage", levelStartDelay);
+            Invoke("HideLevelImage", levelStartDelay);
 
             //Initialize the starting deck and create the cards.
-           // DeckManager.player.StartingDeck(playerClass.Startingdeck);
+            DeckManager.player.StartingDeck(playerClass.Startingdeck);
 
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             boardScript.SetupScene(level);
@@ -126,27 +126,26 @@ namespace Assets.Scripts
             //DungeonCanvas = GameObject.Find("Canvas(Board)");
             CardGameCanvas = GameObject.Find("Canvas(CardGame)");
 
-           
 
             //Get a reference to our image LevelImage by finding it by name.
             levelImage = GameObject.Find("LevelImage");
 
             //Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
             levelText = GameObject.Find("LevelText").GetComponent<Text>();
-           
+
             lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
-          
+
 
         }
 
-        public void InitCardgame(Collider2D monster, Player player)
+        public void InitCardgame(Collider monster, Player3d player)
         {
 
             doingSetup = true;
             CardGameCanvas.SetActive(true);
             //Create the monster deck and instantiate the cards.
             var enemyManager = monster.gameObject.GetComponent<EnemyManager>();
-            
+
             enemyManager.InitMonsterDeck();
 
             //Send in the Player and Monster to the card game.
@@ -155,21 +154,21 @@ namespace Assets.Scripts
 
             //Remove the monster from game view. Either it dies or the player does.
             monster.gameObject.SetActive(false);
-            player.gameObject.SetActive(false);
+           // player.gameObject.SetActive(false);
 
             //Prevent player from moving while in card game.
             doingSetup = true;
-            
+
             //Enable the card game Canvas, which also starts the CardgameManager script.          
             CardGameCanvas.SetActive(true);
             CardgameManager.instance.Setup();
-                      
+
         }
 
 
         public void ReturnFromCardgame(bool win)
         {
-            if( win == false)
+            if (win == false)
             {
                 GameOver();
             }
@@ -186,9 +185,9 @@ namespace Assets.Scripts
             doingSetup = false;
         }
 
-      
-               
-      
+
+
+
         //GameOver is called when the player reaches 0 life points
         public void GameOver()
         {
@@ -203,7 +202,7 @@ namespace Assets.Scripts
         }
 
 
-   
+
 
 
 

@@ -9,11 +9,7 @@ namespace Assets.Scripts
 {
 
     public class DungeonManager : MonoBehaviour
-    {
-
-
-
-
+    {                        
 
         //Array of wall prefabs.
         // public GameObject[] enemyTiles;                                 //Array of enemies to place.
@@ -30,9 +26,13 @@ namespace Assets.Scripts
 
         //SetupScene initializes our level and calls the previous functions to lay out the game board
         public void SetupScene(int level)
-        {
+        {             
             var m = GameObject.Find("Map Generator");
             mapGen = m.GetComponent<MapGenerator>();
+            var size = 50 + level * 2;
+
+            mapGen.width = size;
+            mapGen.height = size;
 
             PrepareMapObjects(level);
 
@@ -40,13 +40,13 @@ namespace Assets.Scripts
 
             mapGen.PlacePlayerAndExit();
 
-            mapGen.PlaceObjects(dungeonObjects);
-
-
+            mapGen.PlaceObjects(dungeonObjects);            
         }
 
         private void PrepareMapObjects(int level)
         {
+            dungeonObjects = new List<GameObject>();
+
             GetEnemies(level);
             GetChests(level);
             GetShrines(level);
@@ -57,7 +57,7 @@ namespace Assets.Scripts
         {
 
             //Determine number of enemies based on current level number, based on a logarithmic progression
-            int enemyCount = (int)Mathf.Log(Level, 2f) + 2;
+            int enemyCount = (int)Mathf.Log(Level, 2f) + 3;
 
             //Get all enemies with level lower than current dungeon Level
             var enemiesToChooseFrom = DAL.ObjectDAL.GetEnemies(Level);
@@ -102,7 +102,7 @@ namespace Assets.Scripts
         {
 
             //Determine number of shrines based on current level number, based on a logarithmic progression
-            int shrineCount = (int)Mathf.Log(Level, 2f);
+            int shrineCount = 1;
 
             for (int i = 0; i < shrineCount; i++)
             {

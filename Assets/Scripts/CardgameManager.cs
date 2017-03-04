@@ -44,7 +44,7 @@ namespace Assets.Scripts
         public Text monsterDiscardCount;      
                       
         public EnemyManager enemy;
-        public Player player;
+        public Player3d player;
 
         void Awake()
         {

@@ -197,22 +197,22 @@ namespace Assets.Scripts
         }
 
         //OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            //Check if the tag of the trigger collided with is Exit.
-            if (other.tag == "Exit")
-            {
-                //Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
-                Invoke("Restart", restartLevelDelay);
+        //private void OnTriggerEnter2D(Collider other)
+        //{
+        //    //Check if the tag of the trigger collided with is Exit.
+        //    if (other.tag == "Exit")
+        //    {
+        //        //Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
+        //        Invoke("Restart", restartLevelDelay);
 
-                //Disable the player object since level is over.
-                enabled = false;
-            }
-            else if (other.tag == "Enemy")
-            {
-                GameManager.instance.InitCardgame(other, this);
-            }
-        }
+        //        //Disable the player object since level is over.
+        //        enabled = false;
+        //    }
+        //    else if (other.tag == "Enemy")
+        //    {
+        //        GameManager.instance.InitCardgame(other, this);
+        //    }
+        //}
 
 
         //Restart reloads the scene when called.
