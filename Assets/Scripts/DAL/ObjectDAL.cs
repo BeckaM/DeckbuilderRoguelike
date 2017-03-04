@@ -32,7 +32,7 @@ namespace Assets.Scripts.DAL
         {
             var cards = GetAllCards();
             var cardReturn = new List<Card>();
-            
+
             foreach (string cardToGet in cardsToGet)
             {
                 var card = cards.cardItems.Find(item => item.cardName.Equals(cardToGet));
@@ -42,15 +42,25 @@ namespace Assets.Scripts.DAL
             return cardReturn;
         }
 
+        internal static Card GetRandomCard(int level)
+        {
+            var cards = GetAllCards();
+            
+            var card = cards.cardItems.FindAll(item => item.level.Equals(level));
+            Card cardReturn = cards.cardItems[UnityEngine.Random.Range(0, cards.cardItems.Count)];
+            
+            return cardReturn;
+        }
+
 
         internal static List<Enemy> GetEnemies(int enemyLevel)
         {
 
             string text = File.ReadAllText(EnemyPath);
             var enemyList = JsonUtility.FromJson<EnemyWrapper>(text);
-            
+
             var enemies = enemyList.EnemyItems.FindAll(item => item.BaseEnemyLevel <= enemyLevel);
-            
+
             return enemies;
 
         }
@@ -105,7 +115,7 @@ namespace Assets.Scripts.DAL
         {
             string text = File.ReadAllText(CardPath);
             return JsonUtility.FromJson<CardWrapper>(text);
-            
+
         }
 
         internal static PlayerClassWrapper GetAllClasses()

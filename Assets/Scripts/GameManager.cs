@@ -104,6 +104,7 @@ namespace Assets.Scripts
 
             //Hide the cardgame overlay.            
             CardGameCanvas.SetActive(false);
+            panel.GetComponent<GameObject>().SetActive(false);
 
             //Set the text of levelText to the string "Level" and append the current level number.
             levelText.text = "Level " + level;
@@ -126,8 +127,7 @@ namespace Assets.Scripts
         {
             //DungeonCanvas = GameObject.Find("Canvas(Board)");
             CardGameCanvas = GameObject.Find("Canvas(CardGame)");
-
-
+            
             //Get a reference to our image LevelImage by finding it by name.
             levelImage = GameObject.Find("LevelImage");
 
@@ -135,8 +135,7 @@ namespace Assets.Scripts
             levelText = GameObject.Find("LevelText").GetComponent<Text>();
 
             lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
-
-
+            
         }
 
         public void InitCardgame(Collider monster, Player3d player)

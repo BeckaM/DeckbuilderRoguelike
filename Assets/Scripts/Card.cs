@@ -9,6 +9,7 @@ namespace Assets.Scripts
     [Serializable]
     public class Card
     {
+        public string level;
         public string cardName;
         public string cardText;
         public int spriteIcon;
