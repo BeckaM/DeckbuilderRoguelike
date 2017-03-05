@@ -41,10 +41,10 @@ namespace Assets.Scripts
         public Text monsterLifeText;
         public Text monsterManaText;
         public Text monsterDeckCount;
-        public Text monsterDiscardCount;      
-                      
+        public Text monsterDiscardCount;
+
         public EnemyManager enemy;
-        public Player3d player;
+        public Player player;
 
         void Awake()
         {
@@ -59,8 +59,6 @@ namespace Assets.Scripts
             EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
         }
 
-
-
         void OnDisable()
         {
             EventManager.Instance.RemoveListener<UpdateMana_GUI>(GUIUpdateMana);
@@ -68,10 +66,7 @@ namespace Assets.Scripts
             EventManager.Instance.RemoveListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
 
         }
-
-
-
-
+        
         // Use this for initialization
         public void Setup()
         {
@@ -93,10 +88,8 @@ namespace Assets.Scripts
         {
             for (var i = 0; i < 3; i++)
             {
-
                 DeckManager.player.Draw();
                 DeckManager.monster.Draw();
-
             }
         }
 
@@ -147,17 +140,17 @@ namespace Assets.Scripts
 
         private void SetOpponents()
         {
-
             player.mana = player.maxMana;
             enemy.mana = enemy.maxMana;
+
+            player.life = GameManager.instance.lifeHolder;
+            player.maxLife = GameManager.instance.maxLife;
 
             //enemy.UpdateLife();
             monsterPortrait.sprite = enemy.monsterImage;
 
             // player.UpdateLife();
             playerPortrait.sprite = player.playerImage;
-
-
         }
 
         internal void IncreaseMaxMana(int value, Team team)
@@ -172,10 +165,9 @@ namespace Assets.Scripts
             {
                 enemy.maxMana += value;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
-
             }
-
         }
+
         internal void IncreaseDamageReduction(int value, Team team)
         {
             if (team == Team.Me)
@@ -188,7 +180,6 @@ namespace Assets.Scripts
             {
                 enemy.ward += value;
                 // EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.AI));
-
             }
 
         }
@@ -197,16 +188,13 @@ namespace Assets.Scripts
             if (team == Team.Me)
             {
                 enemy.life -= value;
-
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
             }
             else
             {
                 player.life -= value;
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
-
             }
-
         }
 
         internal void ApplyHealing(int value, Team team)
@@ -228,14 +216,11 @@ namespace Assets.Scripts
                     enemy.life = enemy.maxLife;
                 }
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, player.maxLife, Team.Opponent));
-
             }
-
         }
 
         public void UpdateGame()
         {
-
 
             // Set cards as playable and/or draggable.
             //SetPlayableDraggable();
@@ -262,20 +247,9 @@ namespace Assets.Scripts
 
         private void EndGame(bool win)
         {
-
-            //MyDeckCards.Clear();
-            //MyHandCards.Clear();
-            //MyDiscardCards.Clear();
-            //MyTableCards.Clear();
-
-            //AIDeckCards.Clear();
-            //AIHandCards.Clear();
-            //AIDiscardCards.Clear();
-            //AITableCards.Clear();
-
-            //DeckManager.instance.Cleanup();
             this.gameObject.SetActive(false);
 
+            GameManager.instance.lifeHolder = player.life;
             GameManager.instance.ReturnFromCardgame(win);
         }
 
@@ -286,7 +260,7 @@ namespace Assets.Scripts
 
             if (turn == Team.Opponent)
             {
-                
+
                 DeckManager.player.Draw();
                 turn = Team.Me;
                 player.mana = player.maxMana;
@@ -300,8 +274,6 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
                 enemy.initAI();
             }
-
-
         }
 
 
@@ -336,7 +308,6 @@ namespace Assets.Scripts
                 if (effect.trigger == CardEffect.Trigger.Instant || effect.trigger == CardEffect.Trigger.Passive)
                 {
                     card.ApplyEffect(effect);
-
                 }
             }
             Debug.Log("Done applying Card effects");
@@ -349,18 +320,16 @@ namespace Assets.Scripts
                 Debug.Log("Duration = 0, startpoint tabletop endpoint discard");
                 card.SetCardPosition(CardManager.CardStatus.InDiscard);
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.discard));
-              
             }
             else
             {
                 card.SetCardPosition(CardManager.CardStatus.OnTable);
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.table));
-               
             }
 
 
             //Queue up a move card event to move the card to it's final destination.
-            
+
 
         }
     }

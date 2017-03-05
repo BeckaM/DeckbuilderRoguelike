@@ -2,17 +2,20 @@
 using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections;
+using System;
+using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
     public class ModalPanel : MonoBehaviour
     {
 
-        public Text question;
+        public Text title;
+        public Text subText;
 
-        public Button yesButton;
+        public Button addButton;
         public Button noButton;
-        public Button cancelButton;
+        public Button thanksButton;
         public GameObject modalPanelObject;
         public GameObject choice1;
         public GameObject choice2;
@@ -33,131 +36,67 @@ namespace Assets.Scripts
             return modalPanel;
         }
 
-        //  Announcement: A string and Cancel event;
-        public void Chest(string title, UnityAction yesEvent, UnityAction noEvent)
+        //  Chest with card or consumable.
+        public void Chest(string title, string subText, Card reward, UnityAction yesEvent, UnityAction noEvent)
         {
             modalPanelObject.SetActive(true);
 
-            yesButton.onClick.RemoveAllListeners();
-            yesButton.onClick.AddListener(yesEvent);
-            yesButton.onClick.AddListener(ClosePanel);
+            addButton.onClick.RemoveAllListeners();
+            addButton.onClick.AddListener(yesEvent);
+            addButton.onClick.AddListener(ClosePanel);
 
             noButton.onClick.RemoveAllListeners();
             noButton.onClick.AddListener(noEvent);
             noButton.onClick.AddListener(ClosePanel);
 
-            this.question.text = title;
-            
-            yesButton.gameObject.SetActive(true);
+            this.title.text = title;
+            this.subText.text = subText;
+            choice1.GetComponent<Choice>().PopulateChoice(reward);
+            choice1.SetActive(true);
+
+            addButton.gameObject.SetActive(true);
             noButton.gameObject.SetActive(true);
-           
+            thanksButton.gameObject.SetActive(false);
+            
+        }
+               
+                //Chest with gold.
+        public void Chest(string title, string subText, int goldReward, UnityAction yesEvent)
+        {
+            modalPanelObject.SetActive(true);
+
+            thanksButton.onClick.RemoveAllListeners();
+            thanksButton.onClick.AddListener(yesEvent);
+            thanksButton.onClick.AddListener(ClosePanel);
+
+            this.title.text = title;
+            this.subText.text = subText;
+            choice1.GetComponent<Choice>().PopulateChoice(goldReward);
+            choice1.SetActive(true);
+
+            addButton.gameObject.SetActive(false);
+            noButton.gameObject.SetActive(false);
+            thanksButton.gameObject.SetActive(true);
         }
 
-        ////  Announcement with Image:  A string, a Sprite and Cancel event;
-        //public void Choice(string question, Sprite iconImage, UnityAction cancelEvent)
-        //{
-        //    modalPanelObject.SetActive(true);
+        internal void Shrine(string title, string subText, List<Prayer> prayers, UnityAction yesEvent, UnityAction noEvent)
+        {
+            modalPanelObject.SetActive(true);
 
-        //    cancelButton.onClick.RemoveAllListeners();
-        //    cancelButton.onClick.AddListener(cancelEvent);
-        //    cancelButton.onClick.AddListener(ClosePanel);
+            thanksButton.onClick.RemoveAllListeners();
+            thanksButton.onClick.AddListener(yesEvent);
+            thanksButton.onClick.AddListener(ClosePanel);
 
-        //    this.question.text = question;
+            this.title.text = title;
+            this.subText.text = subText;
+            choice1.GetComponent<Choice>().PopulateChoice();
+            choice1.SetActive(true);
 
-
-        //    this.iconImage.gameObject.SetActive(true);
-        //    yesButton.gameObject.SetActive(false);
-        //    noButton.gameObject.SetActive(false);
-        //    cancelButton.gameObject.SetActive(true);
-        //}
-
-        ////  Yes/No: A string, a Yes event, a No event (No Cancel Button);
-        //public void Choice(string question, UnityAction yesEvent, UnityAction noEvent)
-        //{
-        //    modalPanelObject.SetActive(true);
-
-
-
-        //    this.question.text = question;
-
-        //    this.iconImage.gameObject.SetActive(false);
-        //    yesButton.gameObject.SetActive(true);
-        //    noButton.gameObject.SetActive(true);
-        //    cancelButton.gameObject.SetActive(false);
-        //}
-
-        ////  Yes/No/Cancel: A string, a Yes event, a No event and Cancel event;
-        //public void Choice(string question, UnityAction yesEvent, UnityAction noEvent, UnityAction cancelEvent)
-        //{
-        //    modalPanelObject.SetActive(true);
-
-        //    yesButton.onClick.RemoveAllListeners();
-        //    yesButton.onClick.AddListener(yesEvent);
-        //    yesButton.onClick.AddListener(ClosePanel);
-
-        //    noButton.onClick.RemoveAllListeners();
-        //    noButton.onClick.AddListener(noEvent);
-        //    noButton.onClick.AddListener(ClosePanel);
-
-        //    cancelButton.onClick.RemoveAllListeners();
-        //    cancelButton.onClick.AddListener(cancelEvent);
-        //    cancelButton.onClick.AddListener(ClosePanel);
-
-        //    this.question.text = question;
-
-        //    this.iconImage.gameObject.SetActive(false);
-        //    yesButton.gameObject.SetActive(true);
-        //    noButton.gameObject.SetActive(true);
-        //    cancelButton.gameObject.SetActive(true);
-        //}
-
-        ////  Yes/No with Image: A string, a Sprite, a Yes event, a No event (No Cancel Button);
-        //public void Choice(string question, Sprite iconImage, UnityAction yesEvent, UnityAction noEvent)
-        //{
-        //    modalPanelObject.SetActive(true);
-
-        //    yesButton.onClick.RemoveAllListeners();
-        //    yesButton.onClick.AddListener(yesEvent);
-        //    yesButton.onClick.AddListener(ClosePanel);
-
-        //    noButton.onClick.RemoveAllListeners();
-        //    noButton.onClick.AddListener(noEvent);
-        //    noButton.onClick.AddListener(ClosePanel);
-
-        //    this.question.text = question;
-        //    this.iconImage.sprite = iconImage;
-
-        //    this.iconImage.gameObject.SetActive(true);
-        //    yesButton.gameObject.SetActive(true);
-        //    noButton.gameObject.SetActive(true);
-        //    cancelButton.gameObject.SetActive(false);
-        //}
-
-        ////  Yes/No/Cancel with Image: A string, a Sprite, a Yes event, a No event and Cancel event;
-        //public void Choice(string question, Sprite iconImage, UnityAction yesEvent, UnityAction noEvent, UnityAction cancelEvent)
-        //{
-        //    modalPanelObject.SetActive(true);
-
-        //    yesButton.onClick.RemoveAllListeners();
-        //    yesButton.onClick.AddListener(yesEvent);
-        //    yesButton.onClick.AddListener(ClosePanel);
-
-        //    noButton.onClick.RemoveAllListeners();
-        //    noButton.onClick.AddListener(noEvent);
-        //    noButton.onClick.AddListener(ClosePanel);
-
-        //    cancelButton.onClick.RemoveAllListeners();
-        //    cancelButton.onClick.AddListener(cancelEvent);
-        //    cancelButton.onClick.AddListener(ClosePanel);
-
-        //    this.question.text = question;
-        //    this.iconImage.sprite = iconImage;
-
-        //    this.iconImage.gameObject.SetActive(true);
-        //    yesButton.gameObject.SetActive(true);
-        //    noButton.gameObject.SetActive(true);
-        //    cancelButton.gameObject.SetActive(true);
-        //}
+            addButton.gameObject.SetActive(false);
+            noButton.gameObject.SetActive(false);
+            thanksButton.gameObject.SetActive(true);
+        }
+                     
 
         void ClosePanel()
         {

@@ -9,7 +9,9 @@ namespace Assets.Scripts
     [Serializable]
     public class Card
     {
-        public string level;
+        public enum Type {MonsterCard, ClassCard, Consumable }
+        public Type type;
+        public int level;
         public string cardName;
         public string cardText;
         public int spriteIcon;

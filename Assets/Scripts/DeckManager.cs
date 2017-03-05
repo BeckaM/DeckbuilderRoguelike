@@ -26,11 +26,11 @@ namespace Assets.Scripts
                 {
                     return CardgameManager.instance.playerDeck;
                 }
-                else 
+                else
                 {
                     return CardgameManager.instance.monsterDeck;
 
-                
+
                 }
             }
         }
@@ -57,47 +57,48 @@ namespace Assets.Scripts
         public List<GameObject> cardsInDiscard = new List<GameObject>();
         public List<GameObject> cardsOnTable = new List<GameObject>();
         public List<GameObject> cardsInHand = new List<GameObject>();
-        
+
         // Use this for initialization
         void Awake()
         {
             name = this.gameObject.name;
-            if (name == "PlayerDeck(Clone)") {
+            if (name == "PlayerDeck(Clone)")
+            {
 
 
                 instancename = "Me";
                 player = this;
                 team = CardgameManager.Team.Me;
                 DontDestroyOnLoad(gameObject);
-                
+
             }
             //If instance already exists and it's not this:
             else if (name == "MonsterDeck")
             {
                 instancename = "AI";
                 monster = this;
-              
+
                 team = CardgameManager.Team.Opponent;
 
             }
-    
+
         }
 
         void OnEnable()
         {
             SceneManager.sceneLoaded += OnLevelFinishedLoading;
-                       
+
         }
 
         private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
         {
-           
+
         }
 
         void OnDisable()
         {
             SceneManager.sceneLoaded -= OnLevelFinishedLoading;
-           
+
 
         }
 
@@ -125,11 +126,11 @@ namespace Assets.Scripts
 
 
 
-        public void StartingDeck(List <string> cardstoCreate)
+        public void StartingDeck(List<string> cardstoCreate)
         {
 
-              AddCardtoDeck(cardstoCreate);
-            
+            AddCardtoDeck(cardstoCreate);
+
         }
 
         public void AddCardtoDeck(List<string> cardsToCreate)
@@ -152,6 +153,20 @@ namespace Assets.Scripts
                 cardManager.PopulateCard(card);
             }
         }
+        public void AddCardtoDeck(Card card)
+        {
+
+            GameObject instance = Instantiate(cardObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+            cardManager = instance.GetComponent<CardManager>();
+
+
+            cardManager.owner = team;
+            cardsInDeck.Add(cardManager.gameObject);
+            instance.transform.SetParent(this.transform);
+
+            cardManager.PopulateCard(card);
+
+        }
 
         public void Draw()
         {
@@ -170,18 +185,18 @@ namespace Assets.Scripts
 
                 cardsInDeck.Remove(tempCard);
                 cardsInHand.Add(tempCard);
-                               
-                                               
+
+
                 //Queue up a move card animation.
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, deckholder, hand));
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
                 //Check for objects that trigger on draw card.
                 EventManager.Instance.TriggerEvent(new TableCard_Trigger(manager.owner, CardEffect.Trigger.OnDraw));
-               
+
             }
         }
 
-       
+
     }
 
 

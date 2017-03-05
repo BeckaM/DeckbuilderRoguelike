@@ -27,6 +27,17 @@ namespace Assets.Scripts.DAL
             return classReturn;
         }
 
+        internal static Card GetRandomConsumable(int level)
+        {
+            var cards = GetAllCards();
+
+            var consumables = cards.cardItems.FindAll(item => item.type.Equals(Card.Type.Consumable) && item.level <= level);
+
+            Card cardReturn = consumables[UnityEngine.Random.Range(0, consumables.Count)];
+
+            return cardReturn;
+        }
+                
 
         internal static List<Card> GetCards(List<string> cardsToGet)
         {
@@ -42,12 +53,15 @@ namespace Assets.Scripts.DAL
             return cardReturn;
         }
 
-        internal static Card GetRandomCard(int level)
+        internal static Card GetRandomCard(int level, int below, int above)
         {
             var cards = GetAllCards();
+            var min = level - below;
+            var max = level + above;
             
-            var card = cards.cardItems.FindAll(item => item.level.Equals(level));
-            Card cardReturn = cards.cardItems[UnityEngine.Random.Range(0, cards.cardItems.Count)];
+            var levelCards = cards.cardItems.FindAll(item => item.level >= min && item.level <= max && item.type.Equals(Card.Type.MonsterCard));
+
+            Card cardReturn = levelCards[UnityEngine.Random.Range(0, levelCards.Count)];
             
             return cardReturn;
         }
@@ -56,17 +70,16 @@ namespace Assets.Scripts.DAL
         internal static List<Enemy> GetEnemies(int enemyLevel)
         {
 
-            string text = File.ReadAllText(EnemyPath);
-            var enemyList = JsonUtility.FromJson<EnemyWrapper>(text);
+            // string text = File.ReadAllText(EnemyPath);
+            //var enemyList = JsonUtility.FromJson<EnemyWrapper>(text);
+            var enemyList = GetAllEnemies(); 
 
             var enemies = enemyList.EnemyItems.FindAll(item => item.BaseEnemyLevel <= enemyLevel);
 
             return enemies;
 
         }
-
-
-
+                
         internal static void SaveCards(CardWrapper cardsToEdit)
         {
 

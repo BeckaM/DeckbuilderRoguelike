@@ -10,10 +10,9 @@ namespace Assets.Scripts
 
     public class GameManager : MonoBehaviour
     {
-
-
         public PlayerClass playerClass;
 
+        public int gold;
         public int maxLife = 30;
         public int lifeHolder = 30;
         public Text lifeTextBoard;                      //UI Text to display current player life total.
@@ -31,7 +30,8 @@ namespace Assets.Scripts
         private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.                 
         private GameObject CardGameCanvas;
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
-        public ModalPanel panel;
+        public GameObject panel;
+        public ModalPanel modalPanel;
         //public DeckManager myDeck;
         //public DeckManager AIDeck;
 
@@ -61,9 +61,7 @@ namespace Assets.Scripts
 
             //Get a component reference to the attached BoardManager script
             boardScript = GetComponent<DungeonManager>();
-            panel = ModalPanel.Instance();
-
-
+            
             //Call the InitGame function to initialize the first level 
             // InitGame();
 
@@ -104,10 +102,11 @@ namespace Assets.Scripts
 
             //Hide the cardgame overlay.            
             CardGameCanvas.SetActive(false);
-            panel.GetComponent<GameObject>().SetActive(false);
+            panel.SetActive(false);
 
             //Set the text of levelText to the string "Level" and append the current level number.
             levelText.text = "Level " + level;
+            lifeTextBoard.text = "Life: " +  lifeHolder + "/" + maxLife;
 
             //Set levelImage to active blocking player's view of the game board during setup.
             levelImage.SetActive(true);
@@ -135,10 +134,13 @@ namespace Assets.Scripts
             levelText = GameObject.Find("LevelText").GetComponent<Text>();
 
             lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
+
+            modalPanel = ModalPanel.Instance();
+            panel = GameObject.Find("Panel");
             
         }
 
-        public void InitCardgame(Collider monster, Player3d player)
+        public void InitCardgame(Collider monster, Player player)
         {
 
             doingSetup = true;
@@ -167,12 +169,13 @@ namespace Assets.Scripts
 
 
         public void ReturnFromCardgame(bool win)
-        {
+        {            
             if (win == false)
             {
                 GameOver();
             }
             doingSetup = false;
+            lifeTextBoard.text = "Life: " + lifeHolder + "/" + maxLife;
         }
 
         //Hides black image used between levels

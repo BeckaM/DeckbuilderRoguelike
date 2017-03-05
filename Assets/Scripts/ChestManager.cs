@@ -6,50 +6,75 @@ using UnityEngine.Events;
 
 namespace Assets.Scripts
 {
-    
+
     public class ChestManager : MonoBehaviour
     {
-        private enum Content {Gold, Consumable, Card};
+        private enum Content { Gold, Consumable, Card };
         private Content content;
         private Card cardReward;
-        
+        private int goldReward;
+        private string subText;
+
         internal void PopulateChest(int level)
         {
-           var rand = UnityEngine.Random.Range(0, 10);
+            var rand = UnityEngine.Random.Range(0, 10);
             if (rand == 0)
             {
                 content = Content.Card;
-                level = level + UnityEngine.Random.Range(0, 3);
-                cardReward = DAL.ObjectDAL.GetRandomCard(level);
-
+                cardReward = DAL.ObjectDAL.GetRandomCard(level, 0, 3);
+                subText = "It contains a powerful card. Add it to your deck?";
             }
             else if (rand > 0 && rand < 6)
             {
                 content = Content.Consumable;
+                cardReward = DAL.ObjectDAL.GetRandomConsumable(level);
+                subText = "It contains a consumable. Add it to your deck?";
+
             }
             else
             {
                 content = Content.Gold;
+                goldReward = UnityEngine.Random.Range(5 + level, 10 + level);
+                subText = "It contains some Gold.";
+
             }
         }
 
         internal void OpenChest()
         {
-            GameManager.instance.panel.Chest("You found a chest!", AddReward, DeclineReward);
+            if (content == Content.Gold)
+            {
+                GameManager.instance.modalPanel.Chest("You found a chest!", subText, goldReward, AddReward);
+            }
+            else
+            {
+                GameManager.instance.modalPanel.Chest("You found a chest!", subText, cardReward, AddReward, DeclineReward);
+            }
         }
 
-        private void  DeclineReward()
+        private void DeclineReward()
         {
-            throw new NotImplementedException();
+            this.gameObject.SetActive(false);
+            GameManager.instance.doingSetup = false;
         }
 
         private void AddReward()
         {
-            throw new NotImplementedException();
+            if (content == Content.Gold)
+            {
+                GameManager.instance.gold = GameManager.instance.gold + goldReward;
+            }
+            else
+            {
+                DeckManager.player.AddCardtoDeck(cardReward);
+
+            }
+            this.gameObject.SetActive(false);
+            GameManager.instance.doingSetup = false;
         }
     }
 
 
-    
+
 
 }
