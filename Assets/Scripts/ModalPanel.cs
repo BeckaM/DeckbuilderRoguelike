@@ -9,7 +9,6 @@ namespace Assets.Scripts
 {
     public class ModalPanel : MonoBehaviour
     {
-
         public Text title;
         public Text subText;
 
@@ -20,8 +19,8 @@ namespace Assets.Scripts
         public GameObject choice1;
         public GameObject choice2;
         public GameObject choice3;
-
-
+        public GameObject currentChoice;
+        
         private static ModalPanel modalPanel;
 
         public static ModalPanel Instance()
@@ -53,6 +52,8 @@ namespace Assets.Scripts
             this.subText.text = subText;
             choice1.GetComponent<Choice>().PopulateChoice(reward);
             choice1.SetActive(true);
+            choice2.SetActive(false);
+            choice3.SetActive(false);
 
             addButton.gameObject.SetActive(true);
             noButton.gameObject.SetActive(true);
@@ -73,6 +74,8 @@ namespace Assets.Scripts
             this.subText.text = subText;
             choice1.GetComponent<Choice>().PopulateChoice(goldReward);
             choice1.SetActive(true);
+            choice2.SetActive(false);
+            choice3.SetActive(false);
 
             addButton.gameObject.SetActive(false);
             noButton.gameObject.SetActive(false);
@@ -83,20 +86,66 @@ namespace Assets.Scripts
         {
             modalPanelObject.SetActive(true);
 
-            thanksButton.onClick.RemoveAllListeners();
-            thanksButton.onClick.AddListener(yesEvent);
-            thanksButton.onClick.AddListener(ClosePanel);
+            addButton.onClick.RemoveAllListeners();
+            addButton.onClick.AddListener(yesEvent);
+            addButton.onClick.AddListener(ClosePanel);
+
+            noButton.onClick.RemoveAllListeners();
+            noButton.onClick.AddListener(noEvent);
+            noButton.onClick.AddListener(ClosePanel);
 
             this.title.text = title;
             this.subText.text = subText;
-            choice1.GetComponent<Choice>().PopulateChoice();
+                       
+            choice1.GetComponent<Choice>().PopulateChoice(prayers[0]);
             choice1.SetActive(true);
+            choice1.GetComponent<Button>().interactable = true;
+            choice1.GetComponent<Button>().onClick.AddListener(Choose1);
 
-            addButton.gameObject.SetActive(false);
-            noButton.gameObject.SetActive(false);
-            thanksButton.gameObject.SetActive(true);
+            choice2.GetComponent<Choice>().PopulateChoice(prayers[1]);
+            choice2.SetActive(true);
+            choice2.GetComponent<Button>().interactable = true;
+            choice2.GetComponent<Button>().onClick.AddListener(Choose2);
+
+            choice3.GetComponent<Choice>().PopulateChoice(prayers[2]);
+            choice3.SetActive(true);
+            choice3.GetComponent<Button>().interactable = true;
+            choice3.GetComponent<Button>().onClick.AddListener(Choose3);
+
+            addButton.gameObject.SetActive(true);
+            addButton.GetComponent<Button>().interactable = false;
+
+            noButton.gameObject.SetActive(true);
+            thanksButton.gameObject.SetActive(false);
         }
-                     
+
+        private void Choose1()
+        {
+            currentChoice = choice1;
+            currentChoice.GetComponent<Outline>().enabled = true;
+            choice2.GetComponent<Outline>().enabled = false;
+            choice3.GetComponent<Outline>().enabled = false;
+            addButton.GetComponent<Button>().interactable = true;
+
+        }
+
+        private void Choose2()
+        {
+            currentChoice = choice2;
+            currentChoice.GetComponent<Outline>().enabled = true;
+            addButton.GetComponent<Button>().interactable = true;
+            choice1.GetComponent<Outline>().enabled = false;
+            choice3.GetComponent<Outline>().enabled = false;
+        }
+
+        private void Choose3()
+        {
+            currentChoice = choice3;
+            currentChoice.GetComponent<Outline>().enabled = true;
+            addButton.GetComponent<Button>().interactable = true;
+            choice2.GetComponent<Outline>().enabled = false;
+            choice1.GetComponent<Outline>().enabled = false;
+        }
 
         void ClosePanel()
         {

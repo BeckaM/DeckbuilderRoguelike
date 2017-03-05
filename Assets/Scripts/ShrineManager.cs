@@ -8,20 +8,20 @@ namespace Assets.Scripts
 {
 
     public class ShrineManager : MonoBehaviour
-    {    
+    {
         public List<Sprite> sprites;
         public List<Prayer> prayers;
 
         internal void PopulateShrine(int level)
         {
             List<Prayer> allPrayers = GetPrayers(level);
-          
+            prayers = new List<Prayer>();
+
             for (var i = 0; i < 3; i++)
             {
                 var prayer = allPrayers[UnityEngine.Random.Range(0, allPrayers.Count)];
-                allPrayers.Remove(prayer);
                 prayers.Add(prayer);
-
+                allPrayers.Remove(prayer);                
             }
 
         }
@@ -41,15 +41,13 @@ namespace Assets.Scripts
 
             var prayer4 = new Prayer("Prayer of Evolution", "Choose a card in your deck and replace it with a random one of higher level.", 3);
             prayerList.Add(prayer4);
-            
+
             return prayerList;
         }
 
         internal void OpenShrine()
         {
-            GameManager.instance.modalPanel.Shrine("You found a Shrine!", "Choose a prayer", prayers, ChoosePrayer(), Decline());
-
-
+            GameManager.instance.modalPanel.Shrine("You found a Shrine!", "Choose a prayer", prayers, ChoosePrayer, Decline);
         }
 
         private void Decline()
@@ -82,9 +80,10 @@ namespace Assets.Scripts
 
         public Prayer(string name, string description, int sprite)
         {
-            name = this.name;
-            description = this.description;
-            sprite = this.sprite;
+            this.name = name;
+            this.description = description;
+            this.sprite = sprite;
         }
 
     }
+}

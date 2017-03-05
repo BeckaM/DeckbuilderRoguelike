@@ -76,7 +76,11 @@ namespace Assets.Scripts
             {
                 other.GetComponent<ChestManager>().OpenChest();
                 GameManager.instance.doingSetup = true;
-
+            }
+            else if (other.tag == "Shrine")
+            {
+                other.GetComponent<ShrineManager>().OpenShrine();
+                GameManager.instance.doingSetup = true;
             }
         }
 
