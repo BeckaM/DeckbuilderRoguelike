@@ -30,9 +30,10 @@ namespace Assets.Scripts
         private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.                 
         private GameObject CardGameCanvas;
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
-        public GameObject panel;
+        public GameObject modalPanelObject;
         public ModalPanel modalPanel;
-        public GameObject deckPanel;
+        public GameObject deckPanelObject;
+        public DeckPanel deckPanel;
         //public DeckManager myDeck;
         //public DeckManager AIDeck;
 
@@ -132,12 +133,12 @@ namespace Assets.Scripts
             lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
 
             modalPanel = ModalPanel.Instance();
-            panel = modalPanel.gameObject;
-            panel.SetActive(false);
+            modalPanelObject = modalPanel.gameObject;
+            modalPanelObject.SetActive(false);
 
-            var deckP = DeckPanel.Instance();
-            deckPanel = deckP.gameObject;
-            deckPanel.SetActive(false);
+            deckPanel = DeckPanel.Instance();
+            deckPanelObject = deckPanel.gameObject;
+            deckPanelObject.SetActive(false);
 
         }
 
@@ -157,7 +158,7 @@ namespace Assets.Scripts
 
             //Remove the monster from game view. Either it dies or the player does.
             monster.gameObject.SetActive(false);
-            deckPanel.SetActive(true);
+            deckPanelObject.SetActive(true);
 
             //Prevent player from moving while in card game.
             doingSetup = true;

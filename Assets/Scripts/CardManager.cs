@@ -17,13 +17,14 @@ namespace Assets.Scripts
         public GameObject cardImage;
         public GameObject cardName;
         public GameObject cardEffectText;
+        
         public int duration;
 
         public enum CardStatus { InDeck, InHand, OnTable, InDiscard };
         public CardStatus cardStatus = CardStatus.InDeck;
 
         public CardgameManager.Team owner;
-                
+
         public DeckManager deckManager
         {
             get
@@ -38,7 +39,6 @@ namespace Assets.Scripts
                 }
             }
         }
-
 
         public bool isPlayable
         {
@@ -69,11 +69,12 @@ namespace Assets.Scripts
                 }
             }
         }
+
         public GameObject table
         {
             get
             {
-                if (owner == CardgameManager.Team.Me )
+                if (owner == CardgameManager.Team.Me)
                 {
                     return CardgameManager.instance.playerTable;
                 }
@@ -142,17 +143,16 @@ namespace Assets.Scripts
             {
                 if (trigger.effect == cardeffect.trigger && trigger.team == cardeffect.triggeredBy)
                 {
-                    
                     ApplyEffect(cardeffect);
                 }
             }
 
-            if(trigger.effect == CardEffect.Trigger.EndOfTurn &&  trigger.team == owner)
+            if (trigger.effect == CardEffect.Trigger.EndOfTurn && trigger.team == owner)
             {
                 Debug.Log(card.cardName);
                 duration--;
-               // card.cardName = card.cardName + "second";
-                if( duration == 0)
+                // card.cardName = card.cardName + "second";
+                if (duration == 0)
                 {
                     ExpireCard();
                 }
@@ -160,11 +160,8 @@ namespace Assets.Scripts
 
         }
 
-
-
         public void PopulateCard(Card card)
         {
-
             this.card = card;
 
             var transformer = this.transform;
@@ -186,7 +183,6 @@ namespace Assets.Scripts
             var background = GetComponent<Image>();
             background.color = card.backgroundColor;
             duration = card.cardDuration;
-
         }
 
         internal void ApplyEffect(CardEffect cardEffect)
@@ -290,11 +286,11 @@ namespace Assets.Scripts
 
         internal void Move(MoveCard_GUI move)
         {
-            
+
             if (move.movingCard == this)
-            {                
+            {
                 Debug.Log("Card " + card.cardName + " recieved a move trigger");
-                                
+
                 StartCoroutine(SmoothMovement(move.start, move.end));
             }
         }
@@ -306,7 +302,7 @@ namespace Assets.Scripts
             // Vector3 endsize = new Vector3();
 
             transform.SetParent(start.transform);
-            
+
             this.transform.localScale = Vector3.one;
             yield return new WaitForEndOfFrame();
             Vector3 startpos = new Vector3();
@@ -336,8 +332,7 @@ namespace Assets.Scripts
             }
             this.transform.SetParent(start.transform);
             yield return new WaitForEndOfFrame();
-
-
+            
             GetComponent<CanvasGroup>().alpha = (1f);
             //  yield return new WaitForSeconds(1f);
 
@@ -374,7 +369,6 @@ namespace Assets.Scripts
 
                 //Return and loop until sqrRemainingDistance is close enough to zero to end the function
                 yield return null;
-
             }
 
 
@@ -383,9 +377,9 @@ namespace Assets.Scripts
             {
                 EventManager.Instance.RemoveListener<MoveCard_GUI>(Move);
             }
-           
+
             //this.transform.localScale = endsize;
-            
+
             //yield return new WaitForSeconds(3f);
 
             if (end == discard)
@@ -408,9 +402,6 @@ namespace Assets.Scripts
 
             yield return new WaitForSeconds(0.3f);
             EventManager.Instance.processingQueue = false;
-
-
-
         }
 
         public void ExpireCard()
@@ -428,11 +419,10 @@ namespace Assets.Scripts
                 }
             }
 
-
             EventManager.Instance.QueueAnimation(new MoveCard_GUI(this, table, discard));
             moveCounter++;
-
         }
+
         internal void RemoveEffect(CardEffect cardEffect)
         {
             EventManager.Instance.AddListener<CardEffect_GUI>(CardEffectAnimation);
@@ -440,10 +430,10 @@ namespace Assets.Scripts
 
             EventManager.Instance.QueueAnimation(new CardEffect_GUI(cardEffect.value, owner, this, cardEffect.effect));
             cardEffect.value = cardEffect.value * -1;
-                       
+
             if (CardEffect.Effect.AddMaxMana.Equals(cardEffect.effect))
             {
-                
+
                 CardgameManager.instance.IncreaseMaxMana(cardEffect.value, owner);
             }
 
@@ -457,7 +447,5 @@ namespace Assets.Scripts
             }
         }
     }
-    
-
 }
 

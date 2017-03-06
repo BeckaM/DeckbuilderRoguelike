@@ -58,8 +58,9 @@ namespace Assets.Scripts
 
         private void Duplication()
         {
+            GameManager.instance.deckPanel.DuplicateCard();
+            
             this.gameObject.SetActive(false);
-            Debug.Log("Duplication Prayer triggered");
             GameManager.instance.doingSetup = false;
         }
     }

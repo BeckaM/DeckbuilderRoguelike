@@ -2,17 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
     public class DeckPanel : MonoBehaviour
-    {
+        {
         public Button closeButton;
         public Button chooseButton;
 
         private static DeckPanel deckPanel;
         public GameObject deckPanelObject;
+
+        public GameObject selectedCard;
+        public string selectedTag;
 
         public static DeckPanel Instance()
         {
@@ -25,6 +29,17 @@ namespace Assets.Scripts
             return deckPanel;
         }
 
+        internal void SelectCard(GameObject selectedCard)
+        {
+            if (this.selectedCard)
+            {
+                this.selectedCard.GetComponent<Selectable>().outline.enabled = false;
+            }
+            this.selectedCard = selectedCard;
+            selectedCard.GetComponent<Selectable>().outline.enabled = true;
+
+        }
+
         internal void ShowDeck()
         {
             closeButton.gameObject.SetActive(true);
@@ -34,21 +49,25 @@ namespace Assets.Scripts
             chooseButton.gameObject.SetActive(false);
         }
 
-        internal void ChooseOne()
+        internal void DuplicateCard()
         {
-            closeButton.gameObject.SetActive(true);
-            closeButton.onClick.RemoveAllListeners();
-            closeButton.onClick.AddListener(closePanel);
+            closeButton.gameObject.SetActive(false);
 
-            chooseButton.gameObject.SetActive(false);
+            chooseButton.gameObject.SetActive(true);
+            closeButton.onClick.RemoveAllListeners();
+            closeButton.onClick.AddListener(Duplicate);
         }
 
+        private void Duplicate()
+        {
 
+        }
 
         private void closePanel()
         {
             deckPanelObject.SetActive(false);
         }
+
 
     }
 }
