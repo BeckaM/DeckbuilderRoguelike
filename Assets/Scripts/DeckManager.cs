@@ -17,6 +17,7 @@ namespace Assets.Scripts
         public static DeckManager monster = null;
         CardManager cardManager;
         public string instancename;
+        public GameObject deckPanel;
 
         public GameObject deckholder
         {
@@ -29,11 +30,10 @@ namespace Assets.Scripts
                 else
                 {
                     return CardgameManager.instance.monsterDeck;
-
-
                 }
             }
         }
+
         public GameObject hand
         {
             get
@@ -45,8 +45,6 @@ namespace Assets.Scripts
                 else
                 {
                     return CardgameManager.instance.monsterHand;
-
-
                 }
             }
         }
@@ -148,7 +146,7 @@ namespace Assets.Scripts
 
                 cardManager.owner = team;
                 cardsInDeck.Add(cardManager.gameObject);
-                instance.transform.SetParent(this.transform);
+                instance.transform.SetParent(deckPanel.transform);
 
                 cardManager.PopulateCard(card);
             }
@@ -162,7 +160,7 @@ namespace Assets.Scripts
 
             cardManager.owner = team;
             cardsInDeck.Add(cardManager.gameObject);
-            instance.transform.SetParent(this.transform);
+            instance.transform.SetParent(deckPanel.transform);
 
             cardManager.PopulateCard(card);
 
@@ -185,8 +183,7 @@ namespace Assets.Scripts
 
                 cardsInDeck.Remove(tempCard);
                 cardsInHand.Add(tempCard);
-
-
+                
                 //Queue up a move card animation.
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, deckholder, hand));
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));

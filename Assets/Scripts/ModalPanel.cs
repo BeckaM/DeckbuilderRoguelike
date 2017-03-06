@@ -19,7 +19,7 @@ namespace Assets.Scripts
         public GameObject choice1;
         public GameObject choice2;
         public GameObject choice3;
-        public GameObject currentChoice;
+        public int currentChoice;
         
         private static ModalPanel modalPanel;
 
@@ -82,12 +82,12 @@ namespace Assets.Scripts
             thanksButton.gameObject.SetActive(true);
         }
 
-        internal void Shrine(string title, string subText, List<Prayer> prayers, UnityAction yesEvent, UnityAction noEvent)
+        internal void Shrine(string title, string subText, List<Prayer> prayers, UnityAction noEvent)
         {
             modalPanelObject.SetActive(true);
 
             addButton.onClick.RemoveAllListeners();
-            addButton.onClick.AddListener(yesEvent);
+            addButton.onClick.AddListener(prayers[currentChoice].prayerEvent);
             addButton.onClick.AddListener(ClosePanel);
 
             noButton.onClick.RemoveAllListeners();
@@ -121,18 +121,17 @@ namespace Assets.Scripts
 
         private void Choose1()
         {
-            currentChoice = choice1;
-            currentChoice.GetComponent<Outline>().enabled = true;
+            currentChoice = 0;
+            choice1.GetComponent<Outline>().enabled = true;
             choice2.GetComponent<Outline>().enabled = false;
             choice3.GetComponent<Outline>().enabled = false;
             addButton.GetComponent<Button>().interactable = true;
-
         }
 
         private void Choose2()
         {
-            currentChoice = choice2;
-            currentChoice.GetComponent<Outline>().enabled = true;
+            currentChoice = 1;
+            choice2.GetComponent<Outline>().enabled = true;
             addButton.GetComponent<Button>().interactable = true;
             choice1.GetComponent<Outline>().enabled = false;
             choice3.GetComponent<Outline>().enabled = false;
@@ -140,12 +139,21 @@ namespace Assets.Scripts
 
         private void Choose3()
         {
-            currentChoice = choice3;
-            currentChoice.GetComponent<Outline>().enabled = true;
+            currentChoice = 2;
+            choice3.GetComponent<Outline>().enabled = true;
             addButton.GetComponent<Button>().interactable = true;
             choice2.GetComponent<Outline>().enabled = false;
             choice1.GetComponent<Outline>().enabled = false;
         }
+
+
+        private void PrayerChoice()
+        {
+
+        }
+
+
+
 
         void ClosePanel()
         {

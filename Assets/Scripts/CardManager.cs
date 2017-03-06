@@ -290,13 +290,12 @@ namespace Assets.Scripts
 
         internal void Move(MoveCard_GUI move)
         {
+            
             if (move.movingCard == this)
-            {
+            {                
                 Debug.Log("Card " + card.cardName + " recieved a move trigger");
                                 
                 StartCoroutine(SmoothMovement(move.start, move.end));
-
-
             }
         }
 
@@ -307,6 +306,7 @@ namespace Assets.Scripts
             // Vector3 endsize = new Vector3();
 
             transform.SetParent(start.transform);
+            
             this.transform.localScale = Vector3.one;
             yield return new WaitForEndOfFrame();
             Vector3 startpos = new Vector3();

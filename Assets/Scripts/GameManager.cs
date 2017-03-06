@@ -32,6 +32,7 @@ namespace Assets.Scripts
         private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
         public GameObject panel;
         public ModalPanel modalPanel;
+        public GameObject deckPanel;
         //public DeckManager myDeck;
         //public DeckManager AIDeck;
 
@@ -61,7 +62,7 @@ namespace Assets.Scripts
 
             //Get a component reference to the attached BoardManager script
             boardScript = GetComponent<DungeonManager>();
-            
+
             //Call the InitGame function to initialize the first level 
             // InitGame();
 
@@ -93,20 +94,15 @@ namespace Assets.Scripts
         //Initializes the game for each level.
         void InitGame()
         {
-
             //Prevent player from moving while title card is up.
             doingSetup = true;
 
             //Find all the scene objects we need.
             FindLevelObjects();
 
-            //Hide the cardgame overlay.            
-            CardGameCanvas.SetActive(false);
-            panel.SetActive(false);
-
             //Set the text of levelText to the string "Level" and append the current level number.
             levelText.text = "Level " + level;
-            lifeTextBoard.text = "Life: " +  lifeHolder + "/" + maxLife;
+            lifeTextBoard.text = "Life: " + lifeHolder + "/" + maxLife;
 
             //Set levelImage to active blocking player's view of the game board during setup.
             levelImage.SetActive(true);
@@ -119,14 +115,14 @@ namespace Assets.Scripts
 
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             boardScript.SetupScene(level);
-
         }
 
         private void FindLevelObjects()
         {
             //DungeonCanvas = GameObject.Find("Canvas(Board)");
             CardGameCanvas = GameObject.Find("Canvas(CardGame)");
-            
+            CardGameCanvas.SetActive(false);
+
             //Get a reference to our image LevelImage by finding it by name.
             levelImage = GameObject.Find("LevelImage");
 
@@ -136,8 +132,13 @@ namespace Assets.Scripts
             lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
 
             modalPanel = ModalPanel.Instance();
-            panel = GameObject.Find("Panel");
-            
+            panel = modalPanel.gameObject;
+            panel.SetActive(false);
+
+            var deckP = DeckPanel.Instance();
+            deckPanel = deckP.gameObject;
+            deckPanel.SetActive(false);
+
         }
 
         public void InitCardgame(Collider monster, Player player)
@@ -156,7 +157,7 @@ namespace Assets.Scripts
 
             //Remove the monster from game view. Either it dies or the player does.
             monster.gameObject.SetActive(false);
-           // player.gameObject.SetActive(false);
+            deckPanel.SetActive(true);
 
             //Prevent player from moving while in card game.
             doingSetup = true;
@@ -169,7 +170,7 @@ namespace Assets.Scripts
 
 
         public void ReturnFromCardgame(bool win)
-        {            
+        {
             if (win == false)
             {
                 GameOver();
