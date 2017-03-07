@@ -57,6 +57,7 @@ namespace Assets.Scripts
             EventManager.Instance.AddListener<UpdateMana_GUI>(GUIUpdateMana);
             EventManager.Instance.AddListener<UpdateLife_GUI>(GUIUpdateLife);
             EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
+            EventManager.Instance.AddListener<EndGame_GUI>(EndGame);
         }
 
         void OnDisable()
@@ -195,6 +196,7 @@ namespace Assets.Scripts
                 player.life -= value;
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             }
+            CheckWinConditions();
         }
 
         internal void ApplyHealing(int value, Team team)
@@ -218,17 +220,7 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, player.maxLife, Team.Opponent));
             }
         }
-
-        public void UpdateGame()
-        {
-
-            // Set cards as playable and/or draggable.
-            //SetPlayableDraggable();
-
-            //Check if player or monster has reached 0 life
-            CheckWinConditions();
-        }
-
+              
         private void CheckWinConditions()
         {
             bool win;
@@ -236,22 +228,24 @@ namespace Assets.Scripts
             if (player.life <= 0)
             {
                 win = false;
-                EndGame(win);
+                EventManager.Instance.QueueAnimation(new EndGame_GUI(win));
             }
             else if (enemy.life <= 0)
             {
                 win = true;
-                EndGame(win);
+                EventManager.Instance.QueueAnimation(new EndGame_GUI(win));
             }
         }
 
-        private void EndGame(bool win)
+        private void EndGame(EndGame_GUI end)
         {
+            DeckManager.player.Cleanup();
+            GameManager.instance.lifeHolder = player.life;
+            GameManager.instance.ReturnFromCardgame(end.playerWon);
             this.gameObject.SetActive(false);
 
-            GameManager.instance.lifeHolder = player.life;
-            GameManager.instance.ReturnFromCardgame(win);
         }
+                
 
         //Triggered by end turn button.
         public void EndTurn()
@@ -319,7 +313,10 @@ namespace Assets.Scripts
             {
                 Debug.Log("Duration = 0, startpoint tabletop endpoint discard");
                 card.SetCardPosition(CardManager.CardStatus.InDiscard);
+                
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.discard));
+
+                
             }
             else
             {

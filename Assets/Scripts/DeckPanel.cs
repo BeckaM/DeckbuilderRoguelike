@@ -168,6 +168,10 @@ namespace Assets.Scripts
 
         private void closePanel()
         {
+            if (selectedCard)
+            {
+                selectedCard.GetComponent<Selectable>().outline.enabled = false;
+            }
             isActive = false;
             deckPanelObject.SetActive(false);
         }

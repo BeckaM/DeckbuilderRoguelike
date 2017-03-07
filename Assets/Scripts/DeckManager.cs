@@ -53,7 +53,7 @@ namespace Assets.Scripts
         public CardgameManager.Team team;
         public List<GameObject> cardsInDeck = new List<GameObject>();
         public List<GameObject> cardsInDiscard = new List<GameObject>();
-        public List<GameObject> cardsOnTable = new List<GameObject>();
+        //public List<GameObject> cardsOnTable = new List<GameObject>();
         public List<GameObject> cardsInHand = new List<GameObject>();
 
         // Use this for initialization
@@ -96,31 +96,32 @@ namespace Assets.Scripts
         void OnDisable()
         {
             SceneManager.sceneLoaded -= OnLevelFinishedLoading;
-
-
+            
         }
 
+        public void Cleanup()
+        {
+            cardsInDeck = new List<GameObject>();
+            cardsInDiscard = new List<GameObject>();
 
-        ////public void Cleanup()
-        ////{
-        ////    foreach(GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
-        ////    { 
-        ////        CardManager card = CardObject.GetComponent<CardManager>();
+            foreach(GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
+            { 
+                CardManager card = CardObject.GetComponent<CardManager>();
 
-        ////        if (card.team == CardManager.Team.My)
-        ////        {
-        ////            card.transform.SetParent(playerDeckHolder.transform);
-        ////            card.SetCardStatus(CardManager.CardStatus.InDeck);
+                if (card.owner == CardgameManager.Team.Me)
+                {
+                    card.transform.SetParent(deckPanel.transform);
+                    card.SetCardPosition(CardManager.CardStatus.InDeck);
+                    cardsInDeck.Add(card.gameObject);
 
-        ////        }
-
-
-        ////        else
-        ////        {
-        ////            Destroy(CardObject);
-        ////        }
-        ////    }
-        ////}
+                }
+                
+                else
+                {
+                    Destroy(CardObject);
+                }
+            }
+        }
 
 
 
@@ -191,7 +192,7 @@ namespace Assets.Scripts
                 EventManager.Instance.TriggerEvent(new TableCard_Trigger(manager.owner, CardEffect.Trigger.OnDraw));
             }
         }
-
+               
         public void DestroyCard(GameObject card)
         {
             cardsInDeck.Remove(card);

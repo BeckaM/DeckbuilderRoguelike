@@ -119,7 +119,7 @@ namespace Assets.Scripts
         }
         public bool CheckBounds(Vector3 position, Vector3 boundsSize, int layerMask)
         {
-            Bounds boxBounds = new Bounds(position, boundsSize);
+        //    Bounds boxBounds = new Bounds(position, boundsSize);
 
             //float sqrHalfBoxSize = boxBounds.extents.sqrMagnitude;
             //float overlapingSphereRadius = Mathf.Sqrt(sqrHalfBoxSize + sqrHalfBoxSize);

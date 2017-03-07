@@ -175,6 +175,7 @@ namespace Assets.Scripts
             }
             doingSetup = false;
             lifeTextBoard.text = "Life: " + lifeHolder + "/" + maxLife;
+            deckPanelObject.SetActive(false);
         }
 
         //Hides black image used between levels

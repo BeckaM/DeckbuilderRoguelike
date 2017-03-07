@@ -9,7 +9,7 @@ namespace Assets.Scripts
 {
 
     public class DungeonManager : MonoBehaviour
-    {                        
+    {
 
         //Array of wall prefabs.
         // public GameObject[] enemyTiles;                                 //Array of enemies to place.
@@ -19,14 +19,14 @@ namespace Assets.Scripts
         //public GameObject[] outerWallTiles;                             //Array of outer tile prefabs.
 
         public List<GameObject> dungeonObjects;
-        private Transform dungeonCanvas;
+
         private MapGenerator mapGen;                                  //A variable to store a reference to the transform of our Board object.
-        private List<Vector3> gridPositions = new List<Vector3>();  //A list of possible locations to place tiles.
+
 
 
         //SetupScene initializes our level and calls the previous functions to lay out the game board
         public void SetupScene(int level)
-        {             
+        {
             var m = GameObject.Find("Map Generator");
             mapGen = m.GetComponent<MapGenerator>();
             var size = 50 + level * 2;
@@ -40,7 +40,7 @@ namespace Assets.Scripts
 
             mapGen.PlacePlayerAndExit();
 
-            mapGen.PlaceObjects(dungeonObjects);            
+            mapGen.PlaceObjects(dungeonObjects);
         }
 
         private void PrepareMapObjects(int level)
@@ -61,7 +61,7 @@ namespace Assets.Scripts
 
             //Get all enemies with level lower than current dungeon Level
             var enemiesToChooseFrom = DAL.ObjectDAL.GetEnemies(Level);
-            List<Enemy> enemyList = new List<Enemy>();
+            // List<Enemy> enemyList = new List<Enemy>();
 
             for (int i = 0; i < enemyCount; i++)
             {

@@ -22,6 +22,16 @@ namespace Assets.Scripts
         }
     }
 
+    public class EndGame_GUI : GameEvent
+    {
+        public bool playerWon { get; private set; }
+        
+        public EndGame_GUI(bool playerWon)
+        {
+            this.playerWon = playerWon;
+        }
+    }
+
     public class UpdateDeckTexts_GUI : GameEvent
     {
         public int decktext { get; private set; }

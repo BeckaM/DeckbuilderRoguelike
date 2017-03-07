@@ -134,7 +134,15 @@ namespace Assets.Scripts
             {
                 EventManager.Instance.AddListener<TableCard_Trigger>(CardTrigger);
             }
-
+            else if(status == CardStatus.InDiscard)
+            {                
+                deckManager.cardsInDiscard.Add(this.gameObject);
+                EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(deckManager.cardsInDeck.Count, deckManager.cardsInDiscard.Count, owner));
+            }
+            else if (status == CardStatus.InHand)
+            {
+                deckManager.cardsInHand.Add(this.gameObject);              
+            }
         }
 
         private void CardTrigger(TableCard_Trigger trigger)
@@ -157,7 +165,6 @@ namespace Assets.Scripts
                     ExpireCard();
                 }
             }
-
         }
 
         public void PopulateCard(Card card)
