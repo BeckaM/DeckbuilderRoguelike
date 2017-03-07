@@ -183,18 +183,40 @@ namespace Assets.Scripts
 
                 cardsInDeck.Remove(tempCard);
                 cardsInHand.Add(tempCard);
-                
+
                 //Queue up a move card animation.
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, deckholder, hand));
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
                 //Check for objects that trigger on draw card.
                 EventManager.Instance.TriggerEvent(new TableCard_Trigger(manager.owner, CardEffect.Trigger.OnDraw));
-
             }
         }
 
+        public void DestroyCard(GameObject card)
+        {
+            cardsInDeck.Remove(card);
+            Destroy(card);
+        }
 
+        public void DestroyRandomCard()
+        {
+            if (cardsInDeck.Count != 0)
+            {
+                //Destroy card logic.
+                int random = Random.Range(0, cardsInDeck.Count);
+                GameObject tempCard = cardsInDeck[random];
+
+                cardsInDeck.Remove(tempCard);
+                Destroy(tempCard);
+
+
+            }
+        }
     }
 
 
+
+
 }
+
+

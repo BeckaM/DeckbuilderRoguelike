@@ -21,7 +21,7 @@ namespace Assets.Scripts
             if (rand == 0)
             {
                 content = Content.Card;
-                cardReward = DAL.ObjectDAL.GetRandomCard(level, 0, 3);
+                cardReward = DAL.ObjectDAL.GetRandomCard(level, level + 3);
                 subText = "It contains a powerful card. Add it to your deck?";
             }
             else if (rand > 0 && rand < 6)
@@ -35,8 +35,8 @@ namespace Assets.Scripts
             {
                 content = Content.Gold;
                 goldReward = UnityEngine.Random.Range(5 + level, 10 + level);
-                subText = "It contains some Gold.";
 
+                subText = "It contains some Gold.";
             }
         }
 
@@ -73,8 +73,4 @@ namespace Assets.Scripts
             GameManager.instance.doingSetup = false;
         }
     }
-
-
-
-
 }

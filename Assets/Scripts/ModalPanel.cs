@@ -12,15 +12,19 @@ namespace Assets.Scripts
         public Text title;
         public Text subText;
 
+        public bool isActive;
+        public GameObject choicesPanel;
+        public GameObject goldObject;
+        public GameObject cardObject;
+        public GameObject prayerObject;
         public Button addButton;
         public Button noButton;
         public Button thanksButton;
-        public GameObject modalPanelObject;
-        public GameObject choice1;
-        public GameObject choice2;
-        public GameObject choice3;
-        public int currentChoice;
-        
+        public GameObject currentSelection;
+        public List<GameObject> selections;
+
+        public GameObject modalPanelObject;        
+
         private static ModalPanel modalPanel;
 
         public static ModalPanel Instance()
@@ -39,6 +43,7 @@ namespace Assets.Scripts
         public void Chest(string title, string subText, Card reward, UnityAction yesEvent, UnityAction noEvent)
         {
             modalPanelObject.SetActive(true);
+            isActive = true;
 
             addButton.onClick.RemoveAllListeners();
             addButton.onClick.AddListener(yesEvent);
@@ -50,21 +55,24 @@ namespace Assets.Scripts
 
             this.title.text = title;
             this.subText.text = subText;
-            choice1.GetComponent<Choice>().PopulateChoice(reward);
-            choice1.SetActive(true);
-            choice2.SetActive(false);
-            choice3.SetActive(false);
+
+            var card = Instantiate(cardObject);
+            selections.Add(card);
+            card.transform.SetParent(choicesPanel.transform);
+            var cardScript = card.GetComponent<CardManager>();
+            cardScript.PopulateCard(reward);
 
             addButton.gameObject.SetActive(true);
             noButton.gameObject.SetActive(true);
             thanksButton.gameObject.SetActive(false);
-            
+
         }
-               
-                //Chest with gold.
+
+        //Chest with gold.
         public void Chest(string title, string subText, int goldReward, UnityAction yesEvent)
         {
             modalPanelObject.SetActive(true);
+            isActive = true;
 
             thanksButton.onClick.RemoveAllListeners();
             thanksButton.onClick.AddListener(yesEvent);
@@ -72,22 +80,25 @@ namespace Assets.Scripts
 
             this.title.text = title;
             this.subText.text = subText;
-            choice1.GetComponent<Choice>().PopulateChoice(goldReward);
-            choice1.SetActive(true);
-            choice2.SetActive(false);
-            choice3.SetActive(false);
+
+            var gold = Instantiate(goldObject);
+            selections.Add(gold);
+            gold.transform.SetParent(choicesPanel.transform);
+            var goldscript = gold.GetComponent<Gold>();
+            goldscript.PopulateGold(goldReward);
+
 
             addButton.gameObject.SetActive(false);
             noButton.gameObject.SetActive(false);
             thanksButton.gameObject.SetActive(true);
         }
 
-        internal void Shrine(string title, string subText, List<Prayer> prayers, UnityAction noEvent)
+        internal void Shrine(string title, string subText, List<UnityAction> prayers, UnityAction noEvent)
         {
             modalPanelObject.SetActive(true);
+            isActive = true;
 
             addButton.onClick.RemoveAllListeners();
-            addButton.onClick.AddListener(prayers[currentChoice].prayerEvent);
             addButton.onClick.AddListener(ClosePanel);
 
             noButton.onClick.RemoveAllListeners();
@@ -96,21 +107,16 @@ namespace Assets.Scripts
 
             this.title.text = title;
             this.subText.text = subText;
-                       
-            choice1.GetComponent<Choice>().PopulateChoice(prayers[0]);
-            choice1.SetActive(true);
-            choice1.GetComponent<Button>().interactable = true;
-            choice1.GetComponent<Button>().onClick.AddListener(Choose1);
 
-            choice2.GetComponent<Choice>().PopulateChoice(prayers[1]);
-            choice2.SetActive(true);
-            choice2.GetComponent<Button>().interactable = true;
-            choice2.GetComponent<Button>().onClick.AddListener(Choose2);
+            foreach (UnityAction prayer in prayers)
+            {
+                var p = Instantiate(prayerObject);
+                selections.Add(p);
+                p.transform.SetParent(choicesPanel.transform);
+                var pscript = p.GetComponent<Prayer>();
+                pscript.PopulatePrayer(prayer);
+            }
 
-            choice3.GetComponent<Choice>().PopulateChoice(prayers[2]);
-            choice3.SetActive(true);
-            choice3.GetComponent<Button>().interactable = true;
-            choice3.GetComponent<Button>().onClick.AddListener(Choose3);
 
             addButton.gameObject.SetActive(true);
             addButton.GetComponent<Button>().interactable = false;
@@ -118,45 +124,33 @@ namespace Assets.Scripts
             noButton.gameObject.SetActive(true);
             thanksButton.gameObject.SetActive(false);
         }
-
-        private void Choose1()
+                               
+        internal void Select(GameObject selection)
         {
-            currentChoice = 0;
-            choice1.GetComponent<Outline>().enabled = true;
-            choice2.GetComponent<Outline>().enabled = false;
-            choice3.GetComponent<Outline>().enabled = false;
+            if (currentSelection)
+            {
+                currentSelection.GetComponent<Selectable>().outline.enabled = false;
+            }
+            currentSelection = selection;
+            selection.GetComponent<Selectable>().outline.enabled = true;
             addButton.GetComponent<Button>().interactable = true;
+
+            if (currentSelection.tag == "Prayer")
+            {
+                var prayer = currentSelection.GetComponent<Prayer>();
+                addButton.onClick.RemoveAllListeners();
+                addButton.onClick.AddListener(prayer.prayerEvent);
+                addButton.onClick.AddListener(ClosePanel);
+            }            
         }
-
-        private void Choose2()
-        {
-            currentChoice = 1;
-            choice2.GetComponent<Outline>().enabled = true;
-            addButton.GetComponent<Button>().interactable = true;
-            choice1.GetComponent<Outline>().enabled = false;
-            choice3.GetComponent<Outline>().enabled = false;
-        }
-
-        private void Choose3()
-        {
-            currentChoice = 2;
-            choice3.GetComponent<Outline>().enabled = true;
-            addButton.GetComponent<Button>().interactable = true;
-            choice2.GetComponent<Outline>().enabled = false;
-            choice1.GetComponent<Outline>().enabled = false;
-        }
-
-
-        private void PrayerChoice()
-        {
-
-        }
-
-
-
-
+        
         void ClosePanel()
         {
+            foreach(GameObject obj in selections)
+            {
+                Destroy(obj);
+            }
+            isActive = false;
             modalPanelObject.SetActive(false);
         }
     }

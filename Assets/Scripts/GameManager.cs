@@ -110,10 +110,7 @@ namespace Assets.Scripts
 
             //Call the HideLevelImage function with a delay in seconds of levelStartDelay.
             Invoke("HideLevelImage", levelStartDelay);
-
-            //Initialize the starting deck and create the cards.
-            DeckManager.player.StartingDeck(playerClass.Startingdeck);
-
+                      
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             boardScript.SetupScene(level);
         }

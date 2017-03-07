@@ -13,18 +13,25 @@ namespace Assets.Scripts
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            
+
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            
+
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            var selectedCard = eventData.pointerPress;
-            GameManager.instance.deckPanel.SelectCard(selectedCard);
+            var selection = eventData.pointerPress;
+            if (GameManager.instance.modalPanel.isActive)
+            {
+                GameManager.instance.modalPanel.Select(selection);
+            }
+            else if (GameManager.instance.deckPanel.isActive)
+            {
+                GameManager.instance.deckPanel.Select(selection);
+            }
         }
     }
 }

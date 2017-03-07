@@ -15,8 +15,8 @@ namespace Assets.Scripts
 
         private void ShowDeck()
         {
-            GameManager.instance.deckPanelObject.SetActive(true);
-            GameManager.instance.deckPanel.GetComponent<DeckPanel>().ShowDeck();
+           // GameManager.instance.deckPanelObject.SetActive(true);
+            GameManager.instance.deckPanel.GetComponent<DeckPanel>().ShowDeckPanel();
         }
     }
 

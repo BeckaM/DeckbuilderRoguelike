@@ -10,40 +10,41 @@ namespace Assets.Scripts
     public class ShrineManager : MonoBehaviour
     {
         public List<Sprite> sprites;
-        public List<Prayer> prayers;
+        public List<UnityAction> prayers;
 
         internal void PopulateShrine(int level)
         {
-            List<Prayer> allPrayers = GetPrayers(level);
-            prayers = new List<Prayer>();
+            List<UnityAction> allPrayers = GetPrayers(level);
+            prayers = new List<UnityAction>();
 
             for (var i = 0; i < 3; i++)
             {
                 var prayer = allPrayers[UnityEngine.Random.Range(0, allPrayers.Count)];
                 prayers.Add(prayer);
-                allPrayers.Remove(prayer);                
+                allPrayers.Remove(prayer);
             }
 
         }
 
-        private List<Prayer> GetPrayers(int level)
+        private List<UnityAction> GetPrayers(int level)
         {
-            List<Prayer> prayerList = new List<Prayer>();
+            List<UnityAction> prayerList = new List<UnityAction>();
 
-            var prayer1 = new Prayer("Prayer of Duplication", "Choose a card in your deck and duplicate it.", 0, Duplication);
+            var prayer1 = new UnityAction(Duplication);
             prayerList.Add(prayer1);
 
-            var prayer2 = new Prayer("Prayer of Chaos", "Destroy three random cards in your deck.", 1, Duplication);
+            var prayer2 = new UnityAction(RandomDestroyThree);
             prayerList.Add(prayer2);
 
-            var prayer3 = new Prayer("Prayer of Destruction", "Choose a card in your deck and destroy it.", 2, Duplication);
+            var prayer3 = new UnityAction(Destruction);
             prayerList.Add(prayer3);
 
-            var prayer4 = new Prayer("Prayer of Evolution", "Choose a card in your deck and replace it with a random one of higher level.", 3, Duplication);
+            var prayer4 = new UnityAction(Upgrade);
             prayerList.Add(prayer4);
 
             return prayerList;
         }
+
 
         internal void OpenShrine()
         {
@@ -58,27 +59,40 @@ namespace Assets.Scripts
 
         private void Duplication()
         {
-            GameManager.instance.deckPanel.DuplicateCard();
-            
+            Debug.Log("Prayer of Duplication triggered");
+            GameManager.instance.deckPanel.DuplicateCardPanel();
+
+            this.gameObject.SetActive(false);
+            GameManager.instance.doingSetup = false;
+        }
+
+        private void RandomDestroyThree()
+        {
+            Debug.Log("Prayer of Chaos triggered");
+            GameManager.instance.deckPanel.DestroyRandomCardsPanel(3);
+
+            this.gameObject.SetActive(false);
+            GameManager.instance.doingSetup = false;
+        }
+
+        private void Destruction()
+        {
+            Debug.Log("Prayer of Destruction triggered");
+            GameManager.instance.deckPanel.DestroyCardPanel();
+
+            this.gameObject.SetActive(false);
+            GameManager.instance.doingSetup = false;
+        }
+
+        private void Upgrade()
+        {
+            Debug.Log("Prayer of Evolution triggered");
+            GameManager.instance.deckPanel.UpgradeCardPanel();
+
             this.gameObject.SetActive(false);
             GameManager.instance.doingSetup = false;
         }
     }
-
-    public class Prayer
-    {
-        public string name;
-        public string description;
-        public int sprite;
-        public UnityAction prayerEvent;
-
-        public Prayer(string name, string description, int sprite, UnityAction prayerEvent)
-        {
-            this.name = name;
-            this.description = description;
-            this.sprite = sprite;
-            this.prayerEvent = prayerEvent;
-        }
-
-    }
 }
+
+
