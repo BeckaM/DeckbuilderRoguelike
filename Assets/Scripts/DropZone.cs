@@ -51,8 +51,7 @@ namespace Assets.Scripts
                 if (card.isPlayable && card.isDragable)
                 {
                     d.parentToReturnTo = this.transform;
-                    CardgameManager.instance.PlaceCard(card);
-
+                    
                     //Debug.Log(eventData.pointerDrag.name + " was dropped on " + gameObject.name);
                 }
 

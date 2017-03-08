@@ -96,28 +96,34 @@ namespace Assets.Scripts
         void OnDisable()
         {
             SceneManager.sceneLoaded -= OnLevelFinishedLoading;
-            
+
         }
 
         public void Cleanup()
         {
             cardsInDeck = new List<GameObject>();
             cardsInDiscard = new List<GameObject>();
-
-            foreach(GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
-            { 
-                CardManager card = CardObject.GetComponent<CardManager>();
-
-                if (card.owner == CardgameManager.Team.Me)
+            cardsInHand = new List<GameObject>();
+            if (team == CardgameManager.Team.Me)
+            {
+                foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
                 {
-                    card.transform.SetParent(deckPanel.transform);
-                    card.SetCardPosition(CardManager.CardStatus.InDeck);
-                    cardsInDeck.Add(card.gameObject);
-                }
-                
-                else
-                {
-                    Destroy(CardObject);
+                    CardManager card = CardObject.GetComponent<CardManager>();
+
+                    if (card.owner == CardgameManager.Team.Me)
+                    {
+                        card.moveCounter = 0;
+                        card.effectCounter = 0;
+                        card.PopulateCard(card.card);
+                        card.transform.SetParent(deckPanel.transform);
+                        card.SetCardPosition(CardManager.CardStatus.InDeck);
+                        cardsInDeck.Add(card.gameObject);
+                    }
+
+                    else
+                    {
+                        Destroy(CardObject);
+                    }
                 }
             }
         }
@@ -182,16 +188,19 @@ namespace Assets.Scripts
                 //manager.endPoint = hand;
 
                 cardsInDeck.Remove(tempCard);
-                cardsInHand.Add(tempCard);
+                // cardsInHand.Add(tempCard);
 
                 //Queue up a move card animation.
+                EventManager.Instance.AddListener<MoveCard_GUI>(manager.Move);
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, deckholder, hand));
+                manager.moveCounter++;
+
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
                 //Check for objects that trigger on draw card.
                 EventManager.Instance.TriggerEvent(new TableCard_Trigger(manager.owner, CardEffect.Trigger.OnDraw));
             }
         }
-               
+
         public void DestroyCard(GameObject card)
         {
             cardsInDeck.Remove(card);

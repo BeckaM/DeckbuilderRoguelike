@@ -17,7 +17,7 @@ namespace Assets.Scripts
         public GameObject cardImage;
         public GameObject cardName;
         public GameObject cardEffectText;
-        
+
         public int duration;
 
         public enum CardStatus { InDeck, InHand, OnTable, InDiscard };
@@ -127,21 +127,21 @@ namespace Assets.Scripts
         public void SetCardPosition(CardStatus status)
         {
             cardStatus = status;
-            EventManager.Instance.AddListener<MoveCard_GUI>(Move);
-            moveCounter++;
-
+           // EventManager.Instance.AddListener<MoveCard_GUI>(Move);
+           
             if (status == CardStatus.OnTable)
             {
                 EventManager.Instance.AddListener<TableCard_Trigger>(CardTrigger);
             }
-            else if(status == CardStatus.InDiscard)
-            {                
+            else if (status == CardStatus.InDiscard)
+            {
+                PopulateCard(card);
                 deckManager.cardsInDiscard.Add(this.gameObject);
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(deckManager.cardsInDeck.Count, deckManager.cardsInDiscard.Count, owner));
             }
             else if (status == CardStatus.InHand)
             {
-                deckManager.cardsInHand.Add(this.gameObject);              
+                deckManager.cardsInHand.Add(this.gameObject);
             }
         }
 
@@ -189,6 +189,7 @@ namespace Assets.Scripts
             //Set Card Background.
             var background = GetComponent<Image>();
             background.color = card.backgroundColor;
+
             duration = card.cardDuration;
         }
 
@@ -339,7 +340,7 @@ namespace Assets.Scripts
             }
             this.transform.SetParent(start.transform);
             yield return new WaitForEndOfFrame();
-            
+
             GetComponent<CanvasGroup>().alpha = (1f);
             //  yield return new WaitForSeconds(1f);
 

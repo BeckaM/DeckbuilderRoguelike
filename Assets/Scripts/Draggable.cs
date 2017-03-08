@@ -19,7 +19,7 @@ namespace Assets.Scripts
 
             var card = GetComponent<CardManager>();
             if (!card.isDragable) return;
-            
+
             //Debug.Log("OnBeginDrag");
 
             placeholder = new GameObject();
@@ -77,12 +77,16 @@ namespace Assets.Scripts
             var card = GetComponent<CardManager>();
             if (!card.isDragable) return;
 
-          //  Debug.Log("OnEndDrag");
+            //  Debug.Log("OnEndDrag");
             this.transform.SetParent(parentToReturnTo);
             this.transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
             GetComponent<CanvasGroup>().blocksRaycasts = true;
 
             Destroy(placeholder);
+            if (placeholderParent.name == "Tabletop")
+            {
+                CardgameManager.instance.PlaceCard(card);
+            }
         }
 
 

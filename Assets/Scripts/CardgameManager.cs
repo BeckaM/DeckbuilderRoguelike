@@ -14,7 +14,7 @@ namespace Assets.Scripts
         public static CardgameManager instance;
 
 
-        public enum Team { Me, Opponent };
+        public enum Team { Me, Opponent, None };
         public Team turn = Team.Me;
 
         public Image playerPortrait;
@@ -62,10 +62,11 @@ namespace Assets.Scripts
 
         void OnDisable()
         {
-            EventManager.Instance.RemoveListener<UpdateMana_GUI>(GUIUpdateMana);
-            EventManager.Instance.RemoveListener<UpdateLife_GUI>(GUIUpdateLife);
-            EventManager.Instance.RemoveListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
-            EventManager.Instance.RemoveListener<EndGame_GUI>(EndGame);
+            EventManager.Instance.RemoveAll();
+            //EventManager.Instance.RemoveListener<UpdateMana_GUI>(GUIUpdateMana);
+            //EventManager.Instance.RemoveListener<UpdateLife_GUI>(GUIUpdateLife);
+            //EventManager.Instance.RemoveListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
+            //EventManager.Instance.RemoveListener<EndGame_GUI>(EndGame);
 
         }
 
@@ -74,6 +75,8 @@ namespace Assets.Scripts
         {
             //Sets opponent profile images and texts.
             SetOpponents();
+
+            turn = Team.Me;
 
             //Update life and mana in the GUI.
             EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
@@ -197,7 +200,6 @@ namespace Assets.Scripts
                 player.life -= value;
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             }
-            CheckWinConditions();
         }
 
         internal void ApplyHealing(int value, Team team)
@@ -228,11 +230,13 @@ namespace Assets.Scripts
 
             if (player.life <= 0)
             {
+                turn = Team.None;
                 win = false;
                 EventManager.Instance.QueueAnimation(new EndGame_GUI(win));
             }
             else if (enemy.life <= 0)
             {
+                turn = Team.None;
                 win = true;
                 EventManager.Instance.QueueAnimation(new EndGame_GUI(win));
             }
@@ -242,7 +246,7 @@ namespace Assets.Scripts
         {
             Card cardReward = new Card();
             int goldReward;
-            
+
             List<Card> monsterCards = new List<Card>();
 
             foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
@@ -256,15 +260,19 @@ namespace Assets.Scripts
             }
             cardReward = monsterCards[Random.Range(0, monsterCards.Count)];
             goldReward = Random.Range(5 + enemy.enemy.BaseEnemyLevel, 10 + enemy.enemy.BaseEnemyLevel);
-            
+
             DeckManager.player.Cleanup();
+            DeckManager.monster.Cleanup();
 
             GameManager.instance.lifeHolder = player.life;
             GameManager.instance.ReturnFromCardgame(end.playerWon, cardReward, goldReward);
+
+            EventManager.Instance.processingQueue = false;
+
             this.gameObject.SetActive(false);
 
         }
-        
+
         //Triggered by end turn button.
         public void EndTurn()
         {
@@ -296,11 +304,13 @@ namespace Assets.Scripts
             Debug.Log("Playing a new card: " + card.card.cardName);
             if (card.owner == Team.Me)
             {
+                DeckManager.player.cardsInHand.Remove(card.gameObject);
                 player.mana = player.mana - card.card.cost;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, card.owner));
             }
             else
             {
+                DeckManager.monster.cardsInHand.Remove(card.gameObject);
                 enemy.mana = enemy.mana - card.card.cost;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, card.owner));
             }
@@ -332,20 +342,20 @@ namespace Assets.Scripts
                 Debug.Log("Duration = 0, startpoint tabletop endpoint discard");
                 card.SetCardPosition(CardManager.CardStatus.InDiscard);
 
+                EventManager.Instance.AddListener<MoveCard_GUI>(card.Move);
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.discard));
-
-
+                card.moveCounter++;
             }
             else
             {
                 card.SetCardPosition(CardManager.CardStatus.OnTable);
+
+                EventManager.Instance.AddListener<MoveCard_GUI>(card.Move);
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.table));
+                card.moveCounter++;
             }
 
-
-            //Queue up a move card event to move the card to it's final destination.
-
-
+            CheckWinConditions();
         }
     }
 }

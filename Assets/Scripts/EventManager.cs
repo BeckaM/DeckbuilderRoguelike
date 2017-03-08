@@ -119,21 +119,21 @@ namespace Assets.Scripts
                 del.Invoke(e);
 
                 // remove listeners which should only be called once
-                foreach (EventDelegate k in delegates[e.GetType()].GetInvocationList())
-                {
-                    if (onceLookups.ContainsKey(k))
-                    {
-                        delegates[e.GetType()] -= k;
+                //foreach (EventDelegate k in delegates[e.GetType()].GetInvocationList())
+                //{
+                //    if (onceLookups.ContainsKey(k))
+                //    {
+                //        delegates[e.GetType()] -= k;
 
-                        if (delegates[e.GetType()] == null)
-                        {
-                            delegates.Remove(e.GetType());
-                        }
+                //        if (delegates[e.GetType()] == null)
+                //        {
+                //            delegates.Remove(e.GetType());
+                //        }
 
-                        delegateLookup.Remove(onceLookups[k]);
-                        onceLookups.Remove(k);
-                    }
-                }
+                //        delegateLookup.Remove(onceLookups[k]);
+                //        onceLookups.Remove(k);
+                //    }
+                //}
             }
             else
             {

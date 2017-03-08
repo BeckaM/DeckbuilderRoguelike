@@ -173,6 +173,7 @@ namespace Assets.Scripts
 
         public void ReturnFromCardgame(bool win, Card cardReward, int goldReward)
         {
+            
             if (win == false)
             {
                 GameOver();
