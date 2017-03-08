@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;		//Allows us to use Lists. 
 using UnityEngine.UI;					//Allows us to use UI.
 using UnityEngine.SceneManagement;
-
+using System;
+using UnityEngine.Events;
 
 namespace Assets.Scripts
 {
@@ -34,8 +35,11 @@ namespace Assets.Scripts
         public ModalPanel modalPanel;
         public GameObject deckPanelObject;
         public DeckPanel deckPanel;
-        //public DeckManager myDeck;
-        //public DeckManager AIDeck;
+
+        private enum Content { Gold, Consumable, Card };
+        private Content lootType;
+        private Card cardLoot;
+        private int goldLoot;
 
 
         private int level = 0;                                  //Current level number, expressed in game as "Level 1".
@@ -110,7 +114,7 @@ namespace Assets.Scripts
 
             //Call the HideLevelImage function with a delay in seconds of levelStartDelay.
             Invoke("HideLevelImage", levelStartDelay);
-                      
+
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             boardScript.SetupScene(level);
         }
@@ -167,16 +171,54 @@ namespace Assets.Scripts
         }
 
 
-        public void ReturnFromCardgame(bool win)
+        public void ReturnFromCardgame(bool win, Card cardReward, int goldReward)
         {
             if (win == false)
             {
                 GameOver();
             }
-            doingSetup = false;
-            lifeTextBoard.text = "Life: " + lifeHolder + "/" + maxLife;
-            deckPanelObject.SetActive(false);
+            else
+            {
+                cardLoot = cardReward;
+                goldLoot = goldReward;
+                var rand = UnityEngine.Random.Range(0, 10);
+                if (rand < 5)
+                {
+                    modalPanel.Chest("Victory!", "The monster drops a card. Add to your deck?", cardReward, AddLoot, DeclineLoot);
+                    lootType = Content.Card;
+                }
+                else
+                {
+                    modalPanel.Chest("Victory!", "The monster drops some gold.", goldReward, AddLoot);
+                    lootType = Content.Gold;
+                }
+                                
+                lifeTextBoard.text = "Life: " + lifeHolder + "/" + maxLife;
+                deckPanelObject.SetActive(false);
+            }
         }
+
+        private void AddLoot()
+        {
+            if (lootType == Content.Gold)
+            {
+                gold = instance.gold + goldLoot;
+            }
+            else
+            {
+                DeckManager.player.AddCardtoDeck(cardLoot);
+
+            }
+            
+            doingSetup = false;
+        }
+
+        private void DeclineLoot()
+        {
+            doingSetup = false;
+        }
+
+
 
         //Hides black image used between levels
         void HideLevelImage()

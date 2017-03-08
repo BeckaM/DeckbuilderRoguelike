@@ -113,7 +113,6 @@ namespace Assets.Scripts
                     card.transform.SetParent(deckPanel.transform);
                     card.SetCardPosition(CardManager.CardStatus.InDeck);
                     cardsInDeck.Add(card.gameObject);
-
                 }
                 
                 else

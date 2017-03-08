@@ -153,5 +153,6 @@ namespace Assets.Scripts
             isActive = false;
             modalPanelObject.SetActive(false);
         }
+               
     }
 }

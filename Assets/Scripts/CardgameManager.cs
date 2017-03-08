@@ -65,9 +65,10 @@ namespace Assets.Scripts
             EventManager.Instance.RemoveListener<UpdateMana_GUI>(GUIUpdateMana);
             EventManager.Instance.RemoveListener<UpdateLife_GUI>(GUIUpdateLife);
             EventManager.Instance.RemoveListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
+            EventManager.Instance.RemoveListener<EndGame_GUI>(EndGame);
 
         }
-        
+
         // Use this for initialization
         public void Setup()
         {
@@ -220,7 +221,7 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, player.maxLife, Team.Opponent));
             }
         }
-              
+
         private void CheckWinConditions()
         {
             bool win;
@@ -239,14 +240,31 @@ namespace Assets.Scripts
 
         private void EndGame(EndGame_GUI end)
         {
+            Card cardReward = new Card();
+            int goldReward;
+            
+            List<Card> monsterCards = new List<Card>();
+
+            foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
+            {
+                CardManager card = CardObject.GetComponent<CardManager>();
+
+                if (card.owner == Team.Opponent)
+                {
+                    monsterCards.Add(card.card);
+                }
+            }
+            cardReward = monsterCards[Random.Range(0, monsterCards.Count)];
+            goldReward = Random.Range(5 + enemy.enemy.BaseEnemyLevel, 10 + enemy.enemy.BaseEnemyLevel);
+            
             DeckManager.player.Cleanup();
+
             GameManager.instance.lifeHolder = player.life;
-            GameManager.instance.ReturnFromCardgame(end.playerWon);
+            GameManager.instance.ReturnFromCardgame(end.playerWon, cardReward, goldReward);
             this.gameObject.SetActive(false);
 
         }
-                
-
+        
         //Triggered by end turn button.
         public void EndTurn()
         {
@@ -313,10 +331,10 @@ namespace Assets.Scripts
             {
                 Debug.Log("Duration = 0, startpoint tabletop endpoint discard");
                 card.SetCardPosition(CardManager.CardStatus.InDiscard);
-                
+
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.discard));
 
-                
+
             }
             else
             {
