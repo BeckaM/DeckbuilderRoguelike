@@ -86,7 +86,6 @@ namespace Assets.Scripts
 
             //Draw our starting hand
             DrawStartingHands();
-
         }
 
         private void DrawStartingHands()
@@ -270,7 +269,6 @@ namespace Assets.Scripts
             EventManager.Instance.processingQueue = false;
 
             this.gameObject.SetActive(false);
-
         }
 
         //Triggered by end turn button.

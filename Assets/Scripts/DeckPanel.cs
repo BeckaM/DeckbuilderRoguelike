@@ -36,11 +36,14 @@ namespace Assets.Scripts
         {
             if (this.selectedCard)
             {
+                this.selectedCard.GetComponent<CardManager>().cardDescription.SetActive(false);
+                this.selectedCard.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
                 this.selectedCard.GetComponent<Selectable>().outline.enabled = false;
             }
             this.selectedCard = selectedCard;
+            selectedCard.GetComponent<CardManager>().cardDescription.SetActive(true);
             selectedCard.GetComponent<Selectable>().outline.enabled = true;
-
+            selectedCard.transform.localScale = new Vector3(3f, 3f, 3f);
         }
 
         internal void ShowDeckPanel()

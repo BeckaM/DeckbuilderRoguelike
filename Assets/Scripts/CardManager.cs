@@ -131,17 +131,26 @@ namespace Assets.Scripts
            
             if (status == CardStatus.OnTable)
             {
+                cardDescription.SetActive(false);
                 EventManager.Instance.AddListener<TableCard_Trigger>(CardTrigger);
             }
             else if (status == CardStatus.InDiscard)
             {
+                cardDescription.SetActive(false);
                 PopulateCard(card);
                 deckManager.cardsInDiscard.Add(this.gameObject);
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(deckManager.cardsInDeck.Count, deckManager.cardsInDiscard.Count, owner));
             }
             else if (status == CardStatus.InHand)
             {
+                cardDescription.SetActive(true);
                 deckManager.cardsInHand.Add(this.gameObject);
+            }
+            else if (status == CardStatus.InDeck)
+            {
+                cardDescription.SetActive(false);
+                deckManager.cardsInHand.Add(this.gameObject);
+                PopulateCard(card);
             }
         }
 
@@ -397,16 +406,7 @@ namespace Assets.Scripts
             else
             {
                 transform.SetParent(end.transform);
-            }
-
-            if (end == table)
-            {
-                cardDescription.SetActive(false);
-            }
-            else
-            {
-                cardDescription.SetActive(true);
-            }
+            }                     
 
             yield return new WaitForSeconds(0.3f);
             EventManager.Instance.processingQueue = false;

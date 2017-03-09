@@ -113,9 +113,9 @@ namespace Assets.Scripts
                     if (card.owner == CardgameManager.Team.Me)
                     {
                         card.moveCounter = 0;
-                        card.effectCounter = 0;
-                        card.PopulateCard(card.card);
+                        card.effectCounter = 0;                        
                         card.transform.SetParent(deckPanel.transform);
+                        card.transform.localScale = new Vector3(1.4f,1.4f, 1.4f);                        
                         card.SetCardPosition(CardManager.CardStatus.InDeck);
                         cardsInDeck.Add(card.gameObject);
                     }
