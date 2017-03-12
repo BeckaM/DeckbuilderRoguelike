@@ -112,6 +112,8 @@ namespace Assets.Scripts
             //Set levelImage to active blocking player's view of the game board during setup.
             levelImage.SetActive(true);
 
+            DeckManager.player.InitDeck();
+
             //Call the HideLevelImage function with a delay in seconds of levelStartDelay.
             Invoke("HideLevelImage", levelStartDelay);
 
@@ -207,8 +209,7 @@ namespace Assets.Scripts
             }
             else
             {
-                DeckManager.player.AddCardtoDeck(cardLoot);
-
+                DeckManager.player.AddCardtoDeck(cardLoot.cardName);
             }
             
             doingSetup = false;

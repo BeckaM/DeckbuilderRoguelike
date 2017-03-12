@@ -8,9 +8,7 @@ namespace Assets.Scripts
     {
         public string ClassName;
         public int SpriteIcon;
-        public List<string> Startingdeck;
-                
-                   
+        public List<string> Startingdeck;                                  
     }
 
     [Serializable]

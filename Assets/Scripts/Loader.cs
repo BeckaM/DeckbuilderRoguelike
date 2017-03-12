@@ -8,7 +8,7 @@ namespace Assets.Scripts
 	{
 		public GameObject gameManager;			//GameManager prefab to instantiate.
 		public GameObject soundManager;         //SoundManager prefab to instantiate.
-        public GameObject playerDeckManager;
+      
 
 
 
@@ -25,18 +25,8 @@ namespace Assets.Scripts
 			if (SoundManager.instance == null)
 				
 				//Instantiate SoundManager prefab
-				Instantiate(soundManager);
-
-            //Check if a DeckManager has already been assigned to static variable instance or if it's still null
-            if (DeckManager.player == null)
-
-            //Instantiate DeckManager prefab
-            Instantiate(playerDeckManager);
-
-            //Instantiate DeckManager prefab
-
-
-
+				Instantiate(soundManager);                     
+                
         }
 	}
 }

@@ -37,7 +37,7 @@ namespace Assets.Scripts.DAL
 
             return cardReturn;
         }
-                
+
 
         internal static List<Card> GetCards(List<string> cardsToGet)
         {
@@ -53,20 +53,29 @@ namespace Assets.Scripts.DAL
             return cardReturn;
         }
 
+        internal static Card GetCard(string cardToGet)
+        {
+            var cards = GetAllCards();
+                        
+            var card = cards.cardItems.Find(item => item.cardName.Equals(cardToGet));
+            
+            return card;
+        }
+
         internal static Card GetRandomCard(int minLevel, int maxLevel)
         {
             var cards = GetAllCards();
 
             var levelCards = new List<Card>();
 
-            while (levelCards.Count== 0)
+            while (levelCards.Count == 0)
             {
                 levelCards = cards.cardItems.FindAll(item => item.level >= minLevel && item.level <= maxLevel && item.type.Equals(Card.Type.MonsterCard));
                 minLevel--;
             }
 
             Card cardReturn = levelCards[UnityEngine.Random.Range(0, levelCards.Count)];
-            
+
             return cardReturn;
         }
 
@@ -93,14 +102,14 @@ namespace Assets.Scripts.DAL
 
             // string text = File.ReadAllText(EnemyPath);
             //var enemyList = JsonUtility.FromJson<EnemyWrapper>(text);
-            var enemyList = GetAllEnemies(); 
+            var enemyList = GetAllEnemies();
 
             var enemies = enemyList.EnemyItems.FindAll(item => item.BaseEnemyLevel <= enemyLevel);
 
             return enemies;
 
         }
-                
+
         internal static void SaveCards(CardWrapper cardsToEdit)
         {
 

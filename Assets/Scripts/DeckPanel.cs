@@ -15,6 +15,7 @@ namespace Assets.Scripts
 
         private static DeckPanel deckPanel;
         public GameObject deckPanelObject;
+        public GameObject cardArea;
 
         public GameObject selectedCard;
         public string selectedTag;
@@ -36,14 +37,15 @@ namespace Assets.Scripts
         {
             if (this.selectedCard)
             {
-                this.selectedCard.GetComponent<CardManager>().cardDescription.SetActive(false);
-                this.selectedCard.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
+                // this.selectedCard.GetComponent<CardManager>().cardDescription.SetActive(false);
+                this.selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(false);
                 this.selectedCard.GetComponent<Selectable>().outline.enabled = false;
             }
             this.selectedCard = selectedCard;
-            selectedCard.GetComponent<CardManager>().cardDescription.SetActive(true);
+            //   selectedCard.GetComponent<CardManager>().cardDescription.SetActive(true);
             selectedCard.GetComponent<Selectable>().outline.enabled = true;
-            selectedCard.transform.localScale = new Vector3(3f, 3f, 3f);
+            selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(true);
+           
         }
 
         internal void ShowDeckPanel()
@@ -73,7 +75,7 @@ namespace Assets.Scripts
 
         private void Duplicate()
         {
-            DeckManager.player.AddCardtoDeck(selectedCard.GetComponent<CardManager>().card);
+            DeckManager.player.AddCardtoDeck(selectedCard.GetComponent<CardManager>().card.cardName);
 
             closeButton.gameObject.SetActive(true);
             closeButton.onClick.RemoveAllListeners();
@@ -110,7 +112,7 @@ namespace Assets.Scripts
         }
 
         internal void DestroyCardPanel()
-        {           
+        {
             deckPanelObject.SetActive(true);
             isActive = true;
 
@@ -124,7 +126,7 @@ namespace Assets.Scripts
         private void Destroy()
         {
             DeckManager.player.DestroyCard(selectedCard);
-            
+
             closeButton.gameObject.SetActive(true);
             closeButton.onClick.RemoveAllListeners();
             closeButton.onClick.AddListener(closePanel);
@@ -160,7 +162,7 @@ namespace Assets.Scripts
             {
                 newCard = DAL.ObjectDAL.GetRandomCard(level + 1, level + 1);
             }
-            DeckManager.player.AddCardtoDeck(newCard);
+            DeckManager.player.AddCardtoDeck(newCard.cardName);
 
             closeButton.gameObject.SetActive(true);
             closeButton.onClick.RemoveAllListeners();

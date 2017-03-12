@@ -17,9 +17,25 @@ namespace Assets.Scripts
         public static DeckManager monster = null;
         CardManager cardManager;
         public string instancename;
-        public GameObject deckPanel;
+        public GameObject deckHolder
+        {
+            get
+            {
+                if(team == CardgameManager.Team.Me)
+                {
+                    return GameManager.instance.deckPanel.cardArea;
+                }
+                else
+                {
+                    return this.gameObject;
+                }
+            }
 
-        public GameObject deckholder
+        }
+
+        public List<string> deckStringHolder;
+
+        public GameObject deckManager
         {
             get
             {
@@ -60,7 +76,7 @@ namespace Assets.Scripts
         void Awake()
         {
             name = this.gameObject.name;
-            if (name == "PlayerDeck(Clone)")
+            if (name == "GameManager(Clone)")
             {
 
 
@@ -113,9 +129,9 @@ namespace Assets.Scripts
                     if (card.owner == CardgameManager.Team.Me)
                     {
                         card.moveCounter = 0;
-                        card.effectCounter = 0;                        
-                        card.transform.SetParent(deckPanel.transform);
-                        card.transform.localScale = new Vector3(1.4f,1.4f, 1.4f);                        
+                        card.effectCounter = 0;
+                        card.transform.SetParent(deckHolder.transform);
+                       // card.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
                         card.SetCardPosition(CardManager.CardStatus.InDeck);
                         cardsInDeck.Add(card.gameObject);
                     }
@@ -129,48 +145,60 @@ namespace Assets.Scripts
         }
 
 
-
-        public void StartingDeck(List<string> cardstoCreate)
+        public void StartingDeck(List<string> startingCards)
         {
-
-            AddCardtoDeck(cardstoCreate);
-
+            deckStringHolder = new List<string>();
+            deckStringHolder.AddRange(startingCards);
         }
 
-        public void AddCardtoDeck(List<string> cardsToCreate)
+
+        public void AddCardstoDeck(List<string> cardsToCreate)
         {
+            deckStringHolder.AddRange(cardsToCreate);
             var cardobjects = ObjectDAL.GetCards(cardsToCreate);
-            var deck = this.transform;
+            //   var deck = this.transform;
 
 
             foreach (Card card in cardobjects)
             {
+                CreateCardObject(card);
 
-                GameObject instance = Instantiate(cardObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-                cardManager = instance.GetComponent<CardManager>();
-
-
-                cardManager.owner = team;
-                cardsInDeck.Add(cardManager.gameObject);
-                instance.transform.SetParent(deckPanel.transform);
-
-                cardManager.PopulateCard(card);
             }
         }
-        public void AddCardtoDeck(Card card)
+
+        internal void InitDeck()
         {
+            var cardobjects = ObjectDAL.GetCards(deckStringHolder);
+            foreach (Card card in cardobjects)
+            {
+                CreateCardObject(card);
+            }
+        }
 
-            GameObject instance = Instantiate(cardObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+
+        public void AddCardtoDeck(string cardToCreate)
+        {
+            deckStringHolder.Add(cardToCreate);
+            var cardobject = ObjectDAL.GetCard(cardToCreate);
+            //  var deck = this.transform;
+            CreateCardObject(cardobject);
+        }
+
+
+        private void CreateCardObject(Card card)
+        {
+            GameObject instance = Instantiate(cardObject) as GameObject;
             cardManager = instance.GetComponent<CardManager>();
-
+            
 
             cardManager.owner = team;
             cardsInDeck.Add(cardManager.gameObject);
-            instance.transform.SetParent(deckPanel.transform);
+            instance.transform.SetParent(deckHolder.transform);
+            instance.transform.localScale = new Vector3(1f, 1f, 1f);
 
             cardManager.PopulateCard(card);
-
         }
+
 
         public void Draw()
         {
@@ -192,7 +220,7 @@ namespace Assets.Scripts
 
                 //Queue up a move card animation.
                 EventManager.Instance.AddListener<MoveCard_GUI>(manager.Move);
-                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, deckholder, hand));
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, deckManager, hand));
                 manager.moveCounter++;
 
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));

@@ -4,18 +4,30 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
 namespace Assets.Scripts
 {
 
     public class CardManager : MonoBehaviour
     {
+        public Card card;
 
         public Sprite[] sprites;
-        public Card card;
-        public GameObject cardDescription;
-        public GameObject cardImage;
-        public GameObject cardName;
+        public Sprite[] highlights;
+        public Sprite[] glows;
+        public Image cardImage;
+        public Image highlight;
+        public Image glow;
+        public Image imageBackground;
+        public Image backgroundGlow;
+
+        public Image cardPaneImage;
+
+        public GameObject descriptionPanel;
+        public TMP_Text descriptionText;
+        //  public GameObject cardImage;
+        public TMP_Text cardName;
         public GameObject cardEffectText;
 
         public int duration;
@@ -24,6 +36,20 @@ namespace Assets.Scripts
         public CardStatus cardStatus = CardStatus.InDeck;
 
         public CardgameManager.Team owner;
+        public int ownerMana
+        {
+            get
+            {
+                if (owner == CardgameManager.Team.Me)
+                {
+                    return CardgameManager.instance.player.mana;
+                }
+                else
+                {
+                    return CardgameManager.instance.enemy.mana;
+                }
+            }
+        }
 
         public DeckManager deckManager
         {
@@ -44,7 +70,7 @@ namespace Assets.Scripts
         {
             get
             {
-                if (CardgameManager.instance.turn == owner && CardgameManager.instance.player.mana >= card.cost && cardStatus == CardStatus.InHand)
+                if (CardgameManager.instance.turn == owner && ownerMana >= card.cost && cardStatus == CardStatus.InHand)
                 {
                     return true;
                 }
@@ -127,28 +153,28 @@ namespace Assets.Scripts
         public void SetCardPosition(CardStatus status)
         {
             cardStatus = status;
-           // EventManager.Instance.AddListener<MoveCard_GUI>(Move);
-           
+            // EventManager.Instance.AddListener<MoveCard_GUI>(Move);
+
             if (status == CardStatus.OnTable)
             {
-                cardDescription.SetActive(false);
+                // cardDescription.SetActive(false);
                 EventManager.Instance.AddListener<TableCard_Trigger>(CardTrigger);
             }
             else if (status == CardStatus.InDiscard)
             {
-                cardDescription.SetActive(false);
+                // cardDescription.SetActive(false);
                 PopulateCard(card);
                 deckManager.cardsInDiscard.Add(this.gameObject);
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(deckManager.cardsInDeck.Count, deckManager.cardsInDiscard.Count, owner));
             }
             else if (status == CardStatus.InHand)
             {
-                cardDescription.SetActive(true);
+                // cardDescription.SetActive(true);
                 deckManager.cardsInHand.Add(this.gameObject);
             }
             else if (status == CardStatus.InDeck)
             {
-                cardDescription.SetActive(false);
+                // cardDescription.SetActive(false);
                 deckManager.cardsInHand.Add(this.gameObject);
                 PopulateCard(card);
             }
@@ -182,22 +208,30 @@ namespace Assets.Scripts
 
             var transformer = this.transform;
 
-            //Set Image            
-            var imageComponent = cardImage.GetComponent<Image>();
-            imageComponent.sprite = sprites[card.spriteIcon];
+            //Set Image                       
+            cardImage.sprite = sprites[card.spriteIcon];
+            cardImage.color = card.spriteColor;
+            highlight.sprite = highlights[card.spriteIcon];
+            highlight.color = card.spriteHighlightColor;
+            glow.sprite = glows[card.spriteIcon];
+            glow.color = card.spriteGlowColor;
+
+            //Set Card Background pane.
+            
+            cardPaneImage.color = card.backgroundColor;
+
+            imageBackground.color = card.spriteBackgroundColor;
+            backgroundGlow.color = card.backgroundGlowColor;
 
             //Set Card Title
-
-            var titleComponent = cardName.GetComponent<Text>();
-            titleComponent.text = card.cardName;
+            //   var titleComponent = cardName.GetComponent<Text>();
+            cardName.text = card.cardName;
 
             //Set Card Description
-            var cardtext = cardDescription.GetComponent<Text>();
-            cardtext.text = card.cardText;
+            //  var cardtext = cardDescription.GetComponent<Text>();
+            descriptionText.text = card.cardText;
 
-            //Set Card Background.
-            var background = GetComponent<Image>();
-            background.color = card.backgroundColor;
+
 
             duration = card.cardDuration;
         }
@@ -401,12 +435,12 @@ namespace Assets.Scripts
 
             if (end == discard)
             {
-                transform.SetParent(deckManager.transform);
+                transform.SetParent(deckManager.deckHolder.transform);
             }
             else
             {
                 transform.SetParent(end.transform);
-            }                     
+            }
 
             yield return new WaitForSeconds(0.3f);
             EventManager.Instance.processingQueue = false;

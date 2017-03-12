@@ -50,7 +50,6 @@ namespace Assets.Scripts
             GetEnemies(level);
             GetChests(level);
             GetShrines(level);
-
         }
 
         private void GetEnemies(int Level)

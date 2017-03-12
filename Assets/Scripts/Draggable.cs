@@ -83,7 +83,7 @@ namespace Assets.Scripts
             GetComponent<CanvasGroup>().blocksRaycasts = true;
 
             Destroy(placeholder);
-            if (placeholderParent.name == "Tabletop")
+            if (placeholderParent.name == "Tabletop" && card.isPlayable)
             {
                 CardgameManager.instance.PlaceCard(card);
             }

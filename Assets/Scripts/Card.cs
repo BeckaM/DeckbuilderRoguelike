@@ -9,20 +9,34 @@ namespace Assets.Scripts
     [Serializable]
     public class Card
     {
+        public string cardName;
+
+        //Card Stats
         public enum Type {MonsterCard, ClassCard, Consumable }
         public Type type;
         public int level;
-        public string cardName;
-        public string cardText;
-        public int spriteIcon;
-        public Color backgroundColor;
-
         public int cost;
+
+        public List<CardEffect> effects;
 
         //Permanent = -1, Until end of turn = 0. 
         public int cardDuration;
 
-        public List<CardEffect> effects;
+
+        //Card Appearance
+        
+        public string cardText;
+        public int spriteIcon;
+        public Color spriteColor;
+        public Color spriteHighlightColor;
+        public Color spriteGlowColor;
+        public Color spriteBackgroundColor;
+        public Color backgroundGlowColor;
+
+        public Color backgroundColor;
+
+
+                     
                 
     }
 

@@ -85,8 +85,6 @@ namespace Assets.Scripts
         }
 
 
-
-
         //Restart reloads the scene when called.
         private void Restart()
         {

@@ -66,7 +66,7 @@ namespace Assets.Scripts
             }
             else
             {
-                DeckManager.player.AddCardtoDeck(cardReward);
+                DeckManager.player.AddCardtoDeck(cardReward.cardName);
 
             }
             this.gameObject.SetActive(false);
