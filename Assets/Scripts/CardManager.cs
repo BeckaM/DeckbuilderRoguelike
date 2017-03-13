@@ -150,6 +150,7 @@ namespace Assets.Scripts
 
         }
 
+
         public void SetCardPosition(CardStatus status)
         {
             cardStatus = status;
@@ -180,6 +181,7 @@ namespace Assets.Scripts
             }
         }
 
+
         private void CardTrigger(TableCard_Trigger trigger)
         {
             foreach (CardEffect cardeffect in card.effects)
@@ -201,6 +203,7 @@ namespace Assets.Scripts
                 }
             }
         }
+
 
         public void PopulateCard(Card card)
         {
@@ -230,11 +233,10 @@ namespace Assets.Scripts
             //Set Card Description
             //  var cardtext = cardDescription.GetComponent<Text>();
             descriptionText.text = card.cardText;
-
-
-
+            
             duration = card.cardDuration;
         }
+
 
         internal void ApplyEffect(CardEffect cardEffect)
         {
@@ -271,6 +273,7 @@ namespace Assets.Scripts
                 Debug.LogError("Card Effct not Implemented yet!");
             }
         }
+
 
         public void CardEffectAnimation(CardEffect_GUI e)
         {
@@ -311,6 +314,7 @@ namespace Assets.Scripts
             }
         }
 
+
         private IEnumerator EffectText(Color color)
         {
             var text = cardEffectText.GetComponent<Text>();
@@ -335,6 +339,7 @@ namespace Assets.Scripts
             EventManager.Instance.processingQueue = false;
         }
 
+
         internal void Move(MoveCard_GUI move)
         {
 
@@ -345,6 +350,7 @@ namespace Assets.Scripts
                 StartCoroutine(SmoothMovement(move.start, move.end));
             }
         }
+
 
         protected IEnumerator SmoothMovement(GameObject start, GameObject end)
         {
@@ -446,6 +452,24 @@ namespace Assets.Scripts
             EventManager.Instance.processingQueue = false;
         }
 
+
+        internal void DestroyCardGUI(DestroyCard_GUI e)
+        {
+            var text = cardEffectText.GetComponent<Text>();
+
+            text.text = "Card Consumed!";
+
+            StartCoroutine(EffectText(Color.red));
+
+            Invoke("DestroyCard", 1.5f);       
+        }
+
+        private void DestroyCard()
+        {
+            DeckManager.player.DestroyCard(this.gameObject);
+        }
+
+
         public void ExpireCard()
         {
             SetCardPosition(CardStatus.InDiscard);
@@ -464,6 +488,7 @@ namespace Assets.Scripts
             EventManager.Instance.QueueAnimation(new MoveCard_GUI(this, table, discard));
             moveCounter++;
         }
+
 
         internal void RemoveEffect(CardEffect cardEffect)
         {

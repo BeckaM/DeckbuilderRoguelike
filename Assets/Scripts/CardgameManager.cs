@@ -56,6 +56,7 @@ namespace Assets.Scripts
         {
             EventManager.Instance.AddListener<UpdateMana_GUI>(GUIUpdateMana);
             EventManager.Instance.AddListener<UpdateLife_GUI>(GUIUpdateLife);
+            EventManager.Instance.AddListener<ApplyDamage_GUI>(ApplyDamageGUI);
             EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
             EventManager.Instance.AddListener<EndGame_GUI>(EndGame);
         }
@@ -172,12 +173,12 @@ namespace Assets.Scripts
             }
         }
 
+
         internal void IncreaseDamageReduction(int value, Team team)
         {
             if (team == Team.Me)
             {
                 player.ward += value;
-
                 //   EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.My));
             }
             else
@@ -185,21 +186,67 @@ namespace Assets.Scripts
                 enemy.ward += value;
                 // EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.AI));
             }
-
         }
+
+
         internal void ApplyDamage(int value, Team team)
         {
             if (team == Team.Me)
             {
-                enemy.life -= value;
+                enemy.life -= value - enemy.ward;
+                EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - enemy.ward, enemy.ward, Team.Opponent));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
             }
             else
             {
-                player.life -= value;
+                player.life -= value - player.ward;
+                EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - player.ward, player.ward, Team.Me));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             }
         }
+
+        internal void ApplyDamageGUI(ApplyDamage_GUI a)
+        {
+            var damageText = "" + a.damage + " Damage!";
+            var reduceText = "" + a.reduced + " Reduced";
+            var effectText = "";
+            if (a.reduced > 0)
+            {
+                effectText = damageText + " " + reduceText;
+            }
+            else
+            {
+                effectText = damageText;
+            }
+
+            if (a.team == Team.Me)
+            {
+                StartCoroutine(EffectText(Color.red, playerLifeText, effectText, 3));
+            }
+            else
+            {
+                StartCoroutine(EffectText(Color.red, monsterLifeText, effectText, 3));
+            }
+        }
+
+        private IEnumerator EffectText(Color color, Text textObject, string text, int loops)
+        {
+            var effectText = textObject.GetComponent<Text>();
+            effectText.text = text;
+            effectText.color = color;
+
+            for (var n = 0; n < loops; n++)
+            {
+                effectText.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                effectText.color = color;
+                yield return new WaitForSeconds(.1f);
+            }
+            EventManager.Instance.processingQueue = false;
+        }
+
+
+
 
         internal void ApplyHealing(int value, Team team)
         {
@@ -337,12 +384,21 @@ namespace Assets.Scripts
             Debug.Log("Start moving the card.");
             if (card.card.cardDuration == 0)
             {
-                Debug.Log("Duration = 0, startpoint tabletop endpoint discard");
-                card.SetCardPosition(CardManager.CardStatus.InDiscard);
+                if (card.card.type == Card.Type.Consumable)
+                {
+                    EventManager.Instance.AddListener<DestroyCard_GUI>(card.DestroyCardGUI);
+                    EventManager.Instance.QueueAnimation(new DestroyCard_GUI(card));
+                }
+                else
+                {
 
-                EventManager.Instance.AddListener<MoveCard_GUI>(card.Move);
-                EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.discard));
-                card.moveCounter++;
+                    Debug.Log("Duration = 0, startpoint tabletop endpoint discard");
+                    card.SetCardPosition(CardManager.CardStatus.InDiscard);
+
+                    EventManager.Instance.AddListener<MoveCard_GUI>(card.Move);
+                    EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.discard));
+                    card.moveCounter++;
+                }
             }
             else
             {

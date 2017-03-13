@@ -12,7 +12,7 @@ namespace Assets.Scripts
         public string cardName;
 
         //Card Stats
-        public enum Type {MonsterCard, ClassCard, Consumable }
+        public enum Type { MonsterCard, ClassCard, Consumable }
         public Type type;
         public int level;
         public int cost;
@@ -24,7 +24,7 @@ namespace Assets.Scripts
 
 
         //Card Appearance
-        
+
         public string cardText;
         public int spriteIcon;
         public Color spriteColor;
@@ -34,11 +34,8 @@ namespace Assets.Scripts
         public Color backgroundGlowColor;
 
         public Color backgroundColor;
-
-
-                     
-                
     }
+
 
     [Serializable]
     public class CardWrapper

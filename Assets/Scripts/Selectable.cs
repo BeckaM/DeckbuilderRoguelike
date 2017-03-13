@@ -32,6 +32,7 @@ namespace Assets.Scripts
             {
                 GameManager.instance.deckPanel.Select(selection);
             }
+
         }
     }
 }
