@@ -13,6 +13,8 @@ namespace Assets.Scripts
     {
         public Card card;
 
+        public CardBottomPanel bottomPanel;
+
         public Sprite[] sprites;
         public Sprite[] highlights;
         public Sprite[] glows;
@@ -164,7 +166,7 @@ namespace Assets.Scripts
             else if (status == CardStatus.InDiscard)
             {
                 // cardDescription.SetActive(false);
-                PopulateCard(card);
+                ResetCard();
                 deckManager.cardsInDiscard.Add(this.gameObject);
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(deckManager.cardsInDeck.Count, deckManager.cardsInDiscard.Count, owner));
             }
@@ -177,7 +179,7 @@ namespace Assets.Scripts
             {
                 // cardDescription.SetActive(false);
                 deckManager.cardsInHand.Add(this.gameObject);
-                PopulateCard(card);
+                ResetCard();
             }
         }
 
@@ -220,7 +222,7 @@ namespace Assets.Scripts
             glow.color = card.spriteGlowColor;
 
             //Set Card Background pane.
-            
+
             cardPaneImage.color = card.backgroundColor;
 
             imageBackground.color = card.spriteBackgroundColor;
@@ -233,8 +235,60 @@ namespace Assets.Scripts
             //Set Card Description
             //  var cardtext = cardDescription.GetComponent<Text>();
             descriptionText.text = card.cardText;
-            
+
             duration = card.cardDuration;
+
+            PopulateBottomPanel(card);
+
+        }
+
+        public void PopulateBottomPanel(Card card)
+        {
+            //set cost icon
+            bottomPanel.SetCostIcon(card.cost);
+
+            //set card duration icon
+            if (card.cardDuration == 0)
+            {
+                bottomPanel.ShowInstantDurationIcon();
+            }
+            else if(card.cardDuration > 0)
+            {
+                bottomPanel.ShowDurationIcon(card.cardDuration);
+            }
+            else
+            {
+                bottomPanel.ShowPermanentDurationIcon();
+            }
+
+            //set card effect icons
+            foreach (CardEffect effect in card.effects)
+            {
+                if (effect.effect == CardEffect.Effect.DealDamage)
+                {
+                    bottomPanel.ShowDamageIcon(effect.value);
+                }
+                else if (effect.effect == CardEffect.Effect.Heal)
+                {
+                    bottomPanel.ShowHealIcon(effect.value);
+                }
+                else if (effect.effect == CardEffect.Effect.ReduceDamage)
+                {
+                    bottomPanel.ShowWardIcon(effect.value);
+                }
+                else
+                {
+                }
+            }
+
+            bottomPanel.SetEffectSize();
+        }
+
+        public void ResetCard()
+        {
+            duration = card.cardDuration;
+            effectCounter = 0;
+            moveCounter = 0;
         }
 
 
@@ -461,7 +515,7 @@ namespace Assets.Scripts
 
             StartCoroutine(EffectText(Color.red));
 
-            Invoke("DestroyCard", 1.5f);       
+            Invoke("DestroyCard", 1.5f);
         }
 
         private void DestroyCard()
