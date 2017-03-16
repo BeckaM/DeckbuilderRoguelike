@@ -72,14 +72,14 @@ namespace Assets.Scripts.DAL
                                               
             var edited = cardObjectBeingEdited.GetComponent<CardManager>();
 
-            cardBeingEdited.spriteColor = edited.cardImage.color;
-            cardBeingEdited.spriteHighlightColor = edited.highlight.color;
-            cardBeingEdited.spriteGlowColor = edited.glow.color;
+            cardBeingEdited.spriteColor = edited.imagePanel.cardImage.color;
+            cardBeingEdited.spriteHighlightColor = edited.imagePanel.highlight.color;
+            cardBeingEdited.spriteGlowColor = edited.imagePanel.glow.color;
                         
-            cardBeingEdited.spriteBackgroundColor= edited.imageBackground.color;
-            cardBeingEdited.backgroundGlowColor = edited.backgroundGlow.color;
+            cardBeingEdited.spriteBackgroundColor= edited.imagePanel.imageBackground.color;
+            cardBeingEdited.backgroundGlowColor = edited.imagePanel.backgroundGlow.color;
 
-            cardBeingEdited.backgroundColor = edited.cardPaneImage.color;
+            cardBeingEdited.backgroundColor = edited.cardPanel.color;
 
             cardBeingEdited.cardName = edited.cardName.text;
 

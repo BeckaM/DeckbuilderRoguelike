@@ -14,21 +14,12 @@ namespace Assets.Scripts
         public Card card;
 
         public CardBottomPanel bottomPanel;
+        public CardImagePanel imagePanel;
 
-        public Sprite[] sprites;
-        public Sprite[] highlights;
-        public Sprite[] glows;
-        public Image cardImage;
-        public Image highlight;
-        public Image glow;
-        public Image imageBackground;
-        public Image backgroundGlow;
-
-        public Image cardPaneImage;
-
+        public Image cardPanel;
         public GameObject descriptionPanel;
         public TMP_Text descriptionText;
-        //  public GameObject cardImage;
+       
         public TMP_Text cardName;
         public GameObject cardEffectText;
 
@@ -160,7 +151,8 @@ namespace Assets.Scripts
 
             if (status == CardStatus.OnTable)
             {
-                // cardDescription.SetActive(false);
+                bottomPanel.ShowBottomPanel(false);
+                imagePanel.ShowFullDescription(false);
                 EventManager.Instance.AddListener<TableCard_Trigger>(CardTrigger);
             }
             else if (status == CardStatus.InDiscard)
@@ -210,24 +202,10 @@ namespace Assets.Scripts
         public void PopulateCard(Card card)
         {
             this.card = card;
-
-            var transformer = this.transform;
-
-            //Set Image                       
-            cardImage.sprite = sprites[card.spriteIcon];
-            cardImage.color = card.spriteColor;
-            highlight.sprite = highlights[card.spriteIcon];
-            highlight.color = card.spriteHighlightColor;
-            glow.sprite = glows[card.spriteIcon];
-            glow.color = card.spriteGlowColor;
-
+           
             //Set Card Background pane.
-
-            cardPaneImage.color = card.backgroundColor;
-
-            imageBackground.color = card.spriteBackgroundColor;
-            backgroundGlow.color = card.backgroundGlowColor;
-
+            cardPanel.color = card.backgroundColor;
+                       
             //Set Card Title
             //   var titleComponent = cardName.GetComponent<Text>();
             cardName.text = card.cardName;
@@ -238,59 +216,20 @@ namespace Assets.Scripts
 
             duration = card.cardDuration;
 
-            PopulateBottomPanel(card);
-
+            imagePanel.PopulateCardImage(card);
+            bottomPanel.PopulateBottomPanel(card);
         }
 
-        public void PopulateBottomPanel(Card card)
-        {
-            //set cost icon
-            bottomPanel.SetCostIcon(card.cost);
 
-            //set card duration icon
-            if (card.cardDuration == 0)
-            {
-                bottomPanel.ShowInstantDurationIcon();
-            }
-            else if(card.cardDuration > 0)
-            {
-                bottomPanel.ShowDurationIcon(card.cardDuration);
-            }
-            else
-            {
-                bottomPanel.ShowPermanentDurationIcon();
-            }
-
-            //set card effect icons
-            foreach (CardEffect effect in card.effects)
-            {
-                if (effect.effect == CardEffect.Effect.DealDamage)
-                {
-                    bottomPanel.ShowDamageIcon(effect.value);
-                }
-                else if (effect.effect == CardEffect.Effect.Heal)
-                {
-                    bottomPanel.ShowHealIcon(effect.value);
-                }
-                else if (effect.effect == CardEffect.Effect.ReduceDamage)
-                {
-                    bottomPanel.ShowWardIcon(effect.value);
-                }
-                else
-                {
-                }
-            }
-
-            bottomPanel.SetEffectSize();
-        }
 
         public void ResetCard()
         {
             duration = card.cardDuration;
-            effectCounter = 0;
-            moveCounter = 0;
+            bottomPanel.ShowBottomPanel(true);
+            imagePanel.ShowFullDescription(false);
+            
         }
-
+                                             
 
         internal void ApplyEffect(CardEffect cardEffect)
         {

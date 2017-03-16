@@ -20,6 +20,10 @@ namespace Assets.Scripts
         public TMP_Text wardText;
         public int wardNumber;
 
+        public GameObject manaIncreaseIcon;
+        public TMP_Text manaIncText;
+        public int manaIncNumber;
+
         public GameObject durationPanel;
         public GameObject durationInstantIcon;
         public GameObject durationPermanentIcon;
@@ -28,8 +32,64 @@ namespace Assets.Scripts
         public TMP_Text durationText;
                 
         public TMP_Text costText;
-
+                
         public int cardEffectCount;
+        
+
+        public void PopulateBottomPanel(Card card)
+        {
+            //set cost icon
+           SetCostIcon(card.cost);
+
+            //set card duration icon
+            if (card.cardDuration == 0)
+            {
+                ShowInstantDurationIcon();
+            }
+            else if (card.cardDuration > 0)
+            {
+                ShowDurationIcon(card.cardDuration);
+            }
+            else
+            {
+                ShowPermanentDurationIcon();
+            }
+
+            //set card effect icons
+            foreach (CardEffect effect in card.effects)
+            {
+                if (effect.effect == CardEffect.Effect.DealDamage)
+                {
+                    ShowDamageIcon(effect.value);
+                }
+                else if (effect.effect == CardEffect.Effect.Heal)
+                {
+                    ShowHealIcon(effect.value);
+                }
+                else if (effect.effect == CardEffect.Effect.ReduceDamage)
+                {
+                    ShowWardIcon(effect.value);
+                }
+                else if (effect.effect == CardEffect.Effect.AddMaxMana)
+                {
+                    ShowManaIncreaseIcon(effect.value);
+                }
+                else
+                {
+                }
+            }
+
+            SetEffectSize();
+        }
+
+        public void ShowBottomPanel(bool show)
+        {
+            this.gameObject.SetActive(show);
+        }
+
+
+
+
 
         public void ShowDamageIcon(int damage)
         {
@@ -53,6 +113,14 @@ namespace Assets.Scripts
             wardIcon.SetActive(true);
             wardNumber = wardNumber + ward;
             wardText.text = wardNumber.ToString();
+            cardEffectCount++;
+        }
+
+        public void ShowManaIncreaseIcon(int manaInc)
+        {
+            manaIncreaseIcon.SetActive(true);
+            manaIncNumber = manaIncNumber + manaInc;
+            manaIncText.text = "+" + manaIncNumber.ToString();
             cardEffectCount++;
         }
 

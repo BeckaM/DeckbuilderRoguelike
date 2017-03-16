@@ -45,6 +45,7 @@ namespace Assets.Scripts
 
         public EnemyManager enemy;
         public Player player;
+        public GameObject selectedCard;
 
         void Awake()
         {
@@ -310,12 +311,38 @@ namespace Assets.Scripts
             DeckManager.player.Cleanup();
             DeckManager.monster.Cleanup();
 
+            player.mana = 1;
+            player.maxMana = 1;
+
             GameManager.instance.lifeHolder = player.life;
             GameManager.instance.ReturnFromCardgame(end.playerWon, cardReward, goldReward);
 
             EventManager.Instance.processingQueue = false;
 
             this.gameObject.SetActive(false);
+        }
+
+        internal void Select(GameObject selectedCard)
+        {
+            if (this.selectedCard)
+            {
+
+                if (selectedCard == this.selectedCard)
+                {
+                    selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+                    selectedCard.GetComponent<Selectable>().outline.enabled = false;
+                    this.selectedCard = null;
+                    return;
+                }
+
+                this.selectedCard.GetComponent<Selectable>().outline.enabled = false;
+                this.selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+            }
+            this.selectedCard = selectedCard;
+            //   selectedCard.GetComponent<CardManager>().cardDescription.SetActive(true);
+            selectedCard.GetComponent<Selectable>().outline.enabled = true;
+            //   selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(true);
+            selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);            
         }
 
         //Triggered by end turn button.

@@ -37,15 +37,25 @@ namespace Assets.Scripts
         {
             if (this.selectedCard)
             {
-                // this.selectedCard.GetComponent<CardManager>().cardDescription.SetActive(false);
-                this.selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(false);
+
+                if (selectedCard == this.selectedCard)
+                {
+                    selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+                    selectedCard.GetComponent<Selectable>().outline.enabled = false;
+                    this.selectedCard = null;
+                    return;
+                }
+
                 this.selectedCard.GetComponent<Selectable>().outline.enabled = false;
+                this.selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
             }
             this.selectedCard = selectedCard;
             //   selectedCard.GetComponent<CardManager>().cardDescription.SetActive(true);
             selectedCard.GetComponent<Selectable>().outline.enabled = true;
-            selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(true);
-           
+            //   selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(true);
+            selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
+
+
         }
 
         internal void ShowDeckPanel()
