@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;		//Allows us to use Lists. 
 using UnityEngine.UI;					//Allows us to use UI.
 using UnityEngine.SceneManagement;
+using TMPro;
 using System;
-using UnityEngine.Events;
+using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
@@ -12,11 +11,15 @@ namespace Assets.Scripts
     public class GameManager : MonoBehaviour
     {
         public PlayerClass playerClass;
+        
+        public int gold { get; private set; }
+                
+        public int playerLevel = 0;
+        public int playerXP = 0;
+        public int nextLVLXP = 20;
 
-        public int gold;
         public int maxLife = 30;
         public int lifeHolder = 30;
-        public Text lifeTextBoard;                      //UI Text to display current player life total.
 
 
         public float levelStartDelay = 2f;                      //Time to wait before starting level, in seconds.
@@ -24,22 +27,42 @@ namespace Assets.Scripts
 
         public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
 
-        public bool playersTurn = true;     //Boolean to check if it's players turn, hidden in inspector but public.
+        //        public bool playersTurn = true;     //Boolean to check if it's players turn, hidden in inspector but public.
 
-        private Text levelText;                                 //Text to display current level number.
+
         public GameObject monsterDeck;
-        private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.                 
-        private GameObject CardGameCanvas;
-        private DungeonManager boardScript;						//Store a reference to our BoardManager which will set up the level.
-        public GameObject modalPanelObject;
-        public ModalPanel modalPanel;
-        public GameObject deckPanelObject;
-        public DeckPanel deckPanel;
 
-        private enum Content { Gold, Consumable, Card };
-        private Content lootType;
-        private Card cardLoot;
-        private int goldLoot;
+        private GameObject cardGameCanvas;
+        private GameObject dungeonCanvas;
+        public DungeonUI dungeonUI
+        {
+            get
+            {
+                return dungeonCanvas.GetComponent<DungeonUI>();
+            }
+        }
+
+        private DungeonManager boardScript;                     //Store a reference to our BoardManager which will set up the level.
+
+        public ModalPanel modalPanel
+        {
+            get
+            {
+                return dungeonUI.modalPanelObject.GetComponent<ModalPanel>();
+            }
+        }
+
+        public DeckPanel deckPanel
+        {
+            get
+            {
+                return dungeonUI.deckPanelObject.GetComponent<DeckPanel>();
+            }
+        }
+        public enum Content { Gold, Consumable, Card };
+        public Content lootType;
+        public Card cardLoot;
+        public int goldLoot;
 
 
         private int level = 0;                                  //Current level number, expressed in game as "Level 1".
@@ -105,12 +128,17 @@ namespace Assets.Scripts
             //Find all the scene objects we need.
             FindLevelObjects();
 
-            //Set the text of levelText to the string "Level" and append the current level number.
-            levelText.text = "Level " + level;
-            lifeTextBoard.text = "Life: " + lifeHolder + "/" + maxLife;
+            modalPanel.gameObject.SetActive(false);
+            deckPanel.gameObject.SetActive(false);
+            cardGameCanvas.SetActive(false);
+
+            dungeonUI.UpdateLifeText();
+            dungeonUI.UpdateGoldText();
+            dungeonUI.UpdateXPText();
 
             //Set levelImage to active blocking player's view of the game board during setup.
-            levelImage.SetActive(true);
+            dungeonUI.levelText.text = "Level " + level;
+            dungeonUI.levelImage.SetActive(true);
 
             DeckManager.player.InitDeck();
 
@@ -123,33 +151,15 @@ namespace Assets.Scripts
 
         private void FindLevelObjects()
         {
-            //DungeonCanvas = GameObject.Find("Canvas(Board)");
-            CardGameCanvas = GameObject.Find("Canvas(CardGame)");
-            CardGameCanvas.SetActive(false);
-
-            //Get a reference to our image LevelImage by finding it by name.
-            levelImage = GameObject.Find("LevelImage");
-
-            //Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
-            levelText = GameObject.Find("LevelText").GetComponent<Text>();
-
-            lifeTextBoard = GameObject.Find("LifeTextBoard").GetComponent<Text>();
-
-            modalPanel = ModalPanel.Instance();
-            modalPanelObject = modalPanel.gameObject;
-            modalPanelObject.SetActive(false);
-
-            deckPanel = DeckPanel.Instance();
-            deckPanelObject = deckPanel.gameObject;
-            deckPanelObject.SetActive(false);
-
+            dungeonCanvas = GameObject.Find("Canvas(Board)");
+            cardGameCanvas = GameObject.Find("Canvas(CardGame)");
         }
 
         public void InitCardgame(Collider monster, Player player)
         {
 
             doingSetup = true;
-            CardGameCanvas.SetActive(true);
+            cardGameCanvas.SetActive(true);
             //Create the monster deck and instantiate the cards.
             var enemyManager = monster.gameObject.GetComponent<EnemyManager>();
 
@@ -161,21 +171,23 @@ namespace Assets.Scripts
 
             //Remove the monster from game view. Either it dies or the player does.
             monster.gameObject.SetActive(false);
-            deckPanelObject.SetActive(true);
+            dungeonUI.deckPanelObject.SetActive(true);
 
             //Prevent player from moving while in card game.
             doingSetup = true;
 
             //Enable the card game Canvas, which also starts the CardgameManager script.          
-            CardGameCanvas.SetActive(true);
+            cardGameCanvas.SetActive(true);
             CardgameManager.instance.Setup();
-
         }
 
 
         public void ReturnFromCardgame(bool win, Card cardReward, int goldReward)
         {
-            
+
+            dungeonUI.deckPanelObject.SetActive(false);
+            dungeonUI.UpdateLifeText();
+
             if (win == false)
             {
                 GameOver();
@@ -194,24 +206,22 @@ namespace Assets.Scripts
                 {
                     modalPanel.Chest("Victory!", "The monster drops some gold.", goldReward, AddLoot);
                     lootType = Content.Gold;
-                }
-                                
-                lifeTextBoard.text = "Life: " + lifeHolder + "/" + maxLife;
-                deckPanelObject.SetActive(false);
+                }                
             }
         }
+
 
         private void AddLoot()
         {
             if (lootType == Content.Gold)
             {
-                gold = instance.gold + goldLoot;
+                ModifyGold(goldLoot);
             }
             else
             {
                 DeckManager.player.AddCardtoDeck(cardLoot.cardName);
             }
-            
+
             doingSetup = false;
         }
 
@@ -221,38 +231,75 @@ namespace Assets.Scripts
         }
 
 
-
         //Hides black image used between levels
         void HideLevelImage()
         {
             //Disable the levelImage gameObject.
-            levelImage.SetActive(false);
+            dungeonUI.levelImage.SetActive(false);
 
             //Set doingSetup to false allowing player to move again.
             doingSetup = false;
         }
 
 
-
-
         //GameOver is called when the player reaches 0 life points
         public void GameOver()
         {
             //Set levelText to display number of levels passed and game over message
-            levelText.text = "You died on level " + level;
+            dungeonUI.levelText.text = "You died on level " + level;
 
             //Enable black background image gameObject.
-            levelImage.SetActive(true);
+            dungeonUI.levelImage.SetActive(true);
 
             //Disable this GameManager.
             enabled = false;
         }
 
+        public void GainXP(int XP)
+        {
+            playerXP = playerXP + XP;
+
+            //Check if player leveled up
+            if (playerXP >= nextLVLXP)
+            {
+                dungeonUI.LevelUpButton.SetActive(true);
+            }
+            dungeonUI.UpdateXPText();
+        }
+
+        internal void LevelUp()
+        {
+            List<Card> rewardList = new List<Card>();
+            for (var i = 0; i < 3; i++)
+            {
+                var newCard = DAL.ObjectDAL.GetRandomClassCard(level - 1, level + 1);
+                rewardList.Add(newCard);
+            }
+
+           modalPanel.LevelUp(rewardList, LevelUpComplete);
+        }
+
+        internal void LevelUpComplete()
+        {
+            AddLoot();
+            playerLevel++;
+            var increase = 1.4* nextLVLXP;
+            nextLVLXP = nextLVLXP + (int)increase;
+            dungeonUI.UpdateXPText();
+            if(playerXP < nextLVLXP)
+            {
+                dungeonUI.LevelUpButton.SetActive(false);
+            }
+        }
 
 
+        public void ModifyGold(int gain)
+        {
+            gold = gold + gain;
+            dungeonUI.UpdateGoldText();
+        }
 
-
-
+      
     }
 
 }

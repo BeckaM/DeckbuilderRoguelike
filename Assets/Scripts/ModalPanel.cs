@@ -4,26 +4,28 @@ using UnityEngine.Events;
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using TMPro;
 
 namespace Assets.Scripts
 {
     public class ModalPanel : MonoBehaviour
     {
-        public Text title;
-        public Text subText;
+        public TMP_Text title;
+        public TMP_Text subText;
 
         public bool isActive;
         public GameObject choicesPanel;
         public GameObject goldObject;
         public GameObject cardObject;
         public GameObject prayerObject;
+
         public Button addButton;
         public Button noButton;
         public Button thanksButton;
         public GameObject currentSelection;
         public List<GameObject> selections;
 
-        public GameObject modalPanelObject;        
+        public GameObject modalPanelObject;
 
         private static ModalPanel modalPanel;
 
@@ -93,13 +95,40 @@ namespace Assets.Scripts
             thanksButton.gameObject.SetActive(true);
         }
 
+        internal void LevelUp(List<Card> cardRewards, UnityAction complete)
+        {
+            modalPanelObject.SetActive(true);
+            isActive = true;
+
+            this.title.text = "Level Up!";
+            this.subText.text = "Choose a reward.";
+
+            foreach (Card card in cardRewards)
+            {
+                var tempCard = Instantiate(cardObject);
+                selections.Add(tempCard);
+                tempCard.transform.SetParent(choicesPanel.transform);
+                var cardScript = tempCard.GetComponent<CardManager>();
+                cardScript.PopulateCard(card);
+            }
+
+            addButton.onClick.RemoveAllListeners();
+            addButton.onClick.AddListener(complete);
+            addButton.onClick.AddListener(ClosePanel);
+
+            addButton.GetComponent<Button>().interactable = false;
+            addButton.gameObject.SetActive(true);
+            noButton.gameObject.SetActive(false);
+            thanksButton.gameObject.SetActive(false);
+        }
+
         internal void Shrine(string title, string subText, List<UnityAction> prayers, UnityAction noEvent)
         {
             modalPanelObject.SetActive(true);
             isActive = true;
 
-            addButton.onClick.RemoveAllListeners();
-            addButton.onClick.AddListener(ClosePanel);
+            //addButton.onClick.RemoveAllListeners();
+            //addButton.onClick.AddListener(ClosePanel);
 
             noButton.onClick.RemoveAllListeners();
             noButton.onClick.AddListener(noEvent);
@@ -124,7 +153,7 @@ namespace Assets.Scripts
             noButton.gameObject.SetActive(true);
             thanksButton.gameObject.SetActive(false);
         }
-                               
+
         internal void Select(GameObject selection)
         {
             if (currentSelection)
@@ -141,18 +170,25 @@ namespace Assets.Scripts
                 addButton.onClick.RemoveAllListeners();
                 addButton.onClick.AddListener(prayer.prayerEvent);
                 addButton.onClick.AddListener(ClosePanel);
-            }            
+            }
+            else if(currentSelection.tag == "Card")
+            {
+                GameManager.instance.cardLoot = currentSelection.GetComponent<CardManager>().card;
+                GameManager.instance.lootType = GameManager.Content.Card;
+            }
         }
-        
+
         void ClosePanel()
         {
-            foreach(GameObject obj in selections)
+            foreach (GameObject obj in selections)
             {
                 Destroy(obj);
             }
+            selections.Clear();
+            currentSelection = null;
             isActive = false;
             modalPanelObject.SetActive(false);
         }
-               
+
     }
 }

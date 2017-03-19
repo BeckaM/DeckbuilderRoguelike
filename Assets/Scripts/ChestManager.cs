@@ -62,7 +62,7 @@ namespace Assets.Scripts
         {
             if (content == Content.Gold)
             {
-                GameManager.instance.gold = GameManager.instance.gold + goldReward;
+                GameManager.instance.ModifyGold(goldReward);
             }
             else
             {

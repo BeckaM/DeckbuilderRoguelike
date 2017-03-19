@@ -168,6 +168,7 @@ namespace Assets.Scripts
 
         internal void InitDeck()
         {
+            cardsInDeck = new List<GameObject>();
             var cardobjects = ObjectDAL.GetCards(deckStringHolder);
             foreach (Card card in cardobjects)
             {

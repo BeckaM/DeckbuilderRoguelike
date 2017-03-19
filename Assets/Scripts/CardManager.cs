@@ -477,7 +477,7 @@ namespace Assets.Scripts
                     RemoveEffect(cardeffect);
                 }
             }
-
+            EventManager.Instance.AddListener<MoveCard_GUI>(Move);
             EventManager.Instance.QueueAnimation(new MoveCard_GUI(this, table, discard));
             moveCounter++;
         }
@@ -488,18 +488,17 @@ namespace Assets.Scripts
             EventManager.Instance.AddListener<CardEffect_GUI>(CardEffectAnimation);
             effectCounter++;
 
-            EventManager.Instance.QueueAnimation(new CardEffect_GUI(cardEffect.value, owner, this, cardEffect.effect));
-            cardEffect.value = cardEffect.value * -1;
-
+            var revert = cardEffect.value * -1;
+            EventManager.Instance.QueueAnimation(new CardEffect_GUI(revert, owner, this, cardEffect.effect));
+            
             if (CardEffect.Effect.AddMaxMana.Equals(cardEffect.effect))
             {
-
-                CardgameManager.instance.IncreaseMaxMana(cardEffect.value, owner);
+                CardgameManager.instance.IncreaseMaxMana(revert, owner);
             }
 
             else if (CardEffect.Effect.ReduceDamage.Equals(cardEffect.effect))
             {
-                CardgameManager.instance.IncreaseDamageReduction(cardEffect.value, owner);
+                CardgameManager.instance.IncreaseDamageReduction(revert, owner);
             }
             else
             {

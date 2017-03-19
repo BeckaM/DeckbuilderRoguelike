@@ -10,9 +10,7 @@ namespace Assets.Scripts
 
     public class CardgameManager : MonoBehaviour
     {
-
         public static CardgameManager instance;
-
 
         public enum Team { Me, Opponent, None };
         public Team turn = Team.Me;
@@ -65,11 +63,6 @@ namespace Assets.Scripts
         void OnDisable()
         {
             EventManager.Instance.RemoveAll();
-            //EventManager.Instance.RemoveListener<UpdateMana_GUI>(GUIUpdateMana);
-            //EventManager.Instance.RemoveListener<UpdateLife_GUI>(GUIUpdateLife);
-            //EventManager.Instance.RemoveListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
-            //EventManager.Instance.RemoveListener<EndGame_GUI>(EndGame);
-
         }
 
         // Use this for initialization
@@ -194,13 +187,13 @@ namespace Assets.Scripts
         {
             if (team == Team.Me)
             {
-                enemy.life -= value - enemy.ward;
+                enemy.life -= (value - enemy.ward);
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - enemy.ward, enemy.ward, Team.Opponent));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
             }
             else
             {
-                player.life -= value - player.ward;
+                player.life -= (value - player.ward);
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - player.ward, player.ward, Team.Me));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             }
@@ -314,6 +307,7 @@ namespace Assets.Scripts
             player.mana = 1;
             player.maxMana = 1;
 
+            GameManager.instance.GainXP(enemy.experienceReward);
             GameManager.instance.lifeHolder = player.life;
             GameManager.instance.ReturnFromCardgame(end.playerWon, cardReward, goldReward);
 
@@ -342,7 +336,7 @@ namespace Assets.Scripts
             //   selectedCard.GetComponent<CardManager>().cardDescription.SetActive(true);
             selectedCard.GetComponent<Selectable>().outline.enabled = true;
             //   selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(true);
-            selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);            
+            selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
         }
 
         //Triggered by end turn button.

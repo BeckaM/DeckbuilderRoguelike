@@ -18,9 +18,10 @@ namespace Assets.Scripts
         public int mana = 1;
         public int maxMana = 1;
 
-        public int MonsterLevel;
+        public int monsterLevel;
+        public int experienceReward;
 
-        public GameObject EnemyObject;
+        public GameObject enemyObject;
         public Sprite[] sprites;
         public Sprite monsterImage;
 
@@ -31,12 +32,13 @@ namespace Assets.Scripts
 
             enemy = enemytoget;
 
-            MonsterLevel = UnityEngine.Random.Range(enemy.BaseEnemyLevel, Level+1);
+            monsterLevel = UnityEngine.Random.Range(enemy.BaseEnemyLevel, Level+1);
 
             int HPperlevel = enemy.BaseEnemyHP / 10;
-            int HPbonus = HPperlevel*(MonsterLevel-enemy.BaseEnemyLevel);
+            int HPbonus = HPperlevel*(monsterLevel-enemy.BaseEnemyLevel);
             life = enemy.BaseEnemyHP+(HPperlevel*HPbonus);
             maxLife = life;
+            experienceReward = 4 + monsterLevel;
 
             var transformer = transform;
 
@@ -52,7 +54,7 @@ namespace Assets.Scripts
         {
 
             var EnemyDeckBuilder = new EnemyDeckBuilder();
-            EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, MonsterLevel);
+            EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, monsterLevel);
                                  
         }
 
