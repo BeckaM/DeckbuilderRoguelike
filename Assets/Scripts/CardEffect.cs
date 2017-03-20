@@ -10,7 +10,7 @@ namespace Assets.Scripts
     public class CardEffect
     {
 
-        public enum Effect { DealDamage, DrawCard, ReduceDamage, Heal, AddMaxMana };
+        public enum Effect { DealDamage, Heal, DrawCard, DiscardCard, ReduceDamage, IncreaseDamage, AddMaxMana };
         public Effect effect;
         public int value;
 

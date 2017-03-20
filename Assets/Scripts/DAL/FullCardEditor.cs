@@ -43,8 +43,10 @@ namespace Assets.Scripts.DAL
         public void EditCard()
         {
             // Clear();
-
-            cardObjectBeingEdited.GetComponent<Selectable>().outline.enabled = false;
+            if (cardObjectBeingEdited != null)
+            {
+                cardObjectBeingEdited.GetComponent<Selectable>().outline.enabled = false;
+            }
 
             var card = GetCard(cardToEdit);
             cardBeingEdited = card;

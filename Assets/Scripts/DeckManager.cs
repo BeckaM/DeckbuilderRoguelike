@@ -178,9 +178,9 @@ namespace Assets.Scripts
 
 
         public void AddCardtoDeck(string cardToCreate)
-        {
-            deckStringHolder.Add(cardToCreate);
+        {           
             var cardobject = ObjectDAL.GetCard(cardToCreate);
+            deckStringHolder.Add(cardobject.cardName);
             //  var deck = this.transform;
             CreateCardObject(cardobject);
         }
@@ -189,8 +189,7 @@ namespace Assets.Scripts
         private void CreateCardObject(Card card)
         {
             GameObject instance = Instantiate(cardObject) as GameObject;
-            cardManager = instance.GetComponent<CardManager>();
-            
+            cardManager = instance.GetComponent<CardManager>();            
 
             cardManager.owner = team;
             cardsInDeck.Add(cardManager.gameObject);
@@ -233,6 +232,7 @@ namespace Assets.Scripts
         public void DestroyCard(GameObject card)
         {
             cardsInDeck.Remove(card);
+            deckStringHolder.Remove(card.GetComponent<CardManager>().card.cardName);
             Destroy(card);
         }
 
@@ -244,8 +244,7 @@ namespace Assets.Scripts
                 int random = Random.Range(0, cardsInDeck.Count);
                 GameObject tempCard = cardsInDeck[random];
 
-                cardsInDeck.Remove(tempCard);
-                Destroy(tempCard);
+                DestroyCard(tempCard);
 
 
             }

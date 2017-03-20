@@ -24,6 +24,10 @@ namespace Assets.Scripts
         public TMP_Text manaIncText;
         public int manaIncNumber;
 
+        public GameObject damageIncreaseIcon;
+        public TMP_Text damageIncText;
+        public int damageIncNumber;
+
         public GameObject durationPanel;
         public GameObject durationInstantIcon;
         public GameObject durationPermanentIcon;
@@ -74,9 +78,10 @@ namespace Assets.Scripts
                 {
                     ShowManaIncreaseIcon(effect.value);
                 }
-                else
+                else if (effect.effect == CardEffect.Effect.IncreaseDamage)
                 {
-                }
+                    ShowDamageIncreaseIcon(effect.value);
+                }                
             }
 
             SetEffectSize();
@@ -121,6 +126,14 @@ namespace Assets.Scripts
             manaIncreaseIcon.SetActive(true);
             manaIncNumber = manaIncNumber + manaInc;
             manaIncText.text = "+" + manaIncNumber.ToString();
+            cardEffectCount++;
+        }
+
+        public void ShowDamageIncreaseIcon(int damageInc)
+        {
+            damageIncreaseIcon.SetActive(true);
+            damageIncNumber = damageIncNumber + damageInc;
+            damageIncText.text = "+" + damageIncNumber.ToString();
             cardEffectCount++;
         }
 

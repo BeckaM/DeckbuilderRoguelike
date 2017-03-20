@@ -19,7 +19,7 @@ namespace Assets.Scripts
         public Image cardPanel;
         public GameObject descriptionPanel;
         public TMP_Text descriptionText;
-       
+
         public TMP_Text cardName;
         public GameObject cardEffectText;
 
@@ -186,7 +186,7 @@ namespace Assets.Scripts
                 }
             }
 
-            if (trigger.effect == CardEffect.Trigger.EndOfTurn && trigger.team == owner)
+            if (trigger.effect == CardEffect.Trigger.EndOfTurn && trigger.team != owner)
             {
                 Debug.Log(card.cardName);
                 duration--;
@@ -202,10 +202,10 @@ namespace Assets.Scripts
         public void PopulateCard(Card card)
         {
             this.card = card;
-           
+
             //Set Card Background pane.
             cardPanel.color = card.backgroundColor;
-                       
+
             //Set Card Title
             //   var titleComponent = cardName.GetComponent<Text>();
             cardName.text = card.cardName;
@@ -221,15 +221,13 @@ namespace Assets.Scripts
         }
 
 
-
         public void ResetCard()
         {
             duration = card.cardDuration;
             bottomPanel.ShowBottomPanel(true);
             imagePanel.ShowFullDescription(false);
-            
         }
-                                             
+
 
         internal void ApplyEffect(CardEffect cardEffect)
         {
@@ -460,6 +458,7 @@ namespace Assets.Scripts
         private void DestroyCard()
         {
             DeckManager.player.DestroyCard(this.gameObject);
+            
         }
 
 
@@ -490,7 +489,7 @@ namespace Assets.Scripts
 
             var revert = cardEffect.value * -1;
             EventManager.Instance.QueueAnimation(new CardEffect_GUI(revert, owner, this, cardEffect.effect));
-            
+
             if (CardEffect.Effect.AddMaxMana.Equals(cardEffect.effect))
             {
                 CardgameManager.instance.IncreaseMaxMana(revert, owner);
