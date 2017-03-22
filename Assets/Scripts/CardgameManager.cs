@@ -72,7 +72,7 @@ namespace Assets.Scripts
             SetOpponents();
 
             turn = Team.Me;
-
+            
             //Update life and mana in the GUI.
             EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
@@ -148,7 +148,8 @@ namespace Assets.Scripts
             //enemy.UpdateLife();
             monsterPortrait.sprite = enemy.monsterImage;
 
-            // player.UpdateLife();
+            // player.UpdateLife();            player.playerImage = player.sprites[GameManager.instance.playerClass.SpriteIcon]; // This should be populated earlier. Before time.
+
             playerPortrait.sprite = player.playerImage;
         }
 
