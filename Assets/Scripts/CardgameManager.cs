@@ -148,7 +148,8 @@ namespace Assets.Scripts
             //enemy.UpdateLife();
             monsterPortrait.sprite = enemy.monsterImage;
 
-            // player.UpdateLife();            player.playerImage = player.sprites[GameManager.instance.playerClass.SpriteIcon]; // This should be populated earlier. Before time.
+            // player.UpdateLife();            
+            player.playerImage = player.sprites[GameManager.instance.playerClass.SpriteIcon]; // This should be populated earlier. Before time.
 
             playerPortrait.sprite = player.playerImage;
         }
