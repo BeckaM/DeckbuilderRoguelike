@@ -25,7 +25,7 @@ namespace Assets.Scripts
 
         void Start()
         {
-            rigidbody = GetComponent<Rigidbody>();
+            rigidbody = GetComponent<Rigidbody>();      
         }
 
         void Update()
@@ -83,7 +83,7 @@ namespace Assets.Scripts
                 GameManager.instance.doingSetup = true;
             }
         }
-
+        
 
         //Restart reloads the scene when called.
         private void Restart()
