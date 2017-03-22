@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
 
     public class EnemyManager : MonoBehaviour
     {
-
         public Enemy enemy;
 
         public int life;
@@ -24,38 +25,37 @@ namespace Assets.Scripts
         public GameObject enemyObject;
         public Sprite[] sprites;
         public Sprite monsterImage;
+        public SpriteRenderer monsterRenderer;
+        public TMP_Text monsterLVLText;
 
-        
         //Gets monster properties from Dungeon Manager and sets them on the enemy object.
-        public void PopulateEnemy(Enemy enemytoget, int Level)
+        public void PopulateEnemy(Enemy enemytoget, int level)
         {
-
+            monsterLevel = level;
             enemy = enemytoget;
 
-            monsterLevel = UnityEngine.Random.Range(enemy.BaseEnemyLevel, Level+1);
-
             int HPperlevel = enemy.BaseEnemyHP / 10;
-            int HPbonus = HPperlevel*(monsterLevel-enemy.BaseEnemyLevel);
-            life = enemy.BaseEnemyHP+(HPperlevel*HPbonus);
+            int HPbonus = HPperlevel * (monsterLevel - enemy.BaseEnemyLevel);
+            life = enemy.BaseEnemyHP + (HPperlevel * HPbonus);
             maxLife = life;
             experienceReward = 4 + monsterLevel;
 
             var transformer = transform;
 
             //Set Image
-            var imageObj = transformer.GetChild(0);
-            monsterImage = sprites[enemy.SpriteIcon];
-            var imageComponent = imageObj.GetComponent<SpriteRenderer>();
-            imageComponent.sprite = sprites[enemy.SpriteIcon];
+            monsterRenderer.sprite = sprites[enemy.SpriteIcon];
+
+            //Set lvl text
+            monsterLVLText.text = "LVL" + level.ToString();
         }
-        
+
         //Create all the cards in the scene for the monsters deck when the player fights it. 
         internal void InitMonsterDeck()
         {
 
             var EnemyDeckBuilder = new EnemyDeckBuilder();
             EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, monsterLevel);
-                                 
+
         }
 
         internal void initAI()

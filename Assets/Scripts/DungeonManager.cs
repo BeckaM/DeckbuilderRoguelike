@@ -16,7 +16,10 @@ namespace Assets.Scripts
         public GameObject chestPrefab;
         public GameObject shrinePrefab;
         public GameObject enemyPrefab; //Enemy prefab.
-        //public GameObject[] outerWallTiles;                             //Array of outer tile prefabs.
+
+        int enemyCount;
+
+        public List<int> enemyLevels;
 
         public List<GameObject> dungeonObjects;
 
@@ -54,15 +57,40 @@ namespace Assets.Scripts
 
         private void GetEnemies(int Level)
         {
+            Debug.Log("Getting enemylist for level " + Level);
+            if (Level == 1)
+            {
+                enemyLevels = new List<int> { 1, 1, 1 };
+            }
+            else
+            {
+                Debug.Log("Old enemylist" + enemyLevels.Count);
+                //Determine number of enemies based on current level number, based on a logarithmic progression
+                enemyCount = (int)Mathf.Log(Level, 2f) + 3;
 
-            //Determine number of enemies based on current level number, based on a logarithmic progression
-            int enemyCount = (int)Mathf.Log(Level, 2f) + 3;
+                //if we should have more enemies, add one to the end of list. It will be the lowest level enemy from the last level.
+                if (enemyCount > enemyLevels.Count)
+                {
+                    Debug.Log("Enemy count increased");
+                    var newEnemy = enemyLevels[enemyLevels.Count - 1];
+                    enemyLevels.Add(newEnemy);
+                }
+
+                //Gradually increase the levels of all enemies in the list
+                //Remove the lowest level enemy.
+                enemyLevels.RemoveAt(enemyLevels.Count - 1);
+
+                //Add a new enemy with the same leves as the second biggest monster+1. This gives a good progression.
+                var highEnemy = enemyLevels[1] + 1;
+                enemyLevels.Insert(0, highEnemy);
+            }
+            Debug.Log("New enemylist" + enemyLevels.Count);
 
             //Get all enemies with level lower than current dungeon Level
             var enemiesToChooseFrom = DAL.ObjectDAL.GetEnemies(Level);
             // List<Enemy> enemyList = new List<Enemy>();
 
-            for (int i = 0; i < enemyCount; i++)
+            foreach (int enemyLevel in enemyLevels)
             {
                 Enemy enemyChoice = enemiesToChooseFrom[Random.Range(0, enemiesToChooseFrom.Count)];
 
@@ -70,11 +98,9 @@ namespace Assets.Scripts
 
                 var script = instance.GetComponent<EnemyManager>();
 
-                script.PopulateEnemy(enemyChoice, Level);
-
+                script.PopulateEnemy(enemyChoice, enemyLevel);
 
                 dungeonObjects.Add(instance);
-
             }
         }
 
