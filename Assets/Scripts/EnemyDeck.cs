@@ -11,9 +11,9 @@ namespace Assets.Scripts
     [Serializable]
     public class DeckComponent
     {
-        public string ComponentName;
-        public List<string> CardNames;
-        public int cardcount;
+        public string componentName;
+        public List<string> cardNames;
+        public int cardCount;
     }    
 }
 

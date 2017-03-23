@@ -82,12 +82,14 @@ namespace Assets.Scripts
     {
         public int damage { get; private set; }
         public int reduced { get; private set; }
+        public int increased { get; private set; }
         public CardgameManager.Team team { get; private set; }
 
-        public ApplyDamage_GUI(int damage, int reduced, CardgameManager.Team team)
+        public ApplyDamage_GUI(int damage, int reduced, int increased, CardgameManager.Team team)
         {
             this.damage = damage;
             this.reduced = reduced;
+            this.increased = increased;
             this.team = team;
         }
     }

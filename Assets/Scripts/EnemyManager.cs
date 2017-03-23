@@ -15,6 +15,7 @@ namespace Assets.Scripts
         public int life;
         public int maxLife;
         public int ward = 0;
+        public int damageBoost = 0;
 
         public int mana = 1;
         public int maxMana = 1;
@@ -24,7 +25,7 @@ namespace Assets.Scripts
 
         public GameObject enemyObject;
         public Sprite[] sprites;
-        public Sprite monsterImage;
+      //  public Sprite monsterImage;
         public SpriteRenderer monsterRenderer;
         public TMP_Text monsterLVLText;
 
@@ -51,10 +52,10 @@ namespace Assets.Scripts
 
         //Create all the cards in the scene for the monsters deck when the player fights it. 
         internal void InitMonsterDeck()
-        {
+        {                        
+            var enemyDeck = EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, monsterLevel);
 
-            var EnemyDeckBuilder = new EnemyDeckBuilder();
-            EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, monsterLevel);
+            DeckManager.monster.AddCardstoDeck(enemyDeck);
 
         }
 

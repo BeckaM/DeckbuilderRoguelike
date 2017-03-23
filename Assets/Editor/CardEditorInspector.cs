@@ -36,6 +36,11 @@ public class CardEditorInspector : Editor
         {
             myScript.SaveCards();
         }
+
+        if (GUILayout.Button("Get Enemy Deck"))
+        {
+            myScript.GetMonsterDeck();
+        }
     }
 }
 

@@ -170,7 +170,7 @@ namespace Assets.Scripts
             else if (status == CardStatus.InDeck)
             {
                 // cardDescription.SetActive(false);
-                deckManager.cardsInHand.Add(this.gameObject);
+                deckManager.cardsInDeck.Add(this.gameObject);
                 ResetCard();
             }
         }
@@ -259,6 +259,10 @@ namespace Assets.Scripts
             {
                 CardgameManager.instance.IncreaseDamageReduction(cardEffect.value, owner);
             }
+            else if (CardEffect.Effect.IncreaseDamage.Equals(cardEffect.effect))
+            {
+                CardgameManager.instance.IncreaseDamage(cardEffect.value, owner);
+            }
             else
             {
                 Debug.LogError("Card Effct not Implemented yet!");
@@ -301,6 +305,14 @@ namespace Assets.Scripts
                     text.text = "+" + e.value + " Damage Reduction!";
 
                     StartCoroutine(EffectText(Color.grey));
+                }
+                else if (e.type == CardEffect.Effect.IncreaseDamage)
+                {
+                    var text = cardEffectText.GetComponent<Text>();
+
+                    text.text = "+" + e.value + " Damage Boost!";
+
+                    StartCoroutine(EffectText(Color.yellow));
                 }
             }
         }
@@ -498,6 +510,10 @@ namespace Assets.Scripts
             else if (CardEffect.Effect.ReduceDamage.Equals(cardEffect.effect))
             {
                 CardgameManager.instance.IncreaseDamageReduction(revert, owner);
+            }
+            else if (CardEffect.Effect.IncreaseDamage.Equals(cardEffect.effect))
+            {
+                CardgameManager.instance.IncreaseDamage(revert, owner);
             }
             else
             {

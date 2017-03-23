@@ -52,7 +52,7 @@ namespace Assets.Scripts.DAL
 
             return cardReturn;
         }
-
+        
         internal static Card GetCard(string cardToGet)
         {
             var cards = GetAllCards();

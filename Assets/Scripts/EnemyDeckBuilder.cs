@@ -6,27 +6,70 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    class EnemyDeckBuilder
+    static class EnemyDeckBuilder
     {
-        private List<string> FinalList = new List<string>();
+       // private static List<Card> finalList;
 
-        //This is where we build the enemy deck.
-        public void BuildMonsterDeck(List<DeckComponent> DeckComponents, int EnemyLevel)
-        {   
-            foreach (DeckComponent comp in DeckComponents)
+        //This is where we bake the enemy deck-cake. It's a magic recipe.
+        public static List<string> BuildMonsterDeck(List<DeckComponent> deckComponents, int enemyLevel)
+        {
+            var finalList = new List<Card>();
+
+            foreach (DeckComponent comp in deckComponents)
             {
-                var cardnumbers = comp.cardcount;
-                var cardstoget = comp.CardNames;
-                
-                for (int i = 0; i < cardnumbers; i++)
+                var componentCount = comp.cardCount;
+                var componentCards = comp.cardNames;
+                var componentFinalList = new List<Card>();
+
+                var cardChoices = DAL.ObjectDAL.GetCards(componentCards);
+
+                var tempList = new List<Card>();
+                tempList.AddRange(cardChoices);
+
+                //remove cards that are higher level than monster level
+                //remove cards that are 5 levels lower than monster level
+                foreach (Card card in tempList)
                 {
-                    string cardChoice = cardstoget[Random.Range(0, cardstoget.Count)];                  
-                    FinalList.Add(cardChoice);
+                    if (card.level > enemyLevel)
+                    {
+                        cardChoices.Remove(card);
+                    }
+                    else if (card.level <= enemyLevel - 5)
+                    {
+                        cardChoices.Remove(card);
+                    }
                 }
+
+                tempList = new List<Card>();
+                tempList.AddRange(cardChoices);                
+
+                //add one of each valid card to the list untill we have enough
+                while (componentFinalList.Count < componentCount)
+                {
+                    foreach (Card card in tempList)
+                    {
+                        componentFinalList.Add(card);
+
+                    }
+                }
+
+                //remove cards from the top end until we have the correct ammount
+                while (componentFinalList.Count > componentCount)
+                {
+                    componentFinalList.RemoveAt(componentFinalList.Count - 1);
+                }
+                finalList.AddRange(componentFinalList);
             }
 
+            List<string> returnList = new List<string>();
 
-            DeckManager.monster.AddCardstoDeck(FinalList);
+            foreach (Card card in finalList)
+            {
+                returnList.Add(card.cardName);
+                Debug.Log(card.cardName + "added to deck");
+            }
+
+            return returnList;
 
         }
     }

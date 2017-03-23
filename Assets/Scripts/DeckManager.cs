@@ -21,7 +21,7 @@ namespace Assets.Scripts
         {
             get
             {
-                if(team == CardgameManager.Team.Me)
+                if (team == CardgameManager.Team.Me)
                 {
                     return GameManager.instance.deckPanel.cardArea;
                 }
@@ -30,7 +30,6 @@ namespace Assets.Scripts
                     return this.gameObject;
                 }
             }
-
         }
 
         public List<string> deckStringHolder;
@@ -131,9 +130,9 @@ namespace Assets.Scripts
                         card.moveCounter = 0;
                         card.effectCounter = 0;
                         card.transform.SetParent(deckHolder.transform);
-                       // card.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
+                        // card.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
                         card.SetCardPosition(CardManager.CardStatus.InDeck);
-                        cardsInDeck.Add(card.gameObject);
+                      //  cardsInDeck.Add(card.gameObject);
                     }
 
                     else
@@ -178,7 +177,7 @@ namespace Assets.Scripts
 
 
         public void AddCardtoDeck(string cardToCreate)
-        {           
+        {
             var cardobject = ObjectDAL.GetCard(cardToCreate);
             deckStringHolder.Add(cardobject.cardName);
             //  var deck = this.transform;
@@ -189,7 +188,7 @@ namespace Assets.Scripts
         private void CreateCardObject(Card card)
         {
             GameObject instance = Instantiate(cardObject) as GameObject;
-            cardManager = instance.GetComponent<CardManager>();            
+            cardManager = instance.GetComponent<CardManager>();
 
             cardManager.owner = team;
             cardsInDeck.Add(cardManager.gameObject);
@@ -227,7 +226,33 @@ namespace Assets.Scripts
                 //Check for objects that trigger on draw card.
                 EventManager.Instance.TriggerEvent(new TableCard_Trigger(manager.owner, CardEffect.Trigger.OnDraw));
             }
+            else
+            {
+                ShuffleDeck();
+                if (cardsInDeck.Count != 0)
+                {
+                    Draw();
+                }
+                else
+                {
+                    Debug.Log("You have no cards in your deck!");
+                }                
+            }
         }
+
+
+        private void ShuffleDeck()
+        {
+            foreach (GameObject card in cardsInDiscard)
+            {
+                CardManager manager = card.GetComponent<CardManager>();
+
+                manager.SetCardPosition(CardManager.CardStatus.InDeck);
+            }
+            cardsInDiscard.Clear();
+            EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
+        }
+
 
         public void DestroyCard(GameObject card)
         {
@@ -245,15 +270,9 @@ namespace Assets.Scripts
                 GameObject tempCard = cardsInDeck[random];
 
                 DestroyCard(tempCard);
-
-
             }
         }
     }
-
-
-
-
 }
 
 

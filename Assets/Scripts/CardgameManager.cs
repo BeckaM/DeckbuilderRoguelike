@@ -72,7 +72,7 @@ namespace Assets.Scripts
             SetOpponents();
 
             turn = Team.Me;
-            
+
             //Update life and mana in the GUI.
             EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
@@ -146,10 +146,10 @@ namespace Assets.Scripts
             player.maxLife = GameManager.instance.maxLife;
 
             //enemy.UpdateLife();
-            monsterPortrait.sprite = enemy.monsterImage;
+            monsterPortrait.sprite = enemy.monsterRenderer.sprite;
 
             // player.UpdateLife();            
-            player.playerImage = player.sprites[GameManager.instance.playerClass.SpriteIcon]; // This should be populated earlier. Before time.
+            player.playerImage = player.sprites[GameManager.instance.playerClass.SpriteIcon];
 
             playerPortrait.sprite = player.playerImage;
         }
@@ -159,7 +159,6 @@ namespace Assets.Scripts
             if (team == Team.Me)
             {
                 player.maxMana += value;
-
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
             }
             else
@@ -175,12 +174,23 @@ namespace Assets.Scripts
             if (team == Team.Me)
             {
                 player.ward += value;
-                //   EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.My));
             }
             else
             {
                 enemy.ward += value;
-                // EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.AI));
+            }
+        }
+
+
+        internal void IncreaseDamage(int value, Team team)
+        {
+            if (team == Team.Me)
+            {
+                player.damageBoost += value;
+            }
+            else
+            {
+                enemy.damageBoost += value;
             }
         }
 
@@ -189,17 +199,18 @@ namespace Assets.Scripts
         {
             if (team == Team.Me)
             {
-                enemy.life -= (value - enemy.ward);
-                EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - enemy.ward, enemy.ward, Team.Opponent));
+                enemy.life -= ((value + player.damageBoost) - enemy.ward);
+                EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - enemy.ward, enemy.ward, player.damageBoost, Team.Opponent));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
             }
             else
             {
-                player.life -= (value - player.ward);
-                EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - player.ward, player.ward, Team.Me));
+                player.life -= ((value + enemy.damageBoost) - player.ward);
+                EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - player.ward, player.ward, enemy.damageBoost, Team.Me));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             }
         }
+
 
         internal void ApplyDamageGUI(ApplyDamage_GUI a)
         {
@@ -225,6 +236,7 @@ namespace Assets.Scripts
             }
         }
 
+
         private IEnumerator EffectText(Color color, Text textObject, string text, int loops)
         {
             var effectText = textObject.GetComponent<Text>();
@@ -240,8 +252,6 @@ namespace Assets.Scripts
             }
             EventManager.Instance.processingQueue = false;
         }
-
-
 
 
         internal void ApplyHealing(int value, Team team)
@@ -266,6 +276,7 @@ namespace Assets.Scripts
             }
         }
 
+
         private void CheckWinConditions()
         {
             bool win;
@@ -283,6 +294,7 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new EndGame_GUI(win));
             }
         }
+
 
         private void EndGame(EndGame_GUI end)
         {
@@ -308,6 +320,8 @@ namespace Assets.Scripts
 
             player.mana = 1;
             player.maxMana = 1;
+            player.ward = 0;
+            player.damageBoost = 0;
 
             GameManager.instance.GainXP(enemy.experienceReward);
             GameManager.instance.lifeHolder = player.life;
@@ -317,6 +331,7 @@ namespace Assets.Scripts
 
             this.gameObject.SetActive(false);
         }
+
 
         internal void Select(GameObject selectedCard)
         {
@@ -340,6 +355,7 @@ namespace Assets.Scripts
             //   selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(true);
             selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
         }
+
 
         //Triggered by end turn button.
         public void EndTurn()
@@ -431,7 +447,6 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.table));
                 card.moveCounter++;
             }
-
             CheckWinConditions();
         }
     }

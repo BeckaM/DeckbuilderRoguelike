@@ -15,6 +15,9 @@ namespace Assets.Scripts.DAL
         public string cardToEdit;
         public Card cardBeingEdited;
         public GameObject cardObjectBeingEdited;
+        public Enemy enemy;
+        public string enemyName;
+        public int enemyLevel;
 
         public void GetCardsToEdit()
         {
@@ -24,11 +27,23 @@ namespace Assets.Scripts.DAL
             foreach (Card card in cardsToEdit.cardItems)
             {
                 CreateCardObject(card);
-
-
             }
-
         }
+
+
+        public void GetMonsterDeck()
+        {
+
+            var enemies = ObjectDAL.GetAllEnemies();
+            enemy = enemies.EnemyItems.Find(item => item.EnemyName.Equals(enemyName));
+
+            var enemyCards = ObjectDAL.GetCards(EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, enemyLevel));
+            foreach (Card card in enemyCards)
+            {
+                CreateCardObject(card);
+            }
+        }
+
 
         public void Clear()
         {
@@ -38,7 +53,6 @@ namespace Assets.Scripts.DAL
             }
             cardObjects.Clear();
         }
-
 
         public void EditCard()
         {
@@ -67,18 +81,17 @@ namespace Assets.Scripts.DAL
             return card;
         }
 
-
         public void ApplyCardChanges()
         {
             //reverse populate the card
-                                              
+
             var edited = cardObjectBeingEdited.GetComponent<CardManager>();
 
             cardBeingEdited.spriteColor = edited.imagePanel.cardImage.color;
             cardBeingEdited.spriteHighlightColor = edited.imagePanel.highlight.color;
             cardBeingEdited.spriteGlowColor = edited.imagePanel.glow.color;
-                        
-            cardBeingEdited.spriteBackgroundColor= edited.imagePanel.imageBackground.color;
+
+            cardBeingEdited.spriteBackgroundColor = edited.imagePanel.imageBackground.color;
             cardBeingEdited.backgroundGlowColor = edited.imagePanel.backgroundGlow.color;
 
             cardBeingEdited.backgroundColor = edited.cardPanel.color;
@@ -93,9 +106,8 @@ namespace Assets.Scripts.DAL
             ////Set Card Description
             ////  var cardtext = cardDescription.GetComponent<Text>();
             //descriptionText.text = card.cardText;
-            
-
         }
+
 
         private void CreateCardObject(Card card)
         {
