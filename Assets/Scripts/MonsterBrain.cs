@@ -7,6 +7,7 @@ namespace Assets.Scripts
 {
     public static class MonsterBrain
     {
+        //TODO: AI should play more than one card per turn.
         public static List<CardManager> playableCards
         {
             get
@@ -14,11 +15,11 @@ namespace Assets.Scripts
                 List<CardManager> cardlist = new List<CardManager>();
                 foreach (GameObject card in DeckManager.monster.cardsInHand)
                 {
-                    var manager = card.GetComponent<CardManager>();                    
+                    var manager = card.GetComponent<CardManager>();
                     if (manager.isPlayable)
                     {
                         cardlist.Add(manager);
-                    }                   
+                    }
                 }
                 return cardlist;
             }
