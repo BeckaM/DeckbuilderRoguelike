@@ -7,8 +7,28 @@ using System.Collections.Generic;
 namespace Assets.Scripts.Menu
 {
 
-    public class StartScreen : MonoBehaviour
-    {        
+    public class Menu : MonoBehaviour
+    {
+        public GameObject splashScreen;
+        public GameObject playerSelect;
+        public GameObject startScreen;
+        public GameObject classSelect;
+        public GameObject perkSelect;
+
+        public void HideSplashScreen()
+        {
+            splashScreen.SetActive(false);
+            playerSelect.SetActive(true);
+        }
+             
+        
+       public void HidePlayerSelect()
+        {
+            playerSelect.SetActive(false);
+            startScreen.SetActive(true);
+        }
+
+
         public void StartGame()
         {
             List<string> classlist = new List<string>()

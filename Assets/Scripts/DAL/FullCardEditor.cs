@@ -37,7 +37,7 @@ namespace Assets.Scripts.DAL
             var enemies = ObjectDAL.GetAllEnemies();
             enemy = enemies.EnemyItems.Find(item => item.EnemyName.Equals(enemyName));
 
-            var enemyCards = ObjectDAL.GetCards(EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, enemyLevel));
+            var enemyCards = EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, enemyLevel);
             foreach (Card card in enemyCards)
             {
                 CreateCardObject(card);

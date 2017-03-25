@@ -132,7 +132,7 @@ namespace Assets.Scripts
                         card.transform.SetParent(deckHolder.transform);
                         // card.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
                         card.SetCardPosition(CardManager.CardStatus.InDeck);
-                      //  cardsInDeck.Add(card.gameObject);
+                        //  cardsInDeck.Add(card.gameObject);
                     }
 
                     else
@@ -157,8 +157,13 @@ namespace Assets.Scripts
             var cardobjects = ObjectDAL.GetCards(cardsToCreate);
             //   var deck = this.transform;
 
+            AddCardstoDeck(cardobjects);
 
-            foreach (Card card in cardobjects)
+        }
+
+        public void AddCardstoDeck(List<Card> cards)
+        {
+            foreach (Card card in cards)
             {
                 CreateCardObject(card);
 
@@ -236,7 +241,7 @@ namespace Assets.Scripts
                 else
                 {
                     Debug.Log("You have no cards in your deck!");
-                }                
+                }
             }
         }
 

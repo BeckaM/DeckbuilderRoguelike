@@ -11,7 +11,7 @@ namespace Assets.Scripts
        // private static List<Card> finalList;
 
         //This is where we bake the enemy deck-cake. It's a magic recipe.
-        public static List<string> BuildMonsterDeck(List<DeckComponent> deckComponents, int enemyLevel)
+        public static List<Card> BuildMonsterDeck(List<DeckComponent> deckComponents, int enemyLevel)
         {
             var finalList = new List<Card>();
 
@@ -49,7 +49,6 @@ namespace Assets.Scripts
                     foreach (Card card in tempList)
                     {
                         componentFinalList.Add(card);
-
                     }
                 }
 
@@ -60,16 +59,8 @@ namespace Assets.Scripts
                 }
                 finalList.AddRange(componentFinalList);
             }
-
-            List<string> returnList = new List<string>();
-
-            foreach (Card card in finalList)
-            {
-                returnList.Add(card.cardName);
-                Debug.Log(card.cardName + "added to deck");
-            }
-
-            return returnList;
+                        
+            return finalList;
 
         }
     }

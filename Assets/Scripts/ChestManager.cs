@@ -21,7 +21,7 @@ namespace Assets.Scripts
             if (rand == 0)
             {
                 content = Content.Card;
-                cardReward = DAL.ObjectDAL.GetRandomCard(level, level + 3);
+                cardReward = DAL.ObjectDAL.GetRandomCard(level, level + 1);
                 subText = "It contains a powerful card. Add it to your deck?";
             }
             else if (rand > 0 && rand < 6)

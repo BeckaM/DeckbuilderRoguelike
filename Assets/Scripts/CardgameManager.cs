@@ -199,13 +199,13 @@ namespace Assets.Scripts
         {
             if (team == Team.Me)
             {
-                enemy.life -= ((value + player.damageBoost) - enemy.ward);
+                enemy.life -= ((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0;
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - enemy.ward, enemy.ward, player.damageBoost, Team.Opponent));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
             }
             else
             {
-                player.life -= ((value + enemy.damageBoost) - player.ward);
+                player.life -= ((value + enemy.damageBoost) - player.ward) > 0 ? ((value + enemy.damageBoost) - player.ward): 0;
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - player.ward, player.ward, enemy.damageBoost, Team.Me));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             }
