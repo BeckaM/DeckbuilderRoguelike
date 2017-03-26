@@ -22,14 +22,16 @@ namespace Assets.Scripts.Menu
         // Use this for initialization
         void Start()
         {
+            selectPanel.SetActive(true);
+            createPlayerPanel.SetActive(false);
             int playerNr = 1;
             foreach (Button pButton in playerButtons)
             {
                 var buttonText = pButton.GetComponentInChildren<TMP_Text>();
                 if (DAL.PlayerSaveDAL.PlayerExists(playerNr))
                 {                    
-                    buttonText.text = DAL.PlayerSaveDAL.GetMoon(playerNr);
-                    pButton.onClick.AddListener(mainMenu.HidePlayerSelect);
+                    buttonText.text = DAL.PlayerSaveDAL.GetPlayerName(playerNr);
+                    
                 }
                 else
                 {
@@ -46,6 +48,7 @@ namespace Assets.Scripts.Menu
             if (DAL.PlayerSaveDAL.PlayerExists(player))
             {
                 DAL.PlayerSaveDAL.LoadPlayer(player);
+                mainMenu.HidePlayerSelect();
             }
             else
             {
@@ -58,6 +61,9 @@ namespace Assets.Scripts.Menu
         public void CreatePlayer()
         {
             DAL.PlayerSaveDAL.CreateNewPlayer(selectedPlayer, playerName.text);
+            DAL.PlayerSaveDAL.LoadPlayer(selectedPlayer);
+            mainMenu.HidePlayerSelect();
+
         }
 
     }

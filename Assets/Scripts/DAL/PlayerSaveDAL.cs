@@ -14,38 +14,42 @@ namespace Assets.Scripts.DAL
             return File.Exists(playerSave + player);
         }
 
-        public static void LoadPlayer(int Player)
+        public static void LoadPlayer(int player)
         {
+            string text = File.ReadAllText(playerSave + player);
+            var playerProgress = JsonUtility.FromJson<PlayerProgress>(text);
 
+            GameManager.instance.progressManager.currentProgress = playerProgress;
         }
 
         internal static void CreateNewPlayer(int player, string playerName)
         {
             PlayerProgress progress = new PlayerProgress();
             progress.playerName = playerName;
+            progress.player = player;
 
             var saker = File.Create(playerSave + player);
             saker.Dispose();
-            SaveProgress(progress, player);
+            SaveProgress(progress);
         }
 
-        internal static void SaveProgress(PlayerProgress progress, int player)
+        internal static void SaveProgress(PlayerProgress progress)
         {
-            if (!File.Exists(playerSave + player))
+            if (File.Exists(playerSave + progress.player))
             {
-                return;
+                var jsonProgress = JsonUtility.ToJson(progress);
+                File.WriteAllText(playerSave + progress.player, jsonProgress);
             }
-            string jsonProgress = JsonUtility.ToJson(progress);
-
-            File.WriteAllText(playerSave + player, jsonProgress);
         }
 
-        internal static string GetMoon(int playerNr)
+        //WARNING: Code review was done by rebecka+champagne.
+
+        internal static string GetPlayerName(int playerNr)
         {
             string text = File.ReadAllText(playerSave + playerNr);
-             var moon = JsonUtility.FromJson<PlayerProgress>(text);
+            var moon = JsonUtility.FromJson<PlayerProgress>(text);
 
-            return moon.playerName; // fix bug caused by previous bug. More bugs fixed. Dont panic! We got this.
+            return moon.playerName;
         }
     }
 }

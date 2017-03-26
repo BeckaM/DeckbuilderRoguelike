@@ -28,6 +28,12 @@ namespace Assets.Scripts.Menu
             startScreen.SetActive(true);
         }
 
+        public void HideStart()
+        {
+            startScreen.SetActive(false);
+            classSelect.SetActive(true);
+        } 
+
 
         public void StartGame()
         {

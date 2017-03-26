@@ -11,6 +11,8 @@ namespace Assets.Scripts
     public class GameManager : MonoBehaviour
     {
         public PlayerClass playerClass;
+
+        public ProgressManager progressManager = new ProgressManager();
         
         public int gold { get; private set; }
                 

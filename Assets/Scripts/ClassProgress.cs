@@ -7,14 +7,11 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     [Serializable]
-    public class PlayerProgress
+    public class ClassProgress
     {
-        public List<ClassProgress> classProgressList;
-
-        public int player;
-        public string playerName;
-
+        public string className;
+       
         public int monsterKills;
-               
+       
     }
 }
