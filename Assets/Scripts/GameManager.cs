@@ -11,6 +11,7 @@ namespace Assets.Scripts
     public class GameManager : MonoBehaviour
     {
         public PlayerClass playerClass;
+        public List<Sprite> classImages;
 
         public ProgressManager progressManager = new ProgressManager();
         
@@ -23,7 +24,6 @@ namespace Assets.Scripts
         public int maxLife = 30;
         public int lifeHolder = 30;
 
-
         public float levelStartDelay = 2f;                      //Time to wait before starting level, in seconds.
         public float turnDelay = 0.2f;                          //Delay between each Player turn.
 
@@ -31,6 +31,7 @@ namespace Assets.Scripts
 
         //        public bool playersTurn = true;     //Boolean to check if it's players turn, hidden in inspector but public.
 
+       
 
         public GameObject monsterDeck;
 
@@ -92,7 +93,7 @@ namespace Assets.Scripts
 
             //Get a component reference to the attached BoardManager script
             boardScript = GetComponent<DungeonManager>();
-
+                        
             //Call the InitGame function to initialize the first level 
             // InitGame();
 
@@ -151,11 +152,13 @@ namespace Assets.Scripts
             boardScript.SetupScene(level);
         }
 
+
         private void FindLevelObjects()
         {
             dungeonCanvas = GameObject.Find("Canvas(Board)");
             cardGameCanvas = GameObject.Find("Canvas(CardGame)");
         }
+
 
         public void InitCardgame(Collider monster, Player player)
         {
@@ -227,6 +230,7 @@ namespace Assets.Scripts
             doingSetup = false;
         }
 
+
         private void DeclineLoot()
         {
             doingSetup = false;
@@ -269,6 +273,7 @@ namespace Assets.Scripts
             dungeonUI.UpdateXPText();
         }
 
+
         internal void LevelUp()
         {
             List<Card> rewardList = new List<Card>();
@@ -280,6 +285,7 @@ namespace Assets.Scripts
 
            modalPanel.LevelUp(rewardList, LevelUpComplete);
         }
+
 
         internal void LevelUpComplete()
         {

@@ -9,7 +9,7 @@ namespace Assets.Scripts
     [Serializable]
     public class PlayerProgress
     {
-        public List<ClassProgress> classProgressList;
+        public List<ClassProgress> classProgressList = new List<ClassProgress>();
 
         public int player;
         public string playerName;

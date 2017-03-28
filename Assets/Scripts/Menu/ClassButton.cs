@@ -13,8 +13,7 @@ namespace Assets.Scripts.Menu
         public GameObject lockPanel;
         public Image classImage;
         public TMP_Text className;
-        public List<Image> classImages;
-
+        
         public PlayerClass playerClass;
 
         public void selectClass()
@@ -25,7 +24,7 @@ namespace Assets.Scripts.Menu
         public void PopulateClassButton(PlayerClass playerClass)
         {
             this.playerClass = playerClass;
-            classImage = classImages[playerClass.SpriteIcon];
+            classImage.sprite = GameManager.instance.classImages[playerClass.SpriteIcon];
             className.text = playerClass.ClassName;
         }
 
@@ -34,9 +33,11 @@ namespace Assets.Scripts.Menu
             if (locked)
             {
                 lockPanel.SetActive(true);
+                this.GetComponent<Button>().interactable = false;
             }
             else
             {
+                this.GetComponent<Button>().interactable = true;
                 lockPanel.SetActive(false);
             }
         }

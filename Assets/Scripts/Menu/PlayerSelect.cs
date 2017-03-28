@@ -64,6 +64,9 @@ namespace Assets.Scripts.Menu
             DAL.PlayerSaveDAL.LoadPlayer(selectedPlayer);
             mainMenu.HidePlayerSelect();
 
+           
+
+
         }
 
     }

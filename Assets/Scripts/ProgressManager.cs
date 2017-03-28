@@ -22,6 +22,21 @@ namespace Assets.Scripts
             DAL.PlayerSaveDAL.SaveProgress(currentProgress);
         }
 
+
+        public bool CheckClassUnlock(string className)
+        {           
+            var classcheck = GameManager.instance.progressManager.currentProgress.classProgressList.Exists(item => item.className.Equals(className));
+
+            if (classcheck)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
     }
 }
 

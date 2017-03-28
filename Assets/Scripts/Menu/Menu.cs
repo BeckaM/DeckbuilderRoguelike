@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System;
 
 namespace Assets.Scripts.Menu
 {
@@ -32,7 +33,14 @@ namespace Assets.Scripts.Menu
         {
             startScreen.SetActive(false);
             classSelect.SetActive(true);
-        } 
+        }
+
+
+        internal void HideClassSelect()
+        {
+            classSelect.SetActive(false);
+            perkSelect.SetActive(true);
+        }
 
 
         public void StartGame()
@@ -51,5 +59,7 @@ namespace Assets.Scripts.Menu
 
             SceneManager.LoadScene("Scene 3D");
         }
+
+      
     }
 }
