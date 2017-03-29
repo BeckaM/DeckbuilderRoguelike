@@ -19,7 +19,8 @@ namespace Assets.Scripts.DAL
             string text = File.ReadAllText(playerSave + player);
             var playerProgress = JsonUtility.FromJson<PlayerProgress>(text);
 
-            GameManager.instance.progressManager.currentProgress = playerProgress;
+            GameManager.instance.progressManager.totalProgress = playerProgress;
+            GameManager.instance.progressManager.LoadUnlockables();
         }
 
         internal static void CreateNewPlayer(int player, string playerName)

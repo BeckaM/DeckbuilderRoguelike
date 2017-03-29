@@ -45,9 +45,11 @@ namespace Assets.Scripts.Menu
             selectButton.interactable = true;
         }
 
+
         public void Select()
         {
             GameManager.instance.playerClass = selectedClass;
+            GameManager.instance.progressManager.SetProgressClass(selectedClass);
             mainMenu.HideClassSelect();
         }
 

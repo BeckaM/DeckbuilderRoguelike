@@ -13,11 +13,15 @@ namespace Assets.Scripts
         public GameObject LevelUpButton;
         public TMP_Text lifeText;
         public GameObject levelImage;
+        public TMP_Text levelText;
+
+        public GameObject gameOverPanel;
+        public GameOverPanel gameOverScript;
 
         public GameObject modalPanelObject;
         public GameObject deckPanelObject;
 
-        public TMP_Text levelText;
+        
 
         public void UpdateXPText()
         {

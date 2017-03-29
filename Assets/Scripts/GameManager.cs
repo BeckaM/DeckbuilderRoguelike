@@ -251,14 +251,11 @@ namespace Assets.Scripts
         //GameOver is called when the player reaches 0 life points
         public void GameOver()
         {
-            //Set levelText to display number of levels passed and game over message
-            dungeonUI.levelText.text = "You died on level " + level;
-
-            //Enable black background image gameObject.
-            dungeonUI.levelImage.SetActive(true);
-
-            //Disable this GameManager.
-            enabled = false;
+            progressManager.EndRun();
+           
+            dungeonUI.gameOverScript.UpdateGameOverText(level, playerLevel, progressManager.currentRunProgress);
+            dungeonUI.gameOverPanel.SetActive(true);
+           
         }
 
         public void GainXP(int XP)

@@ -53,6 +53,7 @@ namespace Assets.Scripts.Menu
             var tempClass = DAL.ObjectDAL.GetClasses(classlist);
             var classchoice = tempClass[0];
             GameManager.instance.playerClass = classchoice;
+            GameManager.instance.progressManager.currentRunProgress = new PlayerProgress();
 
             //Initialize the starting deck and create the cards.
             DeckManager.player.StartingDeck(classchoice.Startingdeck);
