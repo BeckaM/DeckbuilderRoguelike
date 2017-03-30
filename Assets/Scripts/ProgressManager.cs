@@ -51,6 +51,7 @@ namespace Assets.Scripts
 
         public void EndRun()
         {
+            var test = currentClass; 
             totalProgress.monsterKills += currentRunProgress.monsterKills;
             currentClass.monsterKills += currentRunProgress.monsterKills;
 
@@ -134,7 +135,7 @@ namespace Assets.Scripts
 
         internal void SetProgressClass(PlayerClass selectedClass)
         {
-            currentClass = totalProgress.classProgressList.Find(item => item.className.Equals(selectedClass));
+            currentClass = totalProgress.classProgressList.Find(item => item.className.Equals(selectedClass.ClassName));
         }
 
 
