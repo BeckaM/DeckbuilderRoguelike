@@ -211,7 +211,10 @@ namespace Assets.Scripts
                 {
                     modalPanel.Chest("Victory!", "The monster drops some gold.", goldReward, AddLoot);
                     lootType = Content.Gold;
-                }                
+                }
+
+                progressManager.MonsterKill();
+                               
             }
         }
 

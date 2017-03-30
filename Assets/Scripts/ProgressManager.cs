@@ -14,13 +14,21 @@ namespace Assets.Scripts
 
         public PlayerProgress currentRunProgress;
 
-        public List<PlayerClass> unlockedClasses;
-        public List<PlayerClass> lockedClasses;
+        public List<PlayerClass> unlockedClasses = new List<PlayerClass>();
+        public List<PlayerClass> lockedClasses = new List<PlayerClass>();
 
-        public List<Perk> unlockedPerks;
-        public List<Perk> lockedPerks;
+        public List<Perk> unlockedPerks = new List<Perk>();
+        public List<Perk> lockedPerks = new List<Perk>();
 
-        public int monsterKills;
+        private int monsterKills;
+        private int cardsPlayed;
+        private int damageDealt;
+        private int healing;
+        private int goldEarned;
+        private int highestPlayerLevel;
+        private int highestDungeonLevel;
+        private int chestsOpened;
+        private int shrinesOpened; 
 
         public enum Metric { MonsterKills, DamageDealt, Healing, GoldEarned, HighestPlayerLevel, HighestDungeonLevel, ChestsOpened, ShrinesOpened, CardsPlayed };
 
@@ -28,6 +36,16 @@ namespace Assets.Scripts
         public void MonsterKill()
         {
             monsterKills++;
+        }
+
+        public void CardPlayed()
+        {
+            cardsPlayed++;
+        }
+
+        public void DamageDealt(int damage)
+        {
+            damageDealt+= damage;
         }
 
 
@@ -38,13 +56,17 @@ namespace Assets.Scripts
 
             CheckNewUnlocks();
             SaveProgress();
-
         }
+
 
         private void CheckNewUnlocks()
         {
-            throw new NotImplementedException();
+            foreach(PlayerClass pClass in lockedClasses)
+            {
+
+            } 
         }
+
 
         public void SaveProgress()
         {
@@ -53,6 +75,13 @@ namespace Assets.Scripts
 
 
         public void LoadUnlockables()
+        {
+            LoadClassUnlockables();
+            LoadPerkUnlockables();
+        }
+
+
+        public void LoadClassUnlockables()
         {
             var allClasses = DAL.ObjectDAL.GetAllClasses();
 
@@ -67,7 +96,24 @@ namespace Assets.Scripts
                     lockedClasses.Add(playerClass);
                 }
             }
+        }
 
+
+        public void LoadPerkUnlockables()
+        {
+            var allPerks = DAL.ObjectDAL.GetAllPerks();
+
+            foreach (Perk perk in allPerks.perkList)
+            {
+                if (CheckPerkUnlock(perk.perkName))
+                {
+                    unlockedPerks.Add(perk);
+                }
+                else
+                {
+                    lockedPerks.Add(perk);
+                }
+            }
         }
 
 
@@ -75,14 +121,14 @@ namespace Assets.Scripts
         {
             var classcheck = totalProgress.classProgressList.Exists(item => item.className.Equals(className));
 
-            if (classcheck)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return (classcheck);
+        }
+
+        public bool CheckPerkUnlock(string perkName)
+        {
+            var perkcheck = totalProgress.perkProgressList.Exists(item => item.Equals(perkName));
+
+            return (perkcheck);
         }
 
 
@@ -90,7 +136,6 @@ namespace Assets.Scripts
         {
             currentClass = totalProgress.classProgressList.Find(item => item.className.Equals(selectedClass));
         }
-
 
 
     }

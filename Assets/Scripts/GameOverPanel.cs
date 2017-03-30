@@ -17,7 +17,7 @@ namespace Assets.Scripts
         public TMP_Text healingText;
         public TMP_Text chestsOpenedText;
         public TMP_Text shrinesFoundText;
-              
+
 
         internal void UpdateGameOverText(int dungeonLevel, int playerLevel, PlayerProgress playerProgress)
         {
@@ -25,12 +25,12 @@ namespace Assets.Scripts
 
             playerLVLText.text = "Player Level: " + playerLevel;
             monsterKillsText.text = "Monster Kills: " + playerProgress.monsterKills;
-            
+
         }
 
         public void ShowRewards()
         {
-            
+
         }
 
     }

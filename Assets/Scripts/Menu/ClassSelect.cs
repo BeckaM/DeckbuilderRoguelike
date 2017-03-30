@@ -12,7 +12,8 @@ namespace Assets.Scripts.Menu
     {
         public Menu mainMenu;
 
-        public List<ClassButton> classButtons;
+        public GameObject classButtonObj;
+        public GameObject classPanel;
 
         public GameObject selectedClassPanel;
         public PlayerClass selectedClass;
@@ -26,12 +27,17 @@ namespace Assets.Scripts.Menu
             selectButton.interactable = false;
 
             var playerClasses = DAL.ObjectDAL.GetAllClasses();
-            int num = 0;
-            foreach (ClassButton classButton in classButtons)
+
+            foreach (PlayerClass pClass in playerClasses.PlayerClasses)
             {
-                classButton.PopulateClassButton(playerClasses.PlayerClasses[num]);
-                num++;
-                classButton.LockClass(GameManager.instance.progressManager.CheckClassUnlock(classButton.playerClass.ClassName));
+                var classButton = Instantiate(classButtonObj);
+                classButton.transform.SetParent(classPanel.transform, false);
+                var cbScript = classButton.GetComponent<ClassButton>();
+                cbScript.classSelect = this;
+
+                cbScript.PopulateClassButton(pClass);
+
+                cbScript.LockClass(!GameManager.instance.progressManager.CheckClassUnlock(pClass.ClassName));
             }
         }
 

@@ -10,8 +10,16 @@ namespace Assets.Scripts
     public class ClassProgress
     {
         public string className;
-       
+
         public int monsterKills;
-       
+        private int cardsPlayed;
+        private int damageDealt;
+        private int healing;
+        private int goldEarned;
+        private int highestPlayerLevel;
+        private int highestDungeonLevel;
+        private int chestsOpened;
+        private int shrinesOpened;
+
     }
 }

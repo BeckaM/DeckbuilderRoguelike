@@ -448,6 +448,7 @@ namespace Assets.Scripts
                 card.moveCounter++;
             }
             CheckWinConditions();
+            GameManager.instance.progressManager.CardPlayed();
         }
     }
 }

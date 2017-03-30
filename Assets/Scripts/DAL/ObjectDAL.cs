@@ -10,6 +10,7 @@ namespace Assets.Scripts.DAL
         public const string EnemyPath = @".\Assets\JSON\Enemies";
         public const string CardPath = @".\Assets\JSON\Cards";
         public const string ClassPath = @".\Assets\JSON\PlayerClasses";
+        public const string PerkPath = @".\Assets\JSON\Perks";
 
 
 
@@ -52,13 +53,13 @@ namespace Assets.Scripts.DAL
 
             return cardReturn;
         }
-        
+
         internal static Card GetCard(string cardToGet)
         {
             var cards = GetAllCards();
-                        
+
             var card = cards.cardItems.Find(item => item.cardName.Equals(cardToGet));
-            
+
             return card;
         }
 
@@ -145,12 +146,22 @@ namespace Assets.Scripts.DAL
         }
 
 
+        internal static void SavePerks(PerkWrapper perksToEdit)
+        {
+            if (!File.Exists(PerkPath))
+            {
+                return;
+            }
+            string jsonPerks = JsonUtility.ToJson(perksToEdit);
+
+            File.WriteAllText(PerkPath, jsonPerks);
+        }
+
 
         internal static EnemyWrapper GetAllEnemies()
         {
             string text = File.ReadAllText(EnemyPath);
             return JsonUtility.FromJson<EnemyWrapper>(text);
-
         }
 
 
@@ -158,13 +169,20 @@ namespace Assets.Scripts.DAL
         {
             string text = File.ReadAllText(CardPath);
             return JsonUtility.FromJson<CardWrapper>(text);
-
         }
+
 
         internal static PlayerClassWrapper GetAllClasses()
         {
             string text = File.ReadAllText(ClassPath);
             return JsonUtility.FromJson<PlayerClassWrapper>(text);
+        }
+
+
+        internal static PerkWrapper GetAllPerks()
+        {
+            string text = File.ReadAllText(PerkPath);
+            return JsonUtility.FromJson<PerkWrapper>(text);
         }
     }
 }
