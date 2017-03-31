@@ -20,40 +20,98 @@ namespace Assets.Scripts
         public List<Perk> unlockedPerks = new List<Perk>();
         public List<Perk> lockedPerks = new List<Perk>();
 
-        private int monsterKills;
-        private int cardsPlayed;
-        private int damageDealt;
-        private int healing;
-        private int goldEarned;
-        private int highestPlayerLevel;
-        private int highestDungeonLevel;
-        private int chestsOpened;
-        private int shrinesOpened; 
-
         public enum Metric { MonsterKills, DamageDealt, Healing, GoldEarned, HighestPlayerLevel, HighestDungeonLevel, ChestsOpened, ShrinesOpened, CardsPlayed };
 
 
         public void MonsterKill()
         {
-            monsterKills++;
+            currentRunProgress.monsterKills++;
         }
 
         public void CardPlayed()
         {
-            cardsPlayed++;
+            currentRunProgress.cardsPlayed++;
         }
 
         public void DamageDealt(int damage)
         {
-            damageDealt+= damage;
+            currentRunProgress.damageDealt += damage;
         }
 
+        public void Healing(int heal)
+        {
+            currentRunProgress.healing += heal;
+        }
+
+        public void GoldEarned(int gold)
+        {
+            currentRunProgress.goldEarned += gold;
+        }
+
+        public void HighestPlayerLevel(int level)
+        {
+            currentRunProgress.highestPlayerLevel = level;
+        }
+
+        public void HighestDungeonLevel(int level)
+        {
+            currentRunProgress.highestDungeonLevel = level;
+        }
+
+        public void FoundShrine()
+        {
+            currentRunProgress.shrinesOpened++;
+        }
+
+        public void FoundChest()
+        {
+            currentRunProgress.chestsOpened++;
+        }
 
         public void EndRun()
-        {
-            var test = currentClass; 
+        {            
             totalProgress.monsterKills += currentRunProgress.monsterKills;
             currentClass.monsterKills += currentRunProgress.monsterKills;
+
+            totalProgress.healing += currentRunProgress.healing;
+            currentClass.healing += currentRunProgress.healing;
+
+            totalProgress.damageDealt += currentRunProgress.damageDealt;
+            currentClass.damageDealt += currentRunProgress.damageDealt;
+
+            totalProgress.cardsPlayed += currentRunProgress.cardsPlayed;
+            currentClass.cardsPlayed += currentRunProgress.cardsPlayed;
+
+            totalProgress.goldEarned += currentRunProgress.goldEarned;
+            currentClass.goldEarned += currentRunProgress.goldEarned;
+
+            totalProgress.shrinesOpened += currentRunProgress.shrinesOpened;
+            currentClass.shrinesOpened += currentRunProgress.shrinesOpened;
+
+            totalProgress.chestsOpened += currentRunProgress.chestsOpened;
+            currentClass.chestsOpened += currentRunProgress.chestsOpened;
+
+            if(currentRunProgress.highestDungeonLevel > totalProgress.highestDungeonLevel)
+            {
+                totalProgress.highestDungeonLevel = currentRunProgress.highestDungeonLevel;
+            }
+
+            if(currentRunProgress.highestDungeonLevel > currentClass.highestDungeonLevel)
+            {
+                currentClass.highestDungeonLevel = currentRunProgress.highestDungeonLevel;
+            }
+
+            if (currentRunProgress.highestPlayerLevel > totalProgress.highestPlayerLevel)
+            {
+                totalProgress.highestPlayerLevel = currentRunProgress.highestPlayerLevel;
+            }
+
+            if (currentRunProgress.highestPlayerLevel > currentClass.highestPlayerLevel)
+            {
+                currentClass.highestPlayerLevel = currentRunProgress.highestPlayerLevel;
+            }
+
+
 
             CheckNewUnlocks();
             SaveProgress();

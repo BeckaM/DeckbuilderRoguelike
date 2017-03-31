@@ -103,6 +103,8 @@ namespace Assets.Scripts
         {
             SceneManager.sceneLoaded += OnLevelFinishedLoading;
         }
+
+
         void OnDisable()
         {
 
@@ -117,10 +119,12 @@ namespace Assets.Scripts
             {
                 //Add one to our level number.
                 level++;
+                progressManager.HighestDungeonLevel(level);
                 //Call InitGame to initialize our level.
                 InitGame();
             }
         }
+
 
         //Initializes the game for each level.
         void InitGame()
@@ -254,12 +258,14 @@ namespace Assets.Scripts
         //GameOver is called when the player reaches 0 life points
         public void GameOver()
         {
-            progressManager.EndRun();
+            
            
             dungeonUI.gameOverScript.UpdateGameOverText(level, playerLevel, progressManager.currentRunProgress);
+            progressManager.EndRun();
             dungeonUI.gameOverPanel.SetActive(true);
            
         }
+
 
         public void GainXP(int XP)
         {
@@ -298,6 +304,7 @@ namespace Assets.Scripts
             {
                 dungeonUI.LevelUpButton.SetActive(false);
             }
+            progressManager.HighestPlayerLevel(playerLevel);
         }
 
 
@@ -305,6 +312,10 @@ namespace Assets.Scripts
         {
             gold = gold + gain;
             dungeonUI.UpdateGoldText();
+            if(gain > 0)
+            {
+                progressManager.GoldEarned(gain);
+            }
         }
 
       

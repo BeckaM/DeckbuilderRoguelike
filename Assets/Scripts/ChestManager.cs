@@ -50,6 +50,7 @@ namespace Assets.Scripts
             {
                 GameManager.instance.modalPanel.Chest("You found a chest!", subText, cardReward, AddReward, DeclineReward);
             }
+            GameManager.instance.progressManager.FoundChest();
         }
 
         private void DeclineReward()

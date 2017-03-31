@@ -25,6 +25,12 @@ namespace Assets.Scripts
 
             playerLVLText.text = "Player Level: " + playerLevel;
             monsterKillsText.text = "Monster Kills: " + playerProgress.monsterKills;
+            cardsPlayedText.text = "Cards Played: " + playerProgress.cardsPlayed;
+            goldEarnedText.text = "Gold Earned: " + playerProgress.goldEarned;
+            damageDealtText.text = "Damage Dealt: " + playerProgress.damageDealt;
+            healingText.text = "Healing Done: " + playerProgress.healing;
+            chestsOpenedText.text = "Chests Opened: " + playerProgress.chestsOpened;
+            shrinesFoundText.text = "Shrines Found: " + playerProgress.shrinesOpened;
 
         }
 

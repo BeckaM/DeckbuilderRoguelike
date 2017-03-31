@@ -198,10 +198,11 @@ namespace Assets.Scripts
         internal void ApplyDamage(int value, Team team)
         {
             if (team == Team.Me)
-            {
+            {                
                 enemy.life -= ((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0;
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - enemy.ward, enemy.ward, player.damageBoost, Team.Opponent));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
+                GameManager.instance.progressManager.DamageDealt(((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0);
             }
             else
             {
@@ -264,6 +265,7 @@ namespace Assets.Scripts
                     player.life = player.maxLife;
                 }
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
+                GameManager.instance.progressManager.Healing(value);
             }
             else
             {

@@ -49,6 +49,7 @@ namespace Assets.Scripts
         internal void OpenShrine()
         {
             GameManager.instance.modalPanel.Shrine("You found a Shrine!", "Choose a prayer", prayers, Decline);
+            GameManager.instance.progressManager.FoundShrine();
         }
 
         private void Decline()

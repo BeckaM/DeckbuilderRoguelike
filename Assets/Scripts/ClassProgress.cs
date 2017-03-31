@@ -12,14 +12,14 @@ namespace Assets.Scripts
         public string className;
 
         public int monsterKills;
-        private int cardsPlayed;
-        private int damageDealt;
-        private int healing;
-        private int goldEarned;
-        private int highestPlayerLevel;
-        private int highestDungeonLevel;
-        private int chestsOpened;
-        private int shrinesOpened;
+        public int cardsPlayed;
+        public int damageDealt;
+        public int healing;
+        public int goldEarned;
+        public int highestPlayerLevel;
+        public int highestDungeonLevel;
+        public int chestsOpened;
+        public int shrinesOpened;
 
     }
 }
