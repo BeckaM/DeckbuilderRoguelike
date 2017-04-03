@@ -29,6 +29,8 @@ namespace Assets.Scripts
 
         private static ModalPanel modalPanel;
 
+        public GameObject anvilPanel;
+
         public static ModalPanel Instance()
         {
             if (!modalPanel)
@@ -152,6 +154,22 @@ namespace Assets.Scripts
 
             noButton.gameObject.SetActive(true);
             thanksButton.gameObject.SetActive(false);
+        }
+
+        internal void Anvil(string title, string subText, UnityAction noEvent)
+        {
+            modalPanelObject.SetActive(true);
+            isActive = true;
+            anvilPanel.SetActive(true);
+                       
+            noButton.onClick.RemoveAllListeners();
+            noButton.onClick.AddListener(noEvent);
+            noButton.onClick.AddListener(ClosePanel);
+
+            noButton.gameObject.SetActive(true);
+            thanksButton.gameObject.SetActive(false);
+            addButton.gameObject.SetActive(false);
+            
         }
 
         internal void Select(GameObject selection)

@@ -6,8 +6,7 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     public static class MonsterBrain
-    {
-        //TODO: AI should play more than one card per turn.
+    {        
         public static List<CardManager> playableCards
         {
             get
