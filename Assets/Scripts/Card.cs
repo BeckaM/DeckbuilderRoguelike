@@ -19,7 +19,7 @@ namespace Assets.Scripts
 
         public List<CardEffect> effects;
 
-        //Permanent = -1, Until end of turn = 0. 
+        //-1 = permanent, 0 = instant 
         public int cardDuration;
 
 

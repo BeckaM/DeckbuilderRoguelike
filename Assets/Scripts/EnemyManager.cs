@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
+using System.Collections;
 
 namespace Assets.Scripts
 {
@@ -25,7 +23,7 @@ namespace Assets.Scripts
 
         public GameObject enemyObject;
         public Sprite[] sprites;
-      //  public Sprite monsterImage;
+        //  public Sprite monsterImage;
         public SpriteRenderer monsterRenderer;
         public TMP_Text monsterLVLText;
 
@@ -52,20 +50,23 @@ namespace Assets.Scripts
 
         //Create all the cards in the scene for the monsters deck when the player fights it. 
         internal void InitMonsterDeck()
-        {                        
+        {
             var enemyDeck = EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, monsterLevel);
 
             DeckManager.monster.AddCardstoDeck(enemyDeck);
 
         }
 
-        internal void initAI()
+        internal IEnumerator initAI()
         {
             MonsterBrain.PlayCards();
 
+            while (EventManager.Instance.processingQueue == true)
+            {
+                yield return new WaitForSeconds(1);
+            }
+
             CardgameManager.instance.EndTurn();
-
-
         }
     }
 }

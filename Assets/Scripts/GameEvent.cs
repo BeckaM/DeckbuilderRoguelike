@@ -18,17 +18,20 @@ namespace Assets.Scripts
             this.movingCard = movingCard;
             this.start = start;
             this.end = end;
-
         }
     }
 
     public class EndGame_GUI : GameEvent
     {
         public bool playerWon { get; private set; }
+        public Card cardReward { get; private set; }
+        public int goldReward { get; private set; }
 
-        public EndGame_GUI(bool playerWon)
+        public EndGame_GUI(bool playerWon, Card cardReward, int goldReward)
         {
             this.playerWon = playerWon;
+            this.cardReward = cardReward;
+            this.goldReward = goldReward;;
         }
     }
 

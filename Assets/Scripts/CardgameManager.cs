@@ -15,11 +15,8 @@ namespace Assets.Scripts
         public enum Team { Me, Opponent, None };
         public Team turn = Team.Me;
 
-        public Image playerPortrait;
-        public Text playerLifeText;
-        public Text playerManaText;
-        public Text playerDeckCount;
-        public Text playerDiscardCount;
+        public CardgameUI cardgameUI;
+
 
         public GameObject playerDiscard;
         public GameObject monsterDiscard;
@@ -35,15 +32,11 @@ namespace Assets.Scripts
 
         public GameObject tabletop;
 
-        public Image monsterPortrait;
-        public Text monsterLifeText;
-        public Text monsterManaText;
-        public Text monsterDeckCount;
-        public Text monsterDiscardCount;
-
         public EnemyManager enemy;
         public Player player;
         public GameObject selectedCard;
+
+        public Button endTurnButton;
 
         void Awake()
         {
@@ -51,19 +44,6 @@ namespace Assets.Scripts
 
         }
 
-        void OnEnable()
-        {
-            EventManager.Instance.AddListener<UpdateMana_GUI>(GUIUpdateMana);
-            EventManager.Instance.AddListener<UpdateLife_GUI>(GUIUpdateLife);
-            EventManager.Instance.AddListener<ApplyDamage_GUI>(ApplyDamageGUI);
-            EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
-            EventManager.Instance.AddListener<EndGame_GUI>(EndGame);
-        }
-
-        void OnDisable()
-        {
-            EventManager.Instance.RemoveAll();
-        }
 
         // Use this for initialization
         public void Setup()
@@ -92,50 +72,6 @@ namespace Assets.Scripts
             }
         }
 
-        private void GUIUpdateDeckDiscardText(UpdateDeckTexts_GUI updates)
-        {
-            if (updates.team == Team.Me)
-            {
-                playerDeckCount.text = updates.decktext.ToString();
-                playerDiscardCount.text = updates.discardtext.ToString();
-            }
-            else
-            {
-                monsterDeckCount.text = updates.decktext.ToString();
-                monsterDiscardCount.text = updates.discardtext.ToString();
-            }
-            EventManager.Instance.processingQueue = false;
-        }
-
-        private void GUIUpdateMana(UpdateMana_GUI e)
-        {
-            //Update Mana text in UI.
-            if (e.team == Team.Me)
-            {
-                playerManaText.text = "Mana:" + e.mana + "/" + player.maxMana;
-            }
-            else
-            {
-                monsterManaText.text = "Mana:" + e.mana + "/" + enemy.maxMana;
-            }
-
-            EventManager.Instance.processingQueue = false;
-        }
-
-        private void GUIUpdateLife(UpdateLife_GUI e)
-        {
-            //Update Mana text in UI.
-            if (e.team == Team.Me)
-            {
-                playerLifeText.text = "Life:" + e.life + "/" + player.maxLife;
-            }
-            else
-            {
-                monsterLifeText.text = "Life:" + e.life + "/" + enemy.maxLife;
-            }
-
-            EventManager.Instance.processingQueue = false;
-        }
 
         private void SetOpponents()
         {
@@ -146,12 +82,12 @@ namespace Assets.Scripts
             player.maxLife = GameManager.instance.maxLife;
 
             //enemy.UpdateLife();
-            monsterPortrait.sprite = enemy.monsterRenderer.sprite;
+            cardgameUI.monsterPortrait.sprite = enemy.monsterRenderer.sprite;
 
             // player.UpdateLife();            
             player.playerImage = player.sprites[GameManager.instance.playerClass.SpriteIcon];
 
-            playerPortrait.sprite = player.playerImage;
+            cardgameUI.playerPortrait.sprite = player.playerImage;
         }
 
         internal void IncreaseMaxMana(int value, Team team)
@@ -198,7 +134,7 @@ namespace Assets.Scripts
         internal void ApplyDamage(int value, Team team)
         {
             if (team == Team.Me)
-            {                
+            {
                 enemy.life -= ((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0;
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - enemy.ward, enemy.ward, player.damageBoost, Team.Opponent));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
@@ -206,52 +142,10 @@ namespace Assets.Scripts
             }
             else
             {
-                player.life -= ((value + enemy.damageBoost) - player.ward) > 0 ? ((value + enemy.damageBoost) - player.ward): 0;
+                player.life -= ((value + enemy.damageBoost) - player.ward) > 0 ? ((value + enemy.damageBoost) - player.ward) : 0;
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - player.ward, player.ward, enemy.damageBoost, Team.Me));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             }
-        }
-
-
-        internal void ApplyDamageGUI(ApplyDamage_GUI a)
-        {
-            var damageText = "" + a.damage + " Damage!";
-            var reduceText = "" + a.reduced + " Reduced";
-            var effectText = "";
-            if (a.reduced > 0)
-            {
-                effectText = damageText + " " + reduceText;
-            }
-            else
-            {
-                effectText = damageText;
-            }
-
-            if (a.team == Team.Me)
-            {
-                StartCoroutine(EffectText(Color.red, playerLifeText, effectText, 3));
-            }
-            else
-            {
-                StartCoroutine(EffectText(Color.red, monsterLifeText, effectText, 3));
-            }
-        }
-
-
-        private IEnumerator EffectText(Color color, Text textObject, string text, int loops)
-        {
-            var effectText = textObject.GetComponent<Text>();
-            effectText.text = text;
-            effectText.color = color;
-
-            for (var n = 0; n < loops; n++)
-            {
-                effectText.color = Color.white;
-                yield return new WaitForSeconds(.1f);
-                effectText.color = color;
-                yield return new WaitForSeconds(.1f);
-            }
-            EventManager.Instance.processingQueue = false;
         }
 
 
@@ -287,18 +181,18 @@ namespace Assets.Scripts
             {
                 turn = Team.None;
                 win = false;
-                EventManager.Instance.QueueAnimation(new EndGame_GUI(win));
+                EndGame(win);
             }
             else if (enemy.life <= 0)
             {
                 turn = Team.None;
                 win = true;
-                EventManager.Instance.QueueAnimation(new EndGame_GUI(win));
+                EndGame(win);
             }
         }
 
 
-        private void EndGame(EndGame_GUI end)
+        private void EndGame(bool win)
         {
             Card cardReward = new Card();
             int goldReward;
@@ -317,9 +211,6 @@ namespace Assets.Scripts
             cardReward = monsterCards[Random.Range(0, monsterCards.Count)];
             goldReward = Random.Range(5 + enemy.enemy.BaseEnemyLevel, 10 + enemy.enemy.BaseEnemyLevel);
 
-            DeckManager.player.Cleanup();
-            DeckManager.monster.Cleanup();
-
             player.mana = 1;
             player.maxMana = 1;
             player.ward = 0;
@@ -327,11 +218,8 @@ namespace Assets.Scripts
 
             GameManager.instance.GainXP(enemy.experienceReward);
             GameManager.instance.lifeHolder = player.life;
-            GameManager.instance.ReturnFromCardgame(end.playerWon, cardReward, goldReward);
 
-            EventManager.Instance.processingQueue = false;
-
-            this.gameObject.SetActive(false);
+            EventManager.Instance.QueueAnimation(new EndGame_GUI(win, cardReward, goldReward));
         }
 
 
@@ -339,7 +227,6 @@ namespace Assets.Scripts
         {
             if (this.selectedCard)
             {
-
                 if (selectedCard == this.selectedCard)
                 {
                     selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
@@ -366,19 +253,22 @@ namespace Assets.Scripts
 
             if (turn == Team.Opponent)
             {
-
                 DeckManager.player.Draw();
                 turn = Team.Me;
                 player.mana = player.maxMana;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
+                endTurnButton.interactable = true;
             }
             else if (turn == Team.Me)
             {
+                endTurnButton.interactable = false;
                 DeckManager.monster.Draw();
                 turn = Team.Opponent;
                 enemy.mana = enemy.maxMana;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
-                enemy.initAI();
+
+                StartCoroutine(enemy.initAI());
+                //enemy.initAI();
             }
         }
 
@@ -450,6 +340,7 @@ namespace Assets.Scripts
                 card.moveCounter++;
             }
             CheckWinConditions();
+
             GameManager.instance.progressManager.CardPlayed();
         }
     }
