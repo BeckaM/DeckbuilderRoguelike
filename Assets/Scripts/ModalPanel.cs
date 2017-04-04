@@ -153,8 +153,7 @@ namespace Assets.Scripts
                 var pscript = p.GetComponent<Prayer>();
                 pscript.PopulatePrayer(prayer);
             }
-
-
+            
             addButton.gameObject.SetActive(true);
             addButton.GetComponent<Button>().interactable = false;
 
@@ -192,16 +191,7 @@ namespace Assets.Scripts
 
             card.transform.SetParent(anvilCardHolder.transform);
             anvilCard = card;
-
-            //GameObject instance = Instantiate(cardObject) as GameObject;
-            //var cardManager = instance.GetComponent<CardManager>();
-            //cardManager.card = card;
-
-            //instance.transform.SetParent(anvilCardHolder.transform);
-            //instance.transform.localScale = new Vector3(1f, 1f, 1f);
-
-            //cardManager.PopulateCard(cardManager.card);
-
+            
             if (GameManager.instance.gold >= 10)
             {
                 anvilUpgrade.interactable = true;
@@ -226,6 +216,7 @@ namespace Assets.Scripts
         {           
             DeckManager.player.DestroyCard(anvilCard);
         }
+
 
         public void AnvilUpgrade()
         {
@@ -289,8 +280,8 @@ namespace Assets.Scripts
             selections.Clear();
             currentSelection = null;
             isActive = false;
+            anvilPanel.SetActive(false);
             modalPanelObject.SetActive(false);
         }
-
     }
 }
