@@ -83,6 +83,11 @@ namespace Assets.Scripts
                 other.GetComponent<ShrineManager>().OpenShrine();
                 GameManager.instance.doingSetup = true;
             }
+            else if (other.tag == "Anvil")
+            {
+                other.GetComponent<AnvilManager>().OpenAnvil();
+                GameManager.instance.doingSetup = true;
+            }
         }
         
 

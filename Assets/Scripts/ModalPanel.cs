@@ -30,6 +30,12 @@ namespace Assets.Scripts
         private static ModalPanel modalPanel;
 
         public GameObject anvilPanel;
+        public GameObject anvilCard;
+        public GameObject anvilCardHolder;
+        public GameObject anvilSelectText;
+
+        public Button anvilDestroy;
+        public Button anvilUpgrade;
 
         public static ModalPanel Instance()
         {
@@ -156,12 +162,16 @@ namespace Assets.Scripts
             thanksButton.gameObject.SetActive(false);
         }
 
+
         internal void Anvil(string title, string subText, UnityAction noEvent)
         {
             modalPanelObject.SetActive(true);
             isActive = true;
             anvilPanel.SetActive(true);
-                       
+
+            this.title.text = title;
+            this.subText.text = subText;
+
             noButton.onClick.RemoveAllListeners();
             noButton.onClick.AddListener(noEvent);
             noButton.onClick.AddListener(ClosePanel);
@@ -169,8 +179,77 @@ namespace Assets.Scripts
             noButton.gameObject.SetActive(true);
             thanksButton.gameObject.SetActive(false);
             addButton.gameObject.SetActive(false);
-            
+
+            anvilUpgrade.interactable = false;
+            anvilDestroy.interactable = false;
         }
+
+
+        public void SelectAnvilCard(GameObject card)
+        {
+            isActive = true;
+            anvilSelectText.SetActive(false);
+
+            card.transform.SetParent(anvilCardHolder.transform);
+            anvilCard = card;
+
+            //GameObject instance = Instantiate(cardObject) as GameObject;
+            //var cardManager = instance.GetComponent<CardManager>();
+            //cardManager.card = card;
+
+            //instance.transform.SetParent(anvilCardHolder.transform);
+            //instance.transform.localScale = new Vector3(1f, 1f, 1f);
+
+            //cardManager.PopulateCard(cardManager.card);
+
+            if (GameManager.instance.gold >= 10)
+            {
+                anvilUpgrade.interactable = true;
+            }
+            else
+            {
+                anvilUpgrade.interactable = false;
+            }
+
+            if (GameManager.instance.gold >= 3)
+            {
+                anvilDestroy.interactable = true;
+            }
+            else
+            {
+                anvilDestroy.interactable = false;
+            }
+        }
+
+
+        public void AnvilDestroy()
+        {           
+            DeckManager.player.DestroyCard(anvilCard);
+        }
+
+        public void AnvilUpgrade()
+        {
+            var level = anvilCard.GetComponent<CardManager>().card.level;
+            var type = anvilCard.GetComponent<CardManager>().card.type;
+            DeckManager.player.DestroyCard(anvilCard);
+
+            var newCard = new Card();
+
+            if (type == Card.Type.ClassCard)
+            {
+                newCard = DAL.ObjectDAL.GetRandomClassCard(level + 1, level + 1);
+            }
+            else
+            {
+                newCard = DAL.ObjectDAL.GetRandomCard(level + 1, level + 1);
+            }
+            var card =  DeckManager.player.AddCardtoDeck(newCard);
+            card.transform.SetParent(anvilCardHolder.transform);
+            anvilCard = card;
+            anvilUpgrade.interactable = false;
+
+        }
+
 
         internal void Select(GameObject selection)
         {
@@ -189,18 +268,23 @@ namespace Assets.Scripts
                 addButton.onClick.AddListener(prayer.prayerEvent);
                 addButton.onClick.AddListener(ClosePanel);
             }
-            else if(currentSelection.tag == "Card")
+            else if (currentSelection.tag == "Card")
             {
                 GameManager.instance.cardLoot = currentSelection.GetComponent<CardManager>().card;
                 GameManager.instance.lootType = GameManager.Content.Card;
             }
         }
 
+
         void ClosePanel()
         {
             foreach (GameObject obj in selections)
             {
                 Destroy(obj);
+            }
+            if (anvilCard)
+            {
+                anvilCard.transform.SetParent(DeckManager.player.deckHolder.transform);
             }
             selections.Clear();
             currentSelection = null;

@@ -181,16 +181,26 @@ namespace Assets.Scripts
         }
 
 
-        public void AddCardtoDeck(string cardToCreate)
+        public GameObject AddCardtoDeck(string cardToCreate)
         {
             var cardobject = ObjectDAL.GetCard(cardToCreate);
             deckStringHolder.Add(cardobject.cardName);
             //  var deck = this.transform;
-            CreateCardObject(cardobject);
+            
+            var card = CreateCardObject(cardobject);
+            return card;
+        }
+
+        public GameObject AddCardtoDeck(Card cardToCreate)
+        {           
+            deckStringHolder.Add(cardToCreate.cardName);
+            //  var deck = this.transform;
+            var card =CreateCardObject(cardToCreate);
+            return card;
         }
 
 
-        private void CreateCardObject(Card card)
+        private GameObject CreateCardObject(Card card)
         {
             GameObject instance = Instantiate(cardObject) as GameObject;
             cardManager = instance.GetComponent<CardManager>();
@@ -201,6 +211,7 @@ namespace Assets.Scripts
             instance.transform.localScale = new Vector3(1f, 1f, 1f);
 
             cardManager.PopulateCard(card);
+            return instance;
         }
 
 

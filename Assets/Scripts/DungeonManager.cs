@@ -16,6 +16,7 @@ namespace Assets.Scripts
         public GameObject chestPrefab;
         public GameObject shrinePrefab;
         public GameObject enemyPrefab; //Enemy prefab.
+        public GameObject anvilPrefab;
 
         int enemyCount;
 
@@ -46,6 +47,7 @@ namespace Assets.Scripts
             mapGen.PlaceObjects(dungeonObjects);
         }
 
+
         private void PrepareMapObjects(int level)
         {
             dungeonObjects = new List<GameObject>();
@@ -53,7 +55,9 @@ namespace Assets.Scripts
             GetEnemies(level);
             GetChests(level);
             GetShrines(level);
+            GetAnvils(level);
         }
+
 
         private void GetEnemies(int Level)
         {
@@ -104,6 +108,7 @@ namespace Assets.Scripts
             }
         }
 
+
         private void GetChests(int Level)
         {
             //Determine number of chests based on current level number, based on a logarithmic progression
@@ -111,7 +116,6 @@ namespace Assets.Scripts
 
             for (int i = 0; i < chestCount; i++)
             {
-
                 var instance = Instantiate(chestPrefab);
 
                 var script = instance.GetComponent<ChestManager>();
@@ -119,9 +123,9 @@ namespace Assets.Scripts
                 script.PopulateChest(Level);
 
                 dungeonObjects.Add(instance);
-
             }
         }
+
 
         private void GetShrines(int Level)
         {
@@ -131,13 +135,26 @@ namespace Assets.Scripts
 
             for (int i = 0; i < shrineCount; i++)
             {
-
                 var instance = Instantiate(shrinePrefab);
 
                 var script = instance.GetComponent<ShrineManager>();
 
                 script.PopulateShrine(Level);
 
+                dungeonObjects.Add(instance);
+            }
+        }
+
+        private void GetAnvils(int Level)
+        {
+
+            //Determine number of shrines based on current level number, based on a logarithmic progression
+            int anvilCount = 1;
+
+            for (int i = 0; i < anvilCount; i++)
+            {
+                var instance = Instantiate(anvilPrefab);
+                            
                 dungeonObjects.Add(instance);
             }
         }

@@ -33,8 +33,10 @@ namespace Assets.Scripts
             return deckPanel;
         }
 
+
         internal void Select(GameObject selectedCard)
         {
+            chooseButton.interactable = true;
             if (this.selectedCard)
             {
 
@@ -54,9 +56,31 @@ namespace Assets.Scripts
             selectedCard.GetComponent<Selectable>().outline.enabled = true;
             //   selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(true);
             selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
-
-
+            
         }
+
+
+        public void AnvilSelect()
+        {
+            deckPanelObject.SetActive(true);
+            isActive = true;
+            GameManager.instance.modalPanel.isActive = false;
+
+            closeButton.gameObject.SetActive(false);
+
+            chooseButton.gameObject.SetActive(true);
+            chooseButton.interactable = false;
+            chooseButton.onClick.RemoveAllListeners();
+            chooseButton.onClick.AddListener(SelectAnvilCard);
+            chooseButton.onClick.AddListener(closePanel);            
+        }
+
+
+        private void SelectAnvilCard()
+        {            
+            GameManager.instance.modalPanel.SelectAnvilCard(selectedCard);
+        }
+
 
         internal void ShowDeckPanel()
         {
@@ -70,9 +94,9 @@ namespace Assets.Scripts
             chooseButton.gameObject.SetActive(false);
         }
 
+
         internal void DuplicateCardPanel()
         {
-
             deckPanelObject.SetActive(true);
             isActive = true;
 
@@ -82,6 +106,7 @@ namespace Assets.Scripts
             chooseButton.onClick.RemoveAllListeners();
             chooseButton.onClick.AddListener(Duplicate);
         }
+
 
         private void Duplicate()
         {
@@ -93,6 +118,7 @@ namespace Assets.Scripts
 
             chooseButton.gameObject.SetActive(false);
         }
+
 
         internal void DestroyRandomCardsPanel(int cardno)
         {
@@ -108,6 +134,7 @@ namespace Assets.Scripts
             chooseButton.onClick.AddListener(DestroyRandom);
         }
 
+
         private void DestroyRandom()
         {
             for (int i = 0; i < cardno; i++)
@@ -121,6 +148,7 @@ namespace Assets.Scripts
             chooseButton.gameObject.SetActive(false);
         }
 
+
         internal void DestroyCardPanel()
         {
             deckPanelObject.SetActive(true);
@@ -133,6 +161,7 @@ namespace Assets.Scripts
             chooseButton.onClick.AddListener(Destroy);
         }
 
+
         private void Destroy()
         {
             DeckManager.player.DestroyCard(selectedCard);
@@ -143,7 +172,7 @@ namespace Assets.Scripts
 
             chooseButton.gameObject.SetActive(false);
         }
-
+        
 
         internal void UpgradeCardPanel()
         {
@@ -156,6 +185,7 @@ namespace Assets.Scripts
             chooseButton.onClick.RemoveAllListeners();
             chooseButton.onClick.AddListener(Upgrade);
         }
+
 
         private void Upgrade()
         {
@@ -180,6 +210,7 @@ namespace Assets.Scripts
 
             chooseButton.gameObject.SetActive(false);
         }
+
 
         private void closePanel()
         {
