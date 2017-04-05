@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
+using System;
 
 namespace Assets.Scripts.Menu
 {
@@ -20,6 +21,12 @@ namespace Assets.Scripts.Menu
         public Image selectedClassImage;
         public TMP_Text selectedClassText;
         public Button selectButton;
+
+        public GameObject progressPanel;
+        public ProgressPanel progressPanelManager;
+
+        public bool isProgress;
+
 
         // Use this for initialization
         void Start()
@@ -41,14 +48,39 @@ namespace Assets.Scripts.Menu
             }
         }
 
+        internal void ShowClassSelect()
+        {
+            progressPanel.SetActive(false);
+            selectedClassPanel.SetActive(true);
+            progressPanelManager.ShowProgress();
+
+        }
+
+        internal void ShowProgress()
+        {
+            this.gameObject.SetActive(true);
+            progressPanel.SetActive(true);
+            selectedClassPanel.SetActive(false);
+            progressPanelManager.ShowProgress();
+        }
 
         public void SelectClass(PlayerClass playerClass)
         {
-            selectedClass = playerClass;
-            selectedClassImage.sprite = GameManager.instance.classImages[playerClass.SpriteIcon];
-            selectedClassText.text = playerClass.ClassName;
+            if (isProgress)
+            {
+                progressPanelManager.ShowClassProgress(playerClass);
 
-            selectButton.interactable = true;
+            }
+            else
+            {
+
+
+                selectedClass = playerClass;
+                selectedClassImage.sprite = GameManager.instance.classImages[playerClass.SpriteIcon];
+                selectedClassText.text = playerClass.ClassName;
+
+                selectButton.interactable = true;
+            }
         }
 
 
@@ -56,7 +88,13 @@ namespace Assets.Scripts.Menu
         {
             GameManager.instance.playerClass = selectedClass;
             GameManager.instance.progressManager.SetProgressClass(selectedClass);
-            mainMenu.HideClassSelect();
+            mainMenu.ShowPerkSelect();
+            
+        }
+
+        public void HideClassSelect()
+        {
+            this.gameObject.SetActive(false);
         }
 
 

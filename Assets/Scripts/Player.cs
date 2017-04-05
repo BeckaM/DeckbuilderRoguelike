@@ -6,8 +6,8 @@ namespace Assets.Scripts
 {
     public class Player : MonoBehaviour
     {
-        public int life;
-        public int maxLife;
+        public int life=30;
+        public int maxLife=30;
         public int ward = 0;
         public int damageBoost = 0;
 
@@ -26,13 +26,12 @@ namespace Assets.Scripts
 
         void Start()
         {
-            rigidbody = GetComponent<Rigidbody>();      
+            rigidbody = GetComponent<Rigidbody>();
         }
 
         void Update()
         {
             velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * 10;
-
 
             if (Input.GetAxisRaw("Horizontal") > 0 && !right)
             {
@@ -44,9 +43,8 @@ namespace Assets.Scripts
                 playerBody.transform.Rotate(0, 180, 0);
                 right = false;
             }
-
-
         }
+
 
         void FixedUpdate()
         {
@@ -55,6 +53,7 @@ namespace Assets.Scripts
                 rigidbody.MovePosition(rigidbody.position + velocity * Time.fixedDeltaTime);
             }
         }
+
 
         //OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).
         private void OnTriggerEnter(Collider other)
@@ -89,13 +88,11 @@ namespace Assets.Scripts
                 GameManager.instance.doingSetup = true;
             }
         }
-        
+
 
         //Restart reloads the scene when called.
         private void Restart()
         {
-            //Store life in Gamemanager between scenes
-            GameManager.instance.lifeHolder = life;
             //Load the last scene loaded, in this case Main, the only scene in the game.
             SceneManager.LoadScene("Scene 3D");
         }

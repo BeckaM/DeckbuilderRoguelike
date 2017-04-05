@@ -48,7 +48,7 @@ namespace Assets.Scripts.Menu
             if (DAL.PlayerSaveDAL.PlayerExists(player))
             {
                 DAL.PlayerSaveDAL.LoadPlayer(player);
-                mainMenu.HidePlayerSelect();
+                mainMenu.ShowStartScreen();
             }
             else
             {
@@ -62,11 +62,13 @@ namespace Assets.Scripts.Menu
         {
             DAL.PlayerSaveDAL.CreateNewPlayer(selectedPlayer, playerName.text);
             DAL.PlayerSaveDAL.LoadPlayer(selectedPlayer);
-            mainMenu.HidePlayerSelect();
+            mainMenu.ShowStartScreen();
+        }
 
-           
-
-
+        public void CloseNewPlayerPanel()
+        {
+            createPlayerPanel.SetActive(false);
+            selectPanel.SetActive(true);
         }
 
     }

@@ -20,8 +20,8 @@ namespace Assets.Scripts
         public GameObject prayerObject;
 
         public Button addButton;
-        public Button noButton;
-        public Button thanksButton;
+        public Button closeButton;
+
         public GameObject currentSelection;
         public List<GameObject> selections;
 
@@ -29,13 +29,19 @@ namespace Assets.Scripts
 
         private static ModalPanel modalPanel;
 
-        public GameObject anvilPanel;
-        public GameObject anvilCard;
-        public GameObject anvilCardHolder;
-        public GameObject anvilSelectText;
+        public GameObject prayerPanel;
+        public Button prayButton;
 
-        public Button anvilDestroy;
-        public Button anvilUpgrade;
+        public GameObject selectCardPanel;
+        public GameObject cardSelectText;
+        public GameObject selectedCard;
+        public GameObject selectedCardHolder;
+
+        public GameObject selectFromThreePanel;
+
+        public GameObject anvilPanel;
+        public Button anvilDestroyButton;
+        public Button anvilUpgradeButton;
 
         public static ModalPanel Instance()
         {
@@ -45,9 +51,9 @@ namespace Assets.Scripts
                 if (!modalPanel)
                     Debug.LogError("There needs to be one active ModalPanel script on a GameObject in your scene.");
             }
-
             return modalPanel;
         }
+
 
         //  Chest with card or consumable.
         public void Chest(string title, string subText, Card reward, UnityAction yesEvent, UnityAction noEvent)
@@ -55,13 +61,15 @@ namespace Assets.Scripts
             modalPanelObject.SetActive(true);
             isActive = true;
 
-            addButton.onClick.RemoveAllListeners();
+            ClearPanel();
+
+            selectFromThreePanel.SetActive(true);
+
             addButton.onClick.AddListener(yesEvent);
             addButton.onClick.AddListener(ClosePanel);
 
-            noButton.onClick.RemoveAllListeners();
-            noButton.onClick.AddListener(noEvent);
-            noButton.onClick.AddListener(ClosePanel);
+            closeButton.onClick.AddListener(noEvent);
+            closeButton.onClick.AddListener(ClosePanel);
 
             this.title.text = title;
             this.subText.text = subText;
@@ -73,10 +81,9 @@ namespace Assets.Scripts
             cardScript.PopulateCard(reward);
 
             addButton.gameObject.SetActive(true);
-            noButton.gameObject.SetActive(true);
-            thanksButton.gameObject.SetActive(false);
-
+            closeButton.gameObject.SetActive(true);
         }
+
 
         //Chest with gold.
         public void Chest(string title, string subText, int goldReward, UnityAction yesEvent)
@@ -84,9 +91,12 @@ namespace Assets.Scripts
             modalPanelObject.SetActive(true);
             isActive = true;
 
-            thanksButton.onClick.RemoveAllListeners();
-            thanksButton.onClick.AddListener(yesEvent);
-            thanksButton.onClick.AddListener(ClosePanel);
+            ClearPanel();
+
+            selectFromThreePanel.SetActive(true);
+
+            closeButton.onClick.AddListener(yesEvent);
+            closeButton.onClick.AddListener(ClosePanel);
 
             this.title.text = title;
             this.subText.text = subText;
@@ -97,16 +107,18 @@ namespace Assets.Scripts
             var goldscript = gold.GetComponent<Gold>();
             goldscript.PopulateGold(goldReward);
 
-
-            addButton.gameObject.SetActive(false);
-            noButton.gameObject.SetActive(false);
-            thanksButton.gameObject.SetActive(true);
+            closeButton.gameObject.SetActive(true);
         }
+
 
         internal void LevelUp(List<Card> cardRewards, UnityAction complete)
         {
             modalPanelObject.SetActive(true);
             isActive = true;
+
+            ClearPanel();
+
+            selectFromThreePanel.SetActive(true);
 
             this.title.text = "Level Up!";
             this.subText.text = "Choose a reward.";
@@ -120,45 +132,38 @@ namespace Assets.Scripts
                 cardScript.PopulateCard(card);
             }
 
-            addButton.onClick.RemoveAllListeners();
             addButton.onClick.AddListener(complete);
             addButton.onClick.AddListener(ClosePanel);
 
             addButton.GetComponent<Button>().interactable = false;
             addButton.gameObject.SetActive(true);
-            noButton.gameObject.SetActive(false);
-            thanksButton.gameObject.SetActive(false);
         }
 
-        internal void Shrine(string title, string subText, List<UnityAction> prayers, UnityAction noEvent)
+
+        internal void Shrine(string title, string subText, UnityAction prayer, UnityAction noEvent, bool needsCardSelection)
         {
             modalPanelObject.SetActive(true);
             isActive = true;
 
-            //addButton.onClick.RemoveAllListeners();
-            //addButton.onClick.AddListener(ClosePanel);
+            ClearPanel();
+            prayerPanel.SetActive(true);
 
-            noButton.onClick.RemoveAllListeners();
-            noButton.onClick.AddListener(noEvent);
-            noButton.onClick.AddListener(ClosePanel);
+            closeButton.onClick.AddListener(noEvent);
+            closeButton.onClick.AddListener(ClosePanel);
 
             this.title.text = title;
             this.subText.text = subText;
 
-            foreach (UnityAction prayer in prayers)
-            {
-                var p = Instantiate(prayerObject);
-                selections.Add(p);
-                p.transform.SetParent(choicesPanel.transform);
-                var pscript = p.GetComponent<Prayer>();
-                pscript.PopulatePrayer(prayer);
-            }
-            
-            addButton.gameObject.SetActive(true);
-            addButton.GetComponent<Button>().interactable = false;
+            prayButton.onClick.AddListener(prayer);
 
-            noButton.gameObject.SetActive(true);
-            thanksButton.gameObject.SetActive(false);
+            if (needsCardSelection)
+            {
+                prayButton.interactable = false;
+                selectCardPanel.SetActive(true);
+
+            }
+
+            closeButton.gameObject.SetActive(true);
         }
 
 
@@ -166,63 +171,76 @@ namespace Assets.Scripts
         {
             modalPanelObject.SetActive(true);
             isActive = true;
+
+            ClearPanel();
+
             anvilPanel.SetActive(true);
+            selectCardPanel.SetActive(true);
 
             this.title.text = title;
             this.subText.text = subText;
 
-            noButton.onClick.RemoveAllListeners();
-            noButton.onClick.AddListener(noEvent);
-            noButton.onClick.AddListener(ClosePanel);
+            closeButton.onClick.AddListener(noEvent);
+            closeButton.onClick.AddListener(ClosePanel);
 
-            noButton.gameObject.SetActive(true);
-            thanksButton.gameObject.SetActive(false);
-            addButton.gameObject.SetActive(false);
+            closeButton.gameObject.SetActive(true);
 
-            anvilUpgrade.interactable = false;
-            anvilDestroy.interactable = false;
+            anvilUpgradeButton.interactable = false;
+            anvilDestroyButton.interactable = false;
         }
 
 
-        public void SelectAnvilCard(GameObject card)
+        public void SelectCard(GameObject card)
         {
             isActive = true;
-            anvilSelectText.SetActive(false);
+            cardSelectText.SetActive(false);
 
-            card.transform.SetParent(anvilCardHolder.transform);
-            anvilCard = card;
-            
+            card.transform.SetParent(selectedCardHolder.transform);
+            selectedCard = card;
+            prayButton.interactable = true;
+
             if (GameManager.instance.gold >= 10)
             {
-                anvilUpgrade.interactable = true;
+                anvilUpgradeButton.interactable = true;
             }
             else
             {
-                anvilUpgrade.interactable = false;
+                anvilUpgradeButton.interactable = false;
             }
 
             if (GameManager.instance.gold >= 3)
             {
-                anvilDestroy.interactable = true;
+                anvilDestroyButton.interactable = true;
             }
             else
             {
-                anvilDestroy.interactable = false;
+                anvilDestroyButton.interactable = false;
             }
         }
 
-
-        public void AnvilDestroy()
-        {           
-            DeckManager.player.DestroyCard(anvilCard);
+        public void PrayerSpent()
+        {
+            prayButton.interactable = false;
         }
 
 
-        public void AnvilUpgrade()
+        public void DestroySelectedCard()
         {
-            var level = anvilCard.GetComponent<CardManager>().card.level;
-            var type = anvilCard.GetComponent<CardManager>().card.type;
-            DeckManager.player.DestroyCard(anvilCard);
+            DeckManager.player.DestroyCard(selectedCard);
+
+        }
+
+        public void DuplicateSelectedCard()
+        {
+            DeckManager.player.AddCardtoDeck(selectedCard.GetComponent<CardManager>().card);
+        }
+
+
+        public void UpgradeSelectedCard()
+        {
+            var level = selectedCard.GetComponent<CardManager>().card.level;
+            var type = selectedCard.GetComponent<CardManager>().card.type;
+            DeckManager.player.DestroyCard(selectedCard);
 
             var newCard = new Card();
 
@@ -234,11 +252,10 @@ namespace Assets.Scripts
             {
                 newCard = DAL.ObjectDAL.GetRandomCard(level + 1, level + 1);
             }
-            var card =  DeckManager.player.AddCardtoDeck(newCard);
-            card.transform.SetParent(anvilCardHolder.transform);
-            anvilCard = card;
-            anvilUpgrade.interactable = false;
-
+            var card = DeckManager.player.AddCardtoDeck(newCard);
+            card.transform.SetParent(selectedCardHolder.transform);
+            selectedCard = card;
+            anvilUpgradeButton.interactable = false;
         }
 
 
@@ -252,14 +269,7 @@ namespace Assets.Scripts
             selection.GetComponent<Selectable>().outline.enabled = true;
             addButton.GetComponent<Button>().interactable = true;
 
-            if (currentSelection.tag == "Prayer")
-            {
-                var prayer = currentSelection.GetComponent<Prayer>();
-                addButton.onClick.RemoveAllListeners();
-                addButton.onClick.AddListener(prayer.prayerEvent);
-                addButton.onClick.AddListener(ClosePanel);
-            }
-            else if (currentSelection.tag == "Card")
+            if (currentSelection.tag == "Card")
             {
                 GameManager.instance.cardLoot = currentSelection.GetComponent<CardManager>().card;
                 GameManager.instance.lootType = GameManager.Content.Card;
@@ -273,15 +283,36 @@ namespace Assets.Scripts
             {
                 Destroy(obj);
             }
-            if (anvilCard)
+            if (selectedCard)
             {
-                anvilCard.transform.SetParent(DeckManager.player.deckHolder.transform);
+                selectedCard.transform.SetParent(DeckManager.player.deckHolder.transform);
             }
             selections.Clear();
             currentSelection = null;
             isActive = false;
-            anvilPanel.SetActive(false);
             modalPanelObject.SetActive(false);
+        }
+
+
+        void ClearPanel()
+        {
+            this.title.text = "";
+            this.subText.text = "";
+
+            anvilPanel.SetActive(false);
+            prayerPanel.SetActive(false);
+            selectFromThreePanel.SetActive(false);
+            selectCardPanel.SetActive(false);
+            cardSelectText.SetActive(true);
+
+
+            closeButton.gameObject.SetActive(false);
+            closeButton.onClick.RemoveAllListeners();
+
+            addButton.gameObject.SetActive(false);
+            addButton.onClick.RemoveAllListeners();
+
+            prayButton.onClick.RemoveAllListeners();
         }
     }
 }

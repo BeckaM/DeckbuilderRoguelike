@@ -13,32 +13,39 @@ namespace Assets.Scripts.Menu
         public GameObject splashScreen;
         public GameObject playerSelect;
         public GameObject startScreen;
-        public GameObject classSelect;
+        public ClassSelect classSelect;
         public GameObject perkSelect;
 
-        public void HideSplashScreen()
+        public void ShowPlayerSelect()
         {
             splashScreen.SetActive(false);
             playerSelect.SetActive(true);
         }
              
         
-       public void HidePlayerSelect()
+       public void ShowStartScreen()
         {
+            classSelect.HideClassSelect();
             playerSelect.SetActive(false);
             startScreen.SetActive(true);
         }
 
-        public void HideStart()
+        public void ShowProgressScreen()
         {
             startScreen.SetActive(false);
-            classSelect.SetActive(true);
+            classSelect.ShowProgress();
+        }
+
+        public void ShowClassSelect()
+        {
+            startScreen.SetActive(false);
+            classSelect.ShowClassSelect();
         }
 
 
-        internal void HideClassSelect()
+        internal void ShowPerkSelect()
         {
-            classSelect.SetActive(false);
+            classSelect.HideClassSelect();
             perkSelect.SetActive(true);
         }
 
