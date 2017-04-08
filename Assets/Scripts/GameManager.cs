@@ -257,13 +257,10 @@ namespace Assets.Scripts
 
         //GameOver is called when the player reaches 0 life points
         public void GameOver()
-        {
-            
-           
+        {                       
             dungeonUI.gameOverScript.UpdateGameOverText(level, playerLevel, progressManager.currentRunProgress);
             progressManager.EndRun();
-            dungeonUI.gameOverPanel.SetActive(true);
-           
+            dungeonUI.gameOverPanel.SetActive(true);           
         }
 
 
