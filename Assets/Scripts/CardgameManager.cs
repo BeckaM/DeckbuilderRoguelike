@@ -90,6 +90,7 @@ namespace Assets.Scripts
             cardgameUI.playerPortrait.sprite = player.playerImage;
         }
 
+
         internal void IncreaseMaxMana(int value, Team team)
         {
             if (team == Team.Me)

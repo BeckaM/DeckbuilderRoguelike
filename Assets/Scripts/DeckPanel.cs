@@ -20,8 +20,6 @@ namespace Assets.Scripts
         public GameObject selectedCard;
         public string selectedTag;
 
-        public int cardno;
-
         public static DeckPanel Instance()
         {
             if (!deckPanel)
@@ -56,11 +54,11 @@ namespace Assets.Scripts
             selectedCard.GetComponent<Selectable>().outline.enabled = true;
             //   selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(true);
             selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
-            
+
         }
 
 
-        public void AnvilSelect()
+        public void CardSelect()
         {
             deckPanelObject.SetActive(true);
             isActive = true;
@@ -71,14 +69,14 @@ namespace Assets.Scripts
             chooseButton.gameObject.SetActive(true);
             chooseButton.interactable = false;
             chooseButton.onClick.RemoveAllListeners();
-            chooseButton.onClick.AddListener(SelectAnvilCard);
-            chooseButton.onClick.AddListener(closePanel);            
+            chooseButton.onClick.AddListener(SelectCard);
+            chooseButton.onClick.AddListener(closePanel);
         }
 
 
-        private void SelectAnvilCard()
-        {            
-            GameManager.instance.modalPanel.SelectAnvilCard(selectedCard);
+        private void SelectCard()
+        {
+            GameManager.instance.modalPanel.SelectCard(selectedCard);
         }
 
 
@@ -120,10 +118,8 @@ namespace Assets.Scripts
         }
 
 
-        internal void DestroyRandomCardsPanel(int cardno)
+        internal void DestroyRandomCardsPanel()
         {
-            this.cardno = cardno;
-
             deckPanelObject.SetActive(true);
             isActive = true;
 
@@ -137,7 +133,7 @@ namespace Assets.Scripts
 
         private void DestroyRandom()
         {
-            for (int i = 0; i < cardno; i++)
+            for (int i = 0; i < 3; i++)
             {
                 DeckManager.player.DestroyRandomCard();
             }
@@ -172,7 +168,7 @@ namespace Assets.Scripts
 
             chooseButton.gameObject.SetActive(false);
         }
-        
+
 
         internal void UpgradeCardPanel()
         {
