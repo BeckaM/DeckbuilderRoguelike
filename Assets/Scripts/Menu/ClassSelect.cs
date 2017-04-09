@@ -26,9 +26,7 @@ namespace Assets.Scripts.Menu
         public ProgressPanel progressPanelManager;
 
         public bool isProgress;
-
-
-        // Use this for initialization
+        
         void Start()
         {
             selectButton.interactable = false;
@@ -48,13 +46,15 @@ namespace Assets.Scripts.Menu
             }
         }
 
+
         internal void ShowClassSelect()
         {
+            this.gameObject.SetActive(true);
             progressPanel.SetActive(false);
             selectedClassPanel.SetActive(true);
             progressPanelManager.ShowProgress();
-
         }
+
 
         internal void ShowProgress()
         {
@@ -64,17 +64,15 @@ namespace Assets.Scripts.Menu
             progressPanelManager.ShowProgress();
         }
 
+
         public void SelectClass(PlayerClass playerClass)
         {
             if (isProgress)
             {
                 progressPanelManager.ShowClassProgress(playerClass);
-
             }
             else
             {
-
-
                 selectedClass = playerClass;
                 selectedClassImage.sprite = GameManager.instance.classImages[playerClass.SpriteIcon];
                 selectedClassText.text = playerClass.ClassName;
@@ -88,15 +86,13 @@ namespace Assets.Scripts.Menu
         {
             GameManager.instance.playerClass = selectedClass;
             GameManager.instance.progressManager.SetProgressClass(selectedClass);
-            mainMenu.ShowPerkSelect();
-            
+            mainMenu.ShowPerkSelect();            
         }
+
 
         public void HideClassSelect()
         {
             this.gameObject.SetActive(false);
         }
-
-
     }
 }

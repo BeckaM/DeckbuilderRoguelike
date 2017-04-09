@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
-
     public class GameManager : MonoBehaviour
     {
         public PlayerClass playerClass;
@@ -29,10 +28,6 @@ namespace Assets.Scripts
 
         public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
 
-        //        public bool playersTurn = true;     //Boolean to check if it's players turn, hidden in inspector but public.
-
-       
-
         public GameObject monsterDeck;
 
         private GameObject cardGameCanvas;
@@ -44,7 +39,7 @@ namespace Assets.Scripts
                 return dungeonCanvas.GetComponent<DungeonUI>();
             }
         }
-
+        
         private DungeonManager boardScript;                     //Store a reference to our BoardManager which will set up the level.
 
         public ModalPanel modalPanel
@@ -54,7 +49,7 @@ namespace Assets.Scripts
                 return dungeonUI.modalPanelObject.GetComponent<ModalPanel>();
             }
         }
-
+        
         public DeckPanel deckPanel
         {
             get
@@ -62,12 +57,12 @@ namespace Assets.Scripts
                 return dungeonUI.deckPanelObject.GetComponent<DeckPanel>();
             }
         }
+
         public enum Content { Gold, Consumable, Card };
         public Content lootType;
         public Card cardLoot;
         public int goldLoot;
-
-
+        
         private int level = 0;                                  //Current level number, expressed in game as "Level 1".
 
         public bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
@@ -96,8 +91,8 @@ namespace Assets.Scripts
                         
             //Call the InitGame function to initialize the first level 
             // InitGame();
-
         }
+
 
         void OnEnable()
         {
@@ -166,7 +161,6 @@ namespace Assets.Scripts
 
         public void InitCardgame(Collider monster, Player player)
         {
-
             doingSetup = true;
             cardGameCanvas.SetActive(true);
             //Create the monster deck and instantiate the cards.
@@ -193,7 +187,6 @@ namespace Assets.Scripts
 
         public void ReturnFromCardgame(bool win, Card cardReward, int goldReward)
         {
-
             dungeonUI.deckPanelObject.SetActive(false);
             dungeonUI.UpdateLifeText();
 
@@ -217,8 +210,7 @@ namespace Assets.Scripts
                     lootType = Content.Gold;
                 }
 
-                progressManager.MonsterKill();
-                               
+                progressManager.MonsterKill();                               
             }
         }
 
@@ -313,9 +305,6 @@ namespace Assets.Scripts
             {
                 progressManager.GoldEarned(gain);
             }
-        }
-
-      
+        }      
     }
-
 }
