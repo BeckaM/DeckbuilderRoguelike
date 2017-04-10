@@ -114,7 +114,7 @@ namespace Assets.Scripts
             {
                 //Add one to our level number.
                 level++;
-                progressManager.HighestDungeonLevel(level);
+                progressManager.HighestAchievedMetric(ProgressManager.Metric.HighestDungeonLevel, level);
                 //Call InitGame to initialize our level.
                 InitGame();
             }
@@ -210,7 +210,7 @@ namespace Assets.Scripts
                     lootType = Content.Gold;
                 }
 
-                progressManager.MonsterKill();                               
+                progressManager.CumulativeMetric(ProgressManager.Metric.MonsterKills, 1);                               
             }
         }
 
@@ -250,7 +250,7 @@ namespace Assets.Scripts
         //GameOver is called when the player reaches 0 life points
         public void GameOver()
         {                       
-            dungeonUI.gameOverScript.UpdateGameOverText(level, playerLevel, progressManager.currentRunProgress);
+            dungeonUI.gameOverScript.UpdateGameOverText(level, playerLevel);
             progressManager.EndRun();
             
             dungeonUI.gameOverScript.UpdateNewUnlocks(progressManager.GetNewClassUnlocks(), progressManager.GetNewPerkUnlocks());
@@ -296,7 +296,7 @@ namespace Assets.Scripts
             {
                 dungeonUI.LevelUpButton.SetActive(false);
             }
-            progressManager.HighestPlayerLevel(playerLevel);
+            progressManager.HighestAchievedMetric(ProgressManager.Metric.HighestPlayerLevel, playerLevel);
         }
 
 
@@ -306,7 +306,7 @@ namespace Assets.Scripts
             dungeonUI.UpdateGoldText();
             if(gain > 0)
             {
-                progressManager.GoldEarned(gain);
+                progressManager.CumulativeMetric(ProgressManager.Metric.GoldEarned, gain);
             }
         }      
     }

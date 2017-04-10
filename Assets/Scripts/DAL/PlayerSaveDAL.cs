@@ -32,7 +32,7 @@ namespace Assets.Scripts.DAL
             var startclass = new ClassProgress();
             startclass.className = "Iron Soul";
             progress.classProgressList.Add(startclass);
-
+            
             var saker = File.Create(playerSave + player);
             saker.Dispose();
             SaveProgress(progress);

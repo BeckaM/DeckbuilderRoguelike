@@ -22,18 +22,21 @@ namespace Assets.Scripts
 
         public GameObject unlockPanel;
 
-        internal void UpdateGameOverText(int dungeonLevel, int playerLevel, PlayerProgress playerProgress)
+        internal void UpdateGameOverText(int dungeonLevel, int playerLevel)
         {
             dungeonLevelText.text = "You died on level " + dungeonLevel;
 
             playerLVLText.text = "Player Level: " + playerLevel;
-            monsterKillsText.text = "Monster Kills: " + playerProgress.monsterKills;
-            cardsPlayedText.text = "Cards Played: " + playerProgress.cardsPlayed;
-            goldEarnedText.text = "Gold Earned: " + playerProgress.goldEarned;
-            damageDealtText.text = "Damage Dealt: " + playerProgress.damageDealt;
-            healingText.text = "Healing Done: " + playerProgress.healing;
-            chestsOpenedText.text = "Chests Opened: " + playerProgress.chestsOpened;
-            shrinesFoundText.text = "Shrines Found: " + playerProgress.shrinesOpened;
+
+            monsterKillsText.text = "Monster Kills" + GameManager.instance.progressManager.GetCurrentRunMetric(ProgressManager.Metric.MonsterKills);
+
+            //monsterKillsText.text = "Monster Kills: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.MonsterKills];
+            //cardsPlayedText.text = "Cards Played: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.CardsPlayed];
+            //goldEarnedText.text = "Gold Earned: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.GoldEarned];
+            //damageDealtText.text = "Damage Dealt: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.DamageDealt];
+            //healingText.text = "Healing Done: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.Healing];
+            //chestsOpenedText.text = "Chests Opened: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.ChestsOpened];
+            //shrinesFoundText.text = "Shrines Found: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.ShrinesOpened];
 
         }
 

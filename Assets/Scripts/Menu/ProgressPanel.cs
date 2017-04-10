@@ -21,9 +21,9 @@ namespace Assets.Scripts.Menu
 
         public void ShowProgress()
         {
-            var progress = GameManager.instance.progressManager.totalProgress;
+            var progress = GameManager.instance.progressManager;
 
-            monsterKills.text = "Monster kills: " + progress.monsterKills.ToString();
+            monsterKills.text = "Monster kills: " + progress.GetTotalMetric(ProgressManager.Metric.MonsterKills);
            
         }
 
@@ -33,7 +33,7 @@ namespace Assets.Scripts.Menu
             var currentClass = progress.classProgressList.Find(item => item.className.Equals(selectedClass.ClassName));
             classPanel.SetActive(true);
 
-            monsterKillsClass.text = currentClass.monsterKills.ToString();
+            monsterKillsClass.text = currentClass.cumulativeMetrics[ProgressManager.Metric.MonsterKills].ToString();
 
         }
 

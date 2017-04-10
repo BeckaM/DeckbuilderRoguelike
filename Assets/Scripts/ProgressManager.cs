@@ -18,99 +18,82 @@ namespace Assets.Scripts
         public List<PlayerClass> lockedClasses = new List<PlayerClass>();
 
         public List<Perk> unlockedPerks = new List<Perk>();
-        public List<Perk> lockedPerks = new List<Perk>();                
+
+        public List<Perk> lockedPerks = new List<Perk>();
 
         public enum Metric { MonsterKills, DamageDealt, Healing, GoldEarned, HighestPlayerLevel, HighestDungeonLevel, ChestsOpened, ShrinesOpened, CardsPlayed };
 
-
-        public void MonsterKill()
+        public void CumulativeMetric(Metric metric, int value)
         {
-            currentRunProgress.monsterKills++;
+            if (!currentRunProgress.cumulativeMetrics.ContainsKey(metric))
+            {
+                currentRunProgress.cumulativeMetrics.Add(metric, value);
+            }
+            else
+            {
+                currentRunProgress.cumulativeMetrics[metric] += value;
+            }
         }
 
-        public void CardPlayed()
+        public void HighestAchievedMetric(Metric metric, int value)
         {
-            currentRunProgress.cardsPlayed++;
+            if (!currentRunProgress.highestAchievedMetrics.ContainsKey(metric))
+            {
+                currentRunProgress.highestAchievedMetrics.Add(metric, value);
+            }
+            else
+            {
+                if (value > currentRunProgress.highestAchievedMetrics[metric])
+                    currentRunProgress.highestAchievedMetrics[metric] = value;
+            }
         }
 
-        public void DamageDealt(int damage)
-        {
-            currentRunProgress.damageDealt += damage;
-        }
-
-        public void Healing(int heal)
-        {
-            currentRunProgress.healing += heal;
-        }
-
-        public void GoldEarned(int gold)
-        {
-            currentRunProgress.goldEarned += gold;
-        }
-
-        public void HighestPlayerLevel(int level)
-        {
-            currentRunProgress.highestPlayerLevel = level;
-        }
-
-        public void HighestDungeonLevel(int level)
-        {
-            currentRunProgress.highestDungeonLevel = level;
-        }
-
-        public void FoundShrine()
-        {
-            currentRunProgress.shrinesOpened++;
-        }
-
-        public void FoundChest()
-        {
-            currentRunProgress.chestsOpened++;
-        }
 
         public void EndRun()
-        {            
-            totalProgress.monsterKills += currentRunProgress.monsterKills;
-            currentClass.monsterKills += currentRunProgress.monsterKills;
-
-            totalProgress.healing += currentRunProgress.healing;
-            currentClass.healing += currentRunProgress.healing;
-
-            totalProgress.damageDealt += currentRunProgress.damageDealt;
-            currentClass.damageDealt += currentRunProgress.damageDealt;
-
-            totalProgress.cardsPlayed += currentRunProgress.cardsPlayed;
-            currentClass.cardsPlayed += currentRunProgress.cardsPlayed;
-
-            totalProgress.goldEarned += currentRunProgress.goldEarned;
-            currentClass.goldEarned += currentRunProgress.goldEarned;
-
-            totalProgress.shrinesOpened += currentRunProgress.shrinesOpened;
-            currentClass.shrinesOpened += currentRunProgress.shrinesOpened;
-
-            totalProgress.chestsOpened += currentRunProgress.chestsOpened;
-            currentClass.chestsOpened += currentRunProgress.chestsOpened;
-
-            if(currentRunProgress.highestDungeonLevel > totalProgress.highestDungeonLevel)
+        {
+            foreach (Metric metric in currentRunProgress.cumulativeMetrics.Keys)
             {
-                totalProgress.highestDungeonLevel = currentRunProgress.highestDungeonLevel;
+                if (!totalProgress.cumulativeMetrics.ContainsKey(metric))
+                {
+                    totalProgress.cumulativeMetrics.Add(metric, currentRunProgress.cumulativeMetrics[metric]);
+                }
+                else
+                {
+                    totalProgress.cumulativeMetrics[metric] += currentRunProgress.cumulativeMetrics[metric];
+                }
+
+                if (!currentClass.cumulativeMetrics.ContainsKey(metric))
+                {
+                    currentClass.cumulativeMetrics.Add(metric, currentRunProgress.cumulativeMetrics[metric]);
+                }
+                else
+                {
+                    currentClass.cumulativeMetrics[metric] += currentRunProgress.cumulativeMetrics[metric];
+                }
+                               
             }
 
-            if(currentRunProgress.highestDungeonLevel > currentClass.highestDungeonLevel)
+            foreach (Metric metric in currentRunProgress.highestAchievedMetrics.Keys)
             {
-                currentClass.highestDungeonLevel = currentRunProgress.highestDungeonLevel;
+                if (!totalProgress.highestAchievedMetrics.ContainsKey(metric))
+                {
+                    totalProgress.highestAchievedMetrics.Add(metric, currentRunProgress.highestAchievedMetrics[metric]);                                       
+                }
+                else if(totalProgress.highestAchievedMetrics[metric] < currentRunProgress.highestAchievedMetrics[metric])
+                {
+                    totalProgress.highestAchievedMetrics[metric] = currentRunProgress.highestAchievedMetrics[metric];
+                }
+
+                if (!currentClass.highestAchievedMetrics.ContainsKey(metric))
+                {
+                    currentClass.highestAchievedMetrics.Add(metric, currentRunProgress.highestAchievedMetrics[metric]);
+                }
+                else if (totalProgress.highestAchievedMetrics[metric] < currentRunProgress.highestAchievedMetrics[metric])
+                {
+                    currentClass.highestAchievedMetrics[metric] = currentRunProgress.highestAchievedMetrics[metric];
+                }
             }
 
-            if (currentRunProgress.highestPlayerLevel > totalProgress.highestPlayerLevel)
-            {
-                totalProgress.highestPlayerLevel = currentRunProgress.highestPlayerLevel;
-            }
-
-            if (currentRunProgress.highestPlayerLevel > currentClass.highestPlayerLevel)
-            {
-                currentClass.highestPlayerLevel = currentRunProgress.highestPlayerLevel;
-            }
-                       
             SaveProgress();
         }
 
@@ -119,13 +102,54 @@ namespace Assets.Scripts
         {
             List<PlayerClass> newClassUnlocks = new List<PlayerClass>();
 
-            foreach(PlayerClass pClass in lockedClasses)
+            foreach (PlayerClass pClass in lockedClasses)
             {
-
+                CheckUnlockConditions(pClass);
             }
 
             return newClassUnlocks;
         }
+
+        internal string GetTotalMetric(Metric metric)
+        {
+            if (totalProgress.cumulativeMetrics.ContainsKey(metric))
+            {
+                return totalProgress.cumulativeMetrics[metric].ToString();
+            }
+            else if (totalProgress.highestAchievedMetrics.ContainsKey(metric))
+            {
+                return totalProgress.highestAchievedMetrics.ContainsKey(metric).ToString();
+            }
+            return "0";
+        }
+
+        internal string GetCurrentRunMetric(Metric metric)
+        {
+            if (currentRunProgress.cumulativeMetrics.ContainsKey(metric))
+            {
+                return currentRunProgress.cumulativeMetrics[metric].ToString();
+            }
+            else if (currentRunProgress.highestAchievedMetrics.ContainsKey(metric))
+            {
+                return currentRunProgress.highestAchievedMetrics.ContainsKey(metric).ToString();
+            }
+            return "0";
+        }
+
+
+        private bool CheckUnlockConditions(PlayerClass unlock)
+        {
+            if (totalProgress.cumulativeMetrics.ContainsKey(unlock.condition))
+            {
+                return unlock.conditionValue <= totalProgress.cumulativeMetrics[unlock.condition];
+            }
+            else if (totalProgress.highestAchievedMetrics.ContainsKey(unlock.condition))
+            {
+                return unlock.conditionValue <= totalProgress.highestAchievedMetrics[unlock.condition];
+            }
+            return false;
+        }
+
 
         public List<Perk> GetNewPerkUnlocks()
         {

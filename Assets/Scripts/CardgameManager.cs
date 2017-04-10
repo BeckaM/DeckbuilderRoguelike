@@ -139,7 +139,7 @@ namespace Assets.Scripts
                 enemy.life -= ((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0;
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - enemy.ward, enemy.ward, player.damageBoost, Team.Opponent));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
-                GameManager.instance.progressManager.DamageDealt(((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0);
+                GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.DamageDealt,((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0);
             }
             else
             {
@@ -160,7 +160,7 @@ namespace Assets.Scripts
                     player.life = player.maxLife;
                 }
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
-                GameManager.instance.progressManager.Healing(value);
+                GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Healing, value);
             }
             else
             {
@@ -342,7 +342,7 @@ namespace Assets.Scripts
             }
             CheckWinConditions();
 
-            GameManager.instance.progressManager.CardPlayed();
+            GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.CardsPlayed, 1);
         }
     }
 }

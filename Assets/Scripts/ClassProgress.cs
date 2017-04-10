@@ -11,15 +11,8 @@ namespace Assets.Scripts
     {
         public string className;
 
-        public int monsterKills;
-        public int cardsPlayed;
-        public int damageDealt;
-        public int healing;
-        public int goldEarned;
-        public int highestPlayerLevel;
-        public int highestDungeonLevel;
-        public int chestsOpened;
-        public int shrinesOpened;
+        public Dictionary<ProgressManager.Metric, int> cumulativeMetrics = new Dictionary<ProgressManager.Metric, int>();
+        public Dictionary<ProgressManager.Metric, int> highestAchievedMetrics = new Dictionary<ProgressManager.Metric, int>();
 
     }
 }
