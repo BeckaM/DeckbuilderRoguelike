@@ -43,6 +43,7 @@ namespace Assets.Scripts
 
             //Set Image
             monsterRenderer.sprite = sprites[enemy.SpriteIcon];
+            monsterRenderer.color = enemytoget.spriteColor;
 
             //Set lvl text
             monsterLVLText.text = "LVL" + level.ToString();

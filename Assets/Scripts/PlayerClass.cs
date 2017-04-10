@@ -8,7 +8,12 @@ namespace Assets.Scripts
     {
         public string ClassName;
         public int SpriteIcon;
-        public List<string> Startingdeck;                                  
+        public List<string> Startingdeck;
+
+        public string conditionText;
+        public ProgressManager.Metric condition;
+        public int conditionValue;
+
     }
 
     [Serializable]

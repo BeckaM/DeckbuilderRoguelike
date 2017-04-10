@@ -18,7 +18,7 @@ namespace Assets.Scripts
         public List<PlayerClass> lockedClasses = new List<PlayerClass>();
 
         public List<Perk> unlockedPerks = new List<Perk>();
-        public List<Perk> lockedPerks = new List<Perk>();
+        public List<Perk> lockedPerks = new List<Perk>();                
 
         public enum Metric { MonsterKills, DamageDealt, Healing, GoldEarned, HighestPlayerLevel, HighestDungeonLevel, ChestsOpened, ShrinesOpened, CardsPlayed };
 
@@ -110,20 +110,33 @@ namespace Assets.Scripts
             {
                 currentClass.highestPlayerLevel = currentRunProgress.highestPlayerLevel;
             }
-
-
-
-            CheckNewUnlocks();
+                       
             SaveProgress();
         }
 
 
-        private void CheckNewUnlocks()
+        public List<PlayerClass> GetNewClassUnlocks()
         {
+            List<PlayerClass> newClassUnlocks = new List<PlayerClass>();
+
             foreach(PlayerClass pClass in lockedClasses)
             {
 
-            } 
+            }
+
+            return newClassUnlocks;
+        }
+
+        public List<Perk> GetNewPerkUnlocks()
+        {
+            List<Perk> newPerkUnlocks = new List<Perk>();
+
+            foreach (PlayerClass pClass in lockedClasses)
+            {
+
+            }
+
+            return newPerkUnlocks;
         }
 
 

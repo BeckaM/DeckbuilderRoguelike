@@ -11,6 +11,7 @@ namespace Assets.Scripts
     {
         public string EnemyName;
         public int SpriteIcon;
+        public Color spriteColor;
         public int BaseEnemyLevel;
         public int BaseEnemyHP;
 

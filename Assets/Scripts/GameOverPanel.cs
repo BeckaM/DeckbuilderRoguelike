@@ -18,6 +18,9 @@ namespace Assets.Scripts
         public TMP_Text chestsOpenedText;
         public TMP_Text shrinesFoundText;
 
+        public GameObject unlockObject;
+
+        public GameObject unlockPanel;
 
         internal void UpdateGameOverText(int dungeonLevel, int playerLevel, PlayerProgress playerProgress)
         {
@@ -34,10 +37,30 @@ namespace Assets.Scripts
 
         }
 
-        public void ShowRewards()
+        public void ShowUnlocks()
         {
-
+            
         }
 
+        internal void UpdateNewUnlocks(List<PlayerClass> newClassUnlocks, List<Perk> newPerkUnlocks)
+        {
+            foreach(PlayerClass pClass in newClassUnlocks)
+            {
+                var classUnlock = Instantiate(unlockObject);
+                classUnlock.transform.SetParent(unlockPanel.transform, false);
+                var cbScript = classUnlock.GetComponent<UnlockObject>();
+                
+                cbScript.PopulateUnlock(pClass);
+            }
+
+            foreach (Perk perk in newPerkUnlocks)
+            {
+                var classUnlock = Instantiate(unlockObject);
+                classUnlock.transform.SetParent(unlockPanel.transform, false);
+                var cbScript = classUnlock.GetComponent<UnlockObject>();
+
+                cbScript.PopulateUnlock(perk);
+            }
+        }
     }
 }

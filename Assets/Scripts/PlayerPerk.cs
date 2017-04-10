@@ -10,7 +10,7 @@ namespace Assets.Scripts
         public string perkEffectText;
         public int perkCost;
 
-        public string perkConditionText;
+        public string conditionText;
         public ProgressManager.Metric condition;
         public int conditionValue;
     }

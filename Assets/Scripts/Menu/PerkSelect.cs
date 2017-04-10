@@ -50,8 +50,7 @@ namespace Assets.Scripts.Menu
 
 
         public void Select()
-        {
-           
+        {           
             mainMenu.StartGame();
         }
 

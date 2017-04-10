@@ -252,6 +252,9 @@ namespace Assets.Scripts
         {                       
             dungeonUI.gameOverScript.UpdateGameOverText(level, playerLevel, progressManager.currentRunProgress);
             progressManager.EndRun();
+            
+            dungeonUI.gameOverScript.UpdateNewUnlocks(progressManager.GetNewClassUnlocks(), progressManager.GetNewPerkUnlocks());
+                       
             dungeonUI.gameOverPanel.SetActive(true);           
         }
 
