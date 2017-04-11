@@ -10,39 +10,64 @@ namespace Assets.Scripts
     {
         public TMP_Text dungeonLevelText;
         public TMP_Text playerLVLText;
-        public TMP_Text monsterKillsText;
-        public TMP_Text cardsPlayedText;
-        public TMP_Text goldEarnedText;
-        public TMP_Text damageDealtText;
-        public TMP_Text healingText;
-        public TMP_Text chestsOpenedText;
-        public TMP_Text shrinesFoundText;
 
+        public GameObject metricWindow;
+        public GameObject metricObject;
+        public GameObject metricPanel;
+
+        public GameObject unlockWindow;
         public GameObject unlockObject;
-
         public GameObject unlockPanel;
+
+        private bool newUnlocks=false;
+
+        internal void GameOver()
+        {
+            unlockWindow.SetActive(false);
+            this.gameObject.SetActive(true);
+            metricWindow.SetActive(true);
+        }
 
         internal void UpdateGameOverText(int dungeonLevel, int playerLevel)
         {
             dungeonLevelText.text = "You died on level " + dungeonLevel;
 
-            playerLVLText.text = "Player Level: " + playerLevel;
+           // playerLVLText.text = "Player Level: " + playerLevel;
 
-            monsterKillsText.text = "Monster Kills" + GameManager.instance.progressManager.GetCurrentRunMetric(ProgressManager.Metric.MonsterKills);
+            var cumulativeMetrics = GameManager.instance.progressManager.currentRunProgress.cumulativeMetrics;
+            var highestAchievedMetrics = GameManager.instance.progressManager.currentRunProgress.highestAchievedMetrics;
 
-            //monsterKillsText.text = "Monster Kills: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.MonsterKills];
-            //cardsPlayedText.text = "Cards Played: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.CardsPlayed];
-            //goldEarnedText.text = "Gold Earned: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.GoldEarned];
-            //damageDealtText.text = "Damage Dealt: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.DamageDealt];
-            //healingText.text = "Healing Done: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.Healing];
-            //chestsOpenedText.text = "Chests Opened: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.ChestsOpened];
-            //shrinesFoundText.text = "Shrines Found: " + playerProgress.cumulativeMetrics[ProgressManager.Metric.ShrinesOpened];
+            foreach (ProgressManager.Metric metric in cumulativeMetrics.Keys)
+            {
+                var metricDisplay = Instantiate(metricObject);
+                metricDisplay.transform.SetParent(metricPanel.transform, false);
+                var script = metricDisplay.GetComponent<MetricDisplay>();
+
+                script.PopulateMetric(metric, cumulativeMetrics[metric]);
+            }
+
+            //foreach (ProgressManager.Metric metric in highestAchievedMetrics.Keys)
+            //{
+            //    var metricDisplay = Instantiate(metricObject);
+            //    metricDisplay.transform.SetParent(metricPanel.transform, false);
+            //    var script = metricDisplay.GetComponent<MetricDisplay>();
+
+            //    script.PopulateMetric(metric, highestAchievedMetrics[metric]);
+            //}
 
         }
 
         public void ShowUnlocks()
         {
-            
+            if (newUnlocks)
+            {
+                metricWindow.SetActive(false);
+                unlockWindow.SetActive(true);
+            }
+            else
+            {
+                BackToMenu();
+            }
         }
 
         internal void UpdateNewUnlocks(List<PlayerClass> newClassUnlocks, List<Perk> newPerkUnlocks)
@@ -54,6 +79,8 @@ namespace Assets.Scripts
                 var cbScript = classUnlock.GetComponent<UnlockObject>();
                 
                 cbScript.PopulateUnlock(pClass);
+                newUnlocks = true;
+                
             }
 
             foreach (Perk perk in newPerkUnlocks)
@@ -63,7 +90,13 @@ namespace Assets.Scripts
                 var cbScript = classUnlock.GetComponent<UnlockObject>();
 
                 cbScript.PopulateUnlock(perk);
+                newUnlocks = true;
             }
         }
+
+        public void BackToMenu()
+        {
+            GameManager.instance.BackToMenu();
+        }              
     }
 }

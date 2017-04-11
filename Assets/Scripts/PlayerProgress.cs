@@ -12,8 +12,10 @@ namespace Assets.Scripts
         public List<ClassProgress> classProgressList = new List<ClassProgress>();
         public List<string> perkProgressList = new List<string>();
 
-        public Dictionary<ProgressManager.Metric, int> cumulativeMetrics = new Dictionary<ProgressManager.Metric, int>();
-        public Dictionary<ProgressManager.Metric, int> highestAchievedMetrics = new Dictionary<ProgressManager.Metric, int>();
+        //public Dictionary<ProgressManager.Metric, int> cumulativeMetrics = new Dictionary<ProgressManager.Metric, int>();
+        public MyDictionary cumulativeMetrics = new MyDictionary();
+
+        public MyDictionary highestAchievedMetrics = new MyDictionary();
 
         public int player;
         public string playerName;

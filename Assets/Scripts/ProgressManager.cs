@@ -21,7 +21,7 @@ namespace Assets.Scripts
 
         public List<Perk> lockedPerks = new List<Perk>();
 
-        public enum Metric { MonsterKills, DamageDealt, Healing, GoldEarned, HighestPlayerLevel, HighestDungeonLevel, ChestsOpened, ShrinesOpened, CardsPlayed };
+        public enum Metric { Monsters_Killed, Damage_Dealt, Healing_Done, Gold_Earned, Highest_Player_Level, Highest_Dungeon_Level, Chests_Opened, Shrines_Opened, Cards_Played };
 
         public void CumulativeMetric(Metric metric, int value)
         {
@@ -110,31 +110,7 @@ namespace Assets.Scripts
             return newClassUnlocks;
         }
 
-        internal string GetTotalMetric(Metric metric)
-        {
-            if (totalProgress.cumulativeMetrics.ContainsKey(metric))
-            {
-                return totalProgress.cumulativeMetrics[metric].ToString();
-            }
-            else if (totalProgress.highestAchievedMetrics.ContainsKey(metric))
-            {
-                return totalProgress.highestAchievedMetrics.ContainsKey(metric).ToString();
-            }
-            return "0";
-        }
-
-        internal string GetCurrentRunMetric(Metric metric)
-        {
-            if (currentRunProgress.cumulativeMetrics.ContainsKey(metric))
-            {
-                return currentRunProgress.cumulativeMetrics[metric].ToString();
-            }
-            else if (currentRunProgress.highestAchievedMetrics.ContainsKey(metric))
-            {
-                return currentRunProgress.highestAchievedMetrics.ContainsKey(metric).ToString();
-            }
-            return "0";
-        }
+       
 
 
         private bool CheckUnlockConditions(PlayerClass unlock)

@@ -29,6 +29,22 @@ namespace Assets.Scripts
         public CardStatus cardStatus = CardStatus.InDeck;
 
         public CardgameManager.Team owner;
+
+        public CardgameManager.Team opponent
+        {
+            get
+            {
+                if (owner == CardgameManager.Team.Me)
+                {
+                    return CardgameManager.Team.Opponent;
+                }
+                else
+                {
+                    return CardgameManager.Team.Me;
+                }
+            }
+        }
+
         public int ownerMana
         {
             get
@@ -55,6 +71,21 @@ namespace Assets.Scripts
                 else
                 {
                     return DeckManager.monster;
+                }
+            }
+        }
+
+        public DeckManager opponentDeckManager
+        {
+            get
+            {
+                if (owner == CardgameManager.Team.Me)
+                {
+                    return DeckManager.monster;
+                }
+                else
+                {
+                    return DeckManager.player;
                 }
             }
         }
@@ -140,7 +171,6 @@ namespace Assets.Scripts
 
             //By storing the reciprocal of the move time we can use it by multiplying instead of dividing, this is more efficient.
             inverseMoveTime = 1f / moveTime;
-
         }
 
 
@@ -236,37 +266,63 @@ namespace Assets.Scripts
 
             EventManager.Instance.QueueAnimation(new CardEffect_GUI(cardEffect.value, owner, this, cardEffect.effect));
 
-            if (CardEffect.Effect.DealDamage.Equals(cardEffect.effect))
+            switch (cardEffect.effect)
             {
-                CardgameManager.instance.ApplyDamage(cardEffect.value, owner);
-
-                EventManager.Instance.TriggerEvent(new TableCard_Trigger(owner, CardEffect.Trigger.OnDealDamage));
+                case CardEffect.Effect.DealDamage:
+                    {
+                        CardgameManager.instance.ApplyDamage(cardEffect.value, owner);
+                        EventManager.Instance.TriggerEvent(new TableCard_Trigger(owner, CardEffect.Trigger.OnDealDamage));
+                        break;
+                    }
+                case CardEffect.Effect.Heal:
+                    {
+                        CardgameManager.instance.ApplyHealing(cardEffect.value, owner);
+                        EventManager.Instance.TriggerEvent(new TableCard_Trigger(owner, CardEffect.Trigger.OnHeal));
+                        break;
+                    }
+                case CardEffect.Effect.AddMaxMana:
+                    {
+                        CardgameManager.instance.IncreaseMaxMana(cardEffect.value, owner);
+                        break;
+                    }
+                case CardEffect.Effect.ReduceDamage:
+                    {
+                        CardgameManager.instance.IncreaseDamageReduction(cardEffect.value, owner);
+                        break;
+                    }
+                case CardEffect.Effect.IncreaseDamage:
+                    {
+                        CardgameManager.instance.IncreaseDamage(cardEffect.value, owner);
+                        break;
+                    }
+                case CardEffect.Effect.DrawCard:
+                    {
+                        deckManager.Draw();
+                        break;
+                    }
+                case CardEffect.Effect.DiscardCard:
+                    {
+                        opponentDeckManager.DiscardRandomCard();
+                        break;
+                    }
+                case CardEffect.Effect.SelfDamage:
+                    {
+                        CardgameManager.instance.ApplyDamage(cardEffect.value, opponent);
+                        EventManager.Instance.TriggerEvent(new TableCard_Trigger(owner, CardEffect.Trigger.OnDealDamage));
+                        break;
+                    }
+                case CardEffect.Effect.SelfDiscard:
+                    {
+                        deckManager.DiscardRandomCard();
+                        break;
+                    }
+                default:
+                    {
+                        Debug.LogError("Card effect not implemented yet!");
+                        break;
+                    }
             }
 
-            else if (CardEffect.Effect.Heal.Equals(cardEffect.effect))
-            {
-                CardgameManager.instance.ApplyHealing(cardEffect.value, owner);
-
-                EventManager.Instance.TriggerEvent(new TableCard_Trigger(owner, CardEffect.Trigger.OnHeal));
-            }
-
-            else if (CardEffect.Effect.AddMaxMana.Equals(cardEffect.effect))
-            {
-                CardgameManager.instance.IncreaseMaxMana(cardEffect.value, owner);
-            }
-
-            else if (CardEffect.Effect.ReduceDamage.Equals(cardEffect.effect))
-            {
-                CardgameManager.instance.IncreaseDamageReduction(cardEffect.value, owner);
-            }
-            else if (CardEffect.Effect.IncreaseDamage.Equals(cardEffect.effect))
-            {
-                CardgameManager.instance.IncreaseDamage(cardEffect.value, owner);
-            }
-            else
-            {
-                Debug.LogError("Card Effct not Implemented yet!");
-            }
         }
 
 
@@ -274,46 +330,63 @@ namespace Assets.Scripts
         {
             if (e.card == this)
             {
-                if (e.type == CardEffect.Effect.AddMaxMana)
+                switch (e.type)
                 {
-                    var text = cardEffectText.GetComponent<Text>();
+                    case CardEffect.Effect.AddMaxMana:
+                        {
+                            var text = cardEffectText.GetComponent<Text>();
+                            text.text = "Max Mana Increased +" + e.value + "!";
+                            StartCoroutine(EffectText(Color.blue));
+                            break;
+                        }
+                    case CardEffect.Effect.DealDamage:
+                        {
+                            var text = cardEffectText.GetComponent<Text>();
+                            text.text = "" + e.value + " Damage!";
+                            StartCoroutine(EffectText(Color.red));
+                            break;
+                        }
+                    case CardEffect.Effect.Heal:
+                        {
+                            var text = cardEffectText.GetComponent<Text>();
+                            text.text = "" + e.value + " Life Restored!";
+                            StartCoroutine(EffectText(Color.green));
+                            break;
+                        }
+                    case CardEffect.Effect.ReduceDamage:
+                        {
+                            var text = cardEffectText.GetComponent<Text>();
+                            text.text = "+" + e.value + " Damage Reduction!";
+                            StartCoroutine(EffectText(Color.grey));
+                            break;
+                        }
+                    case CardEffect.Effect.IncreaseDamage:
+                        {
+                            var text = cardEffectText.GetComponent<Text>();
+                            text.text = "+" + e.value + " Damage Boost!";
+                            StartCoroutine(EffectText(Color.yellow));
+                            break;
+                        }
+                    default:
+                        {
+                            Debug.LogError("No Animation for this effect");
+                            EventManager.Instance.processingQueue = false;
+                            break;
+                        }
+                    case CardEffect.Effect.SelfDamage:
+                        {
+                            var text = cardEffectText.GetComponent<Text>();
+                            text.text = "" + e.value + " Self Damage!";
+                            StartCoroutine(EffectText(Color.red));
+                            break;
+                        }
 
-                    text.text = "Max Mana Increased +" + e.value + "!";
-
-                    StartCoroutine(EffectText(Color.blue));
                 }
-                else if (e.type == CardEffect.Effect.DealDamage)
-                {
-                    var text = cardEffectText.GetComponent<Text>();
 
-                    text.text = "" + e.value + " Damage!";
 
-                    StartCoroutine(EffectText(Color.red));
-                }
-                else if (e.type == CardEffect.Effect.Heal)
-                {
-                    var text = cardEffectText.GetComponent<Text>();
 
-                    text.text = "" + e.value + " Life Restored!";
 
-                    StartCoroutine(EffectText(Color.green));
-                }
-                else if (e.type == CardEffect.Effect.ReduceDamage)
-                {
-                    var text = cardEffectText.GetComponent<Text>();
 
-                    text.text = "+" + e.value + " Damage Reduction!";
-
-                    StartCoroutine(EffectText(Color.grey));
-                }
-                else if (e.type == CardEffect.Effect.IncreaseDamage)
-                {
-                    var text = cardEffectText.GetComponent<Text>();
-
-                    text.text = "+" + e.value + " Damage Boost!";
-
-                    StartCoroutine(EffectText(Color.yellow));
-                }
             }
         }
 
@@ -383,7 +456,6 @@ namespace Assets.Scripts
             //If we already have a card at that position, place it where the last card is.
             else
             {
-
                 this.GetComponent<CanvasGroup>().alpha = (0f);
                 var lastChild = end.transform.GetChild(end.transform.childCount - 1);
                 endpos = lastChild.transform.position;
@@ -470,7 +542,7 @@ namespace Assets.Scripts
         private void DestroyCard()
         {
             DeckManager.player.DestroyCard(this.gameObject);
-            
+
         }
 
 

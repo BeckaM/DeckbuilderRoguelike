@@ -13,7 +13,7 @@ namespace Assets.Scripts
         internal void OpenAnvil()
         {
             GameManager.instance.modalPanel.Anvil("You found an Anvil!", "",  Decline);
-            GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.ShrinesOpened,1);
+            GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Shrines_Opened,1);
         }
 
         private void Decline()

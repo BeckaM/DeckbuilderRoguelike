@@ -21,9 +21,9 @@ namespace Assets.Scripts.Menu
             splashScreen.SetActive(false);
             playerSelect.SetActive(true);
         }
-             
-        
-       public void ShowStartScreen()
+
+
+        public void ShowStartScreen()
         {
             classSelect.HideClassSelect();
             playerSelect.SetActive(false);
@@ -52,22 +52,20 @@ namespace Assets.Scripts.Menu
 
         public void StartGame()
         {
-            List<string> classlist = new List<string>()
-            {
-                "Iron Soul",
-            };
+            //List<string> classlist = new List<string>()
+            //{
+            //    "Iron Soul",
+            //};
 
-            var tempClass = DAL.ObjectDAL.GetClasses(classlist);
-            var classchoice = tempClass[0];
-            GameManager.instance.playerClass = classchoice;
+            //var tempClass = DAL.ObjectDAL.GetClasses(classlist);
+            //var classchoice = tempClass[0];
+            //GameManager.instance.playerClass = classchoice;
             GameManager.instance.progressManager.currentRunProgress = new PlayerProgress();
-
             //Initialize the starting deck and create the cards.
-            DeckManager.player.StartingDeck(classchoice.Startingdeck);
-
+            
             SceneManager.LoadScene("Scene 3D");
         }
 
-      
+
     }
 }

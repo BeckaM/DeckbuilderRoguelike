@@ -114,7 +114,7 @@ namespace Assets.Scripts
             {
                 //Add one to our level number.
                 level++;
-                progressManager.HighestAchievedMetric(ProgressManager.Metric.HighestDungeonLevel, level);
+                progressManager.HighestAchievedMetric(ProgressManager.Metric.Highest_Dungeon_Level, level);
                 //Call InitGame to initialize our level.
                 InitGame();
             }
@@ -210,7 +210,7 @@ namespace Assets.Scripts
                     lootType = Content.Gold;
                 }
 
-                progressManager.CumulativeMetric(ProgressManager.Metric.MonsterKills, 1);                               
+                progressManager.CumulativeMetric(ProgressManager.Metric.Monsters_Killed, 1);                               
             }
         }
 
@@ -254,8 +254,14 @@ namespace Assets.Scripts
             progressManager.EndRun();
             
             dungeonUI.gameOverScript.UpdateNewUnlocks(progressManager.GetNewClassUnlocks(), progressManager.GetNewPerkUnlocks());
-                       
-            dungeonUI.gameOverPanel.SetActive(true);           
+
+            dungeonUI.gameOverScript.GameOver();           
+        }
+
+        public void BackToMenu()
+        {
+            Destroy(this);
+            SceneManager.LoadScene("Start");
         }
 
 
@@ -296,7 +302,7 @@ namespace Assets.Scripts
             {
                 dungeonUI.LevelUpButton.SetActive(false);
             }
-            progressManager.HighestAchievedMetric(ProgressManager.Metric.HighestPlayerLevel, playerLevel);
+            progressManager.HighestAchievedMetric(ProgressManager.Metric.Highest_Player_Level, playerLevel);
         }
 
 
@@ -306,7 +312,7 @@ namespace Assets.Scripts
             dungeonUI.UpdateGoldText();
             if(gain > 0)
             {
-                progressManager.CumulativeMetric(ProgressManager.Metric.GoldEarned, gain);
+                progressManager.CumulativeMetric(ProgressManager.Metric.Gold_Earned, gain);
             }
         }      
     }

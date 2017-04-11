@@ -11,8 +11,8 @@ namespace Assets.Scripts
     {
         public string className;
 
-        public Dictionary<ProgressManager.Metric, int> cumulativeMetrics = new Dictionary<ProgressManager.Metric, int>();
-        public Dictionary<ProgressManager.Metric, int> highestAchievedMetrics = new Dictionary<ProgressManager.Metric, int>();
+        public MyDictionary cumulativeMetrics = new MyDictionary();
+        public MyDictionary highestAchievedMetrics = new MyDictionary();
 
     }
 }

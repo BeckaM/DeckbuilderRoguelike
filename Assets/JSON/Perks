@@ -1,1 +1,1 @@
-{"perkList":[{"perkName":"Monster Slayer","perkEffectText":"Increase starting HP by 5.","perkCost":1,"perkConditionText":"Defeat 15 monsters.","condition":0,"conditionValue":15}]}
+{"perkList":[{"perkName":"Monster Slayer","perkEffectText":"Increase starting HP by 5.","perkCost":1,"conditionText":"","condition":0,"conditionValue":5}]}

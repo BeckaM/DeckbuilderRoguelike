@@ -64,7 +64,7 @@ namespace Assets.Scripts
         internal void OpenShrine()
         {
             GameManager.instance.modalPanel.Shrine(shrineType, shrineDescription, prayer, Decline, needsCardSelection);
-            GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.ShrinesOpened, 1);
+            GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Shrines_Opened, 1);
         }
 
         private void Decline()

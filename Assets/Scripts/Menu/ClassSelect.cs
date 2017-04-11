@@ -86,6 +86,7 @@ namespace Assets.Scripts.Menu
         {
             GameManager.instance.playerClass = selectedClass;
             GameManager.instance.progressManager.SetProgressClass(selectedClass);
+            DeckManager.player.StartingDeck(selectedClass.Startingdeck);
             mainMenu.ShowPerkSelect();            
         }
 

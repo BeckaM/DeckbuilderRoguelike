@@ -17,26 +17,46 @@ namespace Assets.Scripts.Menu
         public GameObject classPanel;
         public TMP_Text monsterKillsClass;
 
-        public Button closeButton;      
+        public Button closeButton;
+
+        public GameObject metricObject;
+        public GameObject totalProgressPane;
 
         public void ShowProgress()
         {
-            var progress = GameManager.instance.progressManager;
+            var cumulativeMetrics = GameManager.instance.progressManager.totalProgress.cumulativeMetrics;
+            var highestAchievedMetrics = GameManager.instance.progressManager.totalProgress.highestAchievedMetrics;
 
-            monsterKills.text = "Monster kills: " + progress.GetTotalMetric(ProgressManager.Metric.MonsterKills);
-           
+            foreach (ProgressManager.Metric metric in cumulativeMetrics.Keys)
+            {
+                var metricDisplay = Instantiate(metricObject);
+                metricDisplay.transform.SetParent(totalProgressPane.transform, false);
+                var script = metricDisplay.GetComponent<MetricDisplay>();
+
+                script.PopulateMetric(metric, cumulativeMetrics[metric]);
+            }
+
+            foreach (ProgressManager.Metric metric in highestAchievedMetrics.Keys)
+            {
+                var metricDisplay = Instantiate(metricObject);
+                metricDisplay.transform.SetParent(totalProgressPane.transform, false);
+                var script = metricDisplay.GetComponent<MetricDisplay>();
+
+                script.PopulateMetric(metric, highestAchievedMetrics[metric]);
+            }
         }
 
+        
         public void ShowClassProgress(PlayerClass selectedClass)
         {
             var progress = GameManager.instance.progressManager.totalProgress;
             var currentClass = progress.classProgressList.Find(item => item.className.Equals(selectedClass.ClassName));
             classPanel.SetActive(true);
 
-            monsterKillsClass.text = currentClass.cumulativeMetrics[ProgressManager.Metric.MonsterKills].ToString();
+            monsterKillsClass.text = currentClass.cumulativeMetrics[ProgressManager.Metric.Monsters_Killed].ToString();
 
         }
 
-        
+
     }
 }

@@ -139,7 +139,7 @@ namespace Assets.Scripts
                 enemy.life -= ((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0;
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - enemy.ward, enemy.ward, player.damageBoost, Team.Opponent));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
-                GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.DamageDealt,((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0);
+                GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Damage_Dealt,((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0);
             }
             else
             {
@@ -160,7 +160,7 @@ namespace Assets.Scripts
                     player.life = player.maxLife;
                 }
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
-                GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Healing, value);
+                GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Healing_Done, value);
             }
             else
             {
@@ -284,6 +284,7 @@ namespace Assets.Scripts
                 DeckManager.player.cardsInHand.Remove(card.gameObject);
                 player.mana = player.mana - card.card.cost;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, card.owner));
+                GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Cards_Played, 1);
             }
             else
             {
@@ -340,9 +341,7 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.table));
                 card.moveCounter++;
             }
-            CheckWinConditions();
-
-            GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.CardsPlayed, 1);
+            CheckWinConditions();            
         }
     }
 }

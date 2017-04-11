@@ -186,16 +186,16 @@ namespace Assets.Scripts
             var cardobject = ObjectDAL.GetCard(cardToCreate);
             deckStringHolder.Add(cardobject.cardName);
             //  var deck = this.transform;
-            
+
             var card = CreateCardObject(cardobject);
             return card;
         }
 
         public GameObject AddCardtoDeck(Card cardToCreate)
-        {           
+        {
             deckStringHolder.Add(cardToCreate.cardName);
             //  var deck = this.transform;
-            var card =CreateCardObject(cardToCreate);
+            var card = CreateCardObject(cardToCreate);
             return card;
         }
 
@@ -215,11 +215,29 @@ namespace Assets.Scripts
         }
 
 
+        public void DiscardRandomCard()
+        {
+            if (cardsInHand.Count > 0)
+            {
+                var card = cardsInHand[Random.Range(0, cardsInHand.Count)];
+                cardsInHand.Remove(card);
+                var manager = card.GetComponent<CardManager>();
+                manager.SetCardPosition(CardManager.CardStatus.InDiscard);
+
+                EventManager.Instance.AddListener<MoveCard_GUI>(manager.Move);
+                manager.moveCounter++;
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, hand, manager.discard));
+
+
+                //Check for objects that trigger on discard card.
+                EventManager.Instance.TriggerEvent(new TableCard_Trigger(manager.owner, CardEffect.Trigger.OnDiscard));
+            }
+        }
+
         public void Draw()
         {
-            if (cardsInDeck.Count != 0)
+            if (cardsInDeck.Count > 0)
             {
-
                 //Draw card logic.
                 int random = Random.Range(0, cardsInDeck.Count);
                 GameObject tempCard = cardsInDeck[random];
@@ -227,11 +245,8 @@ namespace Assets.Scripts
                 //Prepare the card for being moved
                 CardManager manager = tempCard.GetComponent<CardManager>();
                 manager.SetCardPosition(CardManager.CardStatus.InHand);
-                //manager.startPoint = deckholder;
-                //manager.endPoint = hand;
 
                 cardsInDeck.Remove(tempCard);
-                // cardsInHand.Add(tempCard);
 
                 //Queue up a move card animation.
                 EventManager.Instance.AddListener<MoveCard_GUI>(manager.Move);
@@ -239,6 +254,7 @@ namespace Assets.Scripts
                 manager.moveCounter++;
 
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
+
                 //Check for objects that trigger on draw card.
                 EventManager.Instance.TriggerEvent(new TableCard_Trigger(manager.owner, CardEffect.Trigger.OnDraw));
             }

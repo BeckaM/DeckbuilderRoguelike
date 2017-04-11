@@ -14,7 +14,7 @@ namespace Assets.Scripts
         public Effect effect;
         public int value;
 
-        public enum Trigger { Instant, Passive, StartOfTurn, EndOfTurn, OnTakeDamage, OnDealDamage, OnDraw, OnPlayCard, OnHeal, OnExpire };
+        public enum Trigger { Instant, Passive, StartOfTurn, EndOfTurn, OnTakeDamage, OnDealDamage, OnDraw, OnPlayCard, OnHeal, OnExpire, OnDiscard };
         public Trigger trigger;
         public CardgameManager.Team triggeredBy;
 
