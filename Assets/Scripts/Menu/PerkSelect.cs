@@ -65,6 +65,7 @@ namespace Assets.Scripts.Menu
                 selectedPerk.active = false;
                 perkPoints += selectedPerk.perk.perkCost;
                 perkPointsUI.text = perkPoints.ToString();
+                perkChoices.Remove(selectedPerk.perk);
             }
             else
             {
@@ -82,6 +83,8 @@ namespace Assets.Scripts.Menu
 
         public void Select()
         {
+            GameManager.instance.perkManager.activePerks = perkChoices;
+            GameManager.instance.perkManager.ActivatePerks();
             mainMenu.StartGame();
         }
 

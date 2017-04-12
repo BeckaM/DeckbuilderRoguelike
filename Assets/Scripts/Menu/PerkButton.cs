@@ -27,6 +27,7 @@ namespace Assets.Scripts.Menu
         {
             this.perk = perk;
             perkName.text = perk.perkName;
+            perkCost.text = "Cost: " + perk.perkCost.ToString();
         }
 
         public void LockPerk(bool locked)

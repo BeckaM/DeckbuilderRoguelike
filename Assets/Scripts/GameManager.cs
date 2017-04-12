@@ -28,6 +28,8 @@ namespace Assets.Scripts
 
         public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
 
+        public PerkManager perkManager= new PerkManager();
+
         public GameObject monsterDeck;
 
         private GameObject cardGameCanvas;

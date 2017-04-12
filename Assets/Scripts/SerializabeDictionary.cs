@@ -588,4 +588,4 @@ namespace Assets.Scripts
     {
     }
 
-    }
+}

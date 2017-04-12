@@ -52,14 +52,6 @@ namespace Assets.Scripts.Menu
 
         public void StartGame()
         {
-            //List<string> classlist = new List<string>()
-            //{
-            //    "Iron Soul",
-            //};
-
-            //var tempClass = DAL.ObjectDAL.GetClasses(classlist);
-            //var classchoice = tempClass[0];
-            //GameManager.instance.playerClass = classchoice;
             GameManager.instance.progressManager.currentRunProgress = new PlayerProgress();
             //Initialize the starting deck and create the cards.
             
