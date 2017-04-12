@@ -236,12 +236,10 @@ namespace Assets.Scripts
             //Set Card Background pane.
             cardPanel.color = card.backgroundColor;
 
-            //Set Card Title
-            //   var titleComponent = cardName.GetComponent<Text>();
+            //Set Card Title          
             cardName.text = card.cardName;
 
-            //Set Card Description
-            //  var cardtext = cardDescription.GetComponent<Text>();
+            //Set Card Description           
             descriptionText.text = card.cardText;
 
             duration = card.cardDuration;
@@ -330,41 +328,49 @@ namespace Assets.Scripts
         {
             if (e.card == this)
             {
+                var text = cardEffectText.GetComponent<Text>();
                 switch (e.type)
                 {
                     case CardEffect.Effect.AddMaxMana:
-                        {
-                            var text = cardEffectText.GetComponent<Text>();
+                        {                            
                             text.text = "Max Mana Increased +" + e.value + "!";
                             StartCoroutine(EffectText(Color.blue));
                             break;
                         }
                     case CardEffect.Effect.DealDamage:
-                        {
-                            var text = cardEffectText.GetComponent<Text>();
+                        {                            
                             text.text = "" + e.value + " Damage!";
                             StartCoroutine(EffectText(Color.red));
                             break;
                         }
                     case CardEffect.Effect.Heal:
-                        {
-                            var text = cardEffectText.GetComponent<Text>();
+                        {                            
                             text.text = "" + e.value + " Life Restored!";
                             StartCoroutine(EffectText(Color.green));
                             break;
                         }
                     case CardEffect.Effect.ReduceDamage:
-                        {
-                            var text = cardEffectText.GetComponent<Text>();
+                        {                            
                             text.text = "+" + e.value + " Damage Reduction!";
                             StartCoroutine(EffectText(Color.grey));
                             break;
                         }
                     case CardEffect.Effect.IncreaseDamage:
-                        {
-                            var text = cardEffectText.GetComponent<Text>();
+                        {                            
                             text.text = "+" + e.value + " Damage Boost!";
                             StartCoroutine(EffectText(Color.yellow));
+                            break;
+                        }
+                    case CardEffect.Effect.SelfDamage:
+                        {                           
+                            text.text = "" + e.value + " Self Damage!";
+                            StartCoroutine(EffectText(Color.red));
+                            break;
+                        }
+                    case CardEffect.Effect.DiscardCard:
+                        {                            
+                            text.text = "Discard " + e.value + " Card!";
+                            StartCoroutine(EffectText(Color.red));
                             break;
                         }
                     default:
@@ -373,13 +379,7 @@ namespace Assets.Scripts
                             EventManager.Instance.processingQueue = false;
                             break;
                         }
-                    case CardEffect.Effect.SelfDamage:
-                        {
-                            var text = cardEffectText.GetComponent<Text>();
-                            text.text = "" + e.value + " Self Damage!";
-                            StartCoroutine(EffectText(Color.red));
-                            break;
-                        }
+                   
 
                 }
 

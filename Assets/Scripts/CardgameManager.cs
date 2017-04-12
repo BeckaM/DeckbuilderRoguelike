@@ -83,6 +83,7 @@ namespace Assets.Scripts
 
             //enemy.UpdateLife();
             cardgameUI.monsterPortrait.sprite = enemy.monsterRenderer.sprite;
+            cardgameUI.monsterPortrait.color = enemy.enemy.spriteColor;
 
             // player.UpdateLife();            
             player.playerImage = player.sprites[GameManager.instance.playerClass.SpriteIcon];

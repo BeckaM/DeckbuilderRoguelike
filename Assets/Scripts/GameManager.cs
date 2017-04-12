@@ -13,9 +13,9 @@ namespace Assets.Scripts
         public List<Sprite> classImages;
 
         public ProgressManager progressManager = new ProgressManager();
-        
+
         public int gold { get; private set; }
-                
+
         public int playerLevel = 0;
         public int playerXP = 0;
         public int nextLVLXP = 20;
@@ -39,7 +39,7 @@ namespace Assets.Scripts
                 return dungeonCanvas.GetComponent<DungeonUI>();
             }
         }
-        
+
         private DungeonManager boardScript;                     //Store a reference to our BoardManager which will set up the level.
 
         public ModalPanel modalPanel
@@ -49,7 +49,7 @@ namespace Assets.Scripts
                 return dungeonUI.modalPanelObject.GetComponent<ModalPanel>();
             }
         }
-        
+
         public DeckPanel deckPanel
         {
             get
@@ -62,7 +62,7 @@ namespace Assets.Scripts
         public Content lootType;
         public Card cardLoot;
         public int goldLoot;
-        
+
         private int level = 0;                                  //Current level number, expressed in game as "Level 1".
 
         public bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
@@ -88,7 +88,7 @@ namespace Assets.Scripts
 
             //Get a component reference to the attached BoardManager script
             boardScript = GetComponent<DungeonManager>();
-                        
+
             //Call the InitGame function to initialize the first level 
             // InitGame();
         }
@@ -210,7 +210,7 @@ namespace Assets.Scripts
                     lootType = Content.Gold;
                 }
 
-                progressManager.CumulativeMetric(ProgressManager.Metric.Monsters_Killed, 1);                               
+                progressManager.CumulativeMetric(ProgressManager.Metric.Monsters_Killed, 1);
             }
         }
 
@@ -249,14 +249,14 @@ namespace Assets.Scripts
 
         //GameOver is called when the player reaches 0 life points
         public void GameOver()
-        {                       
+        {
+            dungeonUI.gameOverScript.UpdateNewUnlocks(progressManager.GetNewClassUnlocks(), progressManager.GetNewPerkUnlocks());
             dungeonUI.gameOverScript.UpdateGameOverText(level, playerLevel);
             progressManager.EndRun();
-            
-            dungeonUI.gameOverScript.UpdateNewUnlocks(progressManager.GetNewClassUnlocks(), progressManager.GetNewPerkUnlocks());
 
-            dungeonUI.gameOverScript.GameOver();           
+            dungeonUI.gameOverScript.GameOver();
         }
+
 
         public void BackToMenu()
         {
@@ -287,7 +287,7 @@ namespace Assets.Scripts
                 rewardList.Add(newCard);
             }
 
-           modalPanel.LevelUp(rewardList, LevelUpComplete);
+            modalPanel.LevelUp(rewardList, LevelUpComplete);
         }
 
 
@@ -295,10 +295,10 @@ namespace Assets.Scripts
         {
             AddLoot();
             playerLevel++;
-            var increase = 1.4* nextLVLXP;
+            var increase = 1.4 * nextLVLXP;
             nextLVLXP = nextLVLXP + (int)increase;
             dungeonUI.UpdateXPText();
-            if(playerXP < nextLVLXP)
+            if (playerXP < nextLVLXP)
             {
                 dungeonUI.LevelUpButton.SetActive(false);
             }
@@ -310,10 +310,10 @@ namespace Assets.Scripts
         {
             gold = gold + gain;
             dungeonUI.UpdateGoldText();
-            if(gain > 0)
+            if (gain > 0)
             {
                 progressManager.CumulativeMetric(ProgressManager.Metric.Gold_Earned, gain);
             }
-        }      
+        }
     }
 }

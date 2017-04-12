@@ -12,12 +12,15 @@ namespace Assets.Scripts.Menu
         public PerkSelect perkSelect;
         public GameObject lockPanel;
         public TMP_Text perkName;
+        public TMP_Text perkCost;
 
         public Perk perk;
+        
+        public bool active;
 
         public void selectPerk()
         {
-            perkSelect.SelectPerk(perk);
+            perkSelect.SelectPerk(this);
         }
 
         public void PopulatePerkButton(Perk perk)

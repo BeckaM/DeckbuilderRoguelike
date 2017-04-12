@@ -104,15 +104,23 @@ namespace Assets.Scripts
 
             foreach (PlayerClass pClass in lockedClasses)
             {
-                CheckUnlockConditions(pClass);
+                if (CheckUnlockConditions(pClass))
+                {
+                    newClassUnlocks.Add(pClass);
+                }
+            }
+
+            foreach (PlayerClass pClass in newClassUnlocks)
+            {
+                var unlockedClass = new ClassProgress();
+                unlockedClass.className = pClass.ClassName;
+                totalProgress.classProgressList.Add(unlockedClass);                
             }
 
             return newClassUnlocks;
         }
 
        
-
-
         private bool CheckUnlockConditions(PlayerClass unlock)
         {
             if (totalProgress.cumulativeMetrics.ContainsKey(unlock.condition))
@@ -131,12 +139,34 @@ namespace Assets.Scripts
         {
             List<Perk> newPerkUnlocks = new List<Perk>();
 
-            foreach (PlayerClass pClass in lockedClasses)
-            {
-
+            foreach (Perk perk in lockedPerks)
+            {                
+                if (CheckUnlockConditions(perk))
+                {
+                    newPerkUnlocks.Add(perk);
+                }
             }
 
+            foreach (Perk perk in newPerkUnlocks)
+            {
+                totalProgress.perkProgressList.Add(perk.perkName);
+            }
+
+
             return newPerkUnlocks;
+        }
+
+        private bool CheckUnlockConditions(Perk unlock)
+        {
+            if (totalProgress.cumulativeMetrics.ContainsKey(unlock.condition))
+            {
+                return unlock.conditionValue <= totalProgress.cumulativeMetrics[unlock.condition];
+            }
+            else if (totalProgress.highestAchievedMetrics.ContainsKey(unlock.condition))
+            {
+                return unlock.conditionValue <= totalProgress.highestAchievedMetrics[unlock.condition];
+            }
+            return false;
         }
 
 

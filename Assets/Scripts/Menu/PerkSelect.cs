@@ -11,18 +11,26 @@ namespace Assets.Scripts.Menu
     public class PerkSelect : MonoBehaviour
     {
         public Menu mainMenu;
-                                
-        public Perk selectedPerk;        
-        public TMP_Text selectedPerkText;
+
+        public PerkButton selectedPerk;
+        public TMP_Text selectedPerkNameText;
+        public TMP_Text selectedPerkEffectText;
         public Button selectButton;
 
         public GameObject perkButtonObj;
         public GameObject perkPanel;
+        public GameObject perkChoicePanel;
+
+        public int perkPoints = 5;
+        public TMP_Text perkPointsUI;
+
+        public List<Perk> perkChoices;
 
         // Use this for initialization
         void Start()
         {
             selectButton.interactable = false;
+            perkPointsUI.text = perkPoints.ToString();
 
             var perks = DAL.ObjectDAL.GetAllPerks();
 
@@ -40,17 +48,40 @@ namespace Assets.Scripts.Menu
         }
 
 
-        public void SelectPerk(Perk perk)
+        public void SelectPerk(PerkButton perkButton)
         {
-            selectedPerk = perk;            
-            selectedPerkText.text = perk.perkEffectText;
+            selectedPerk = perkButton;
+            selectedPerkEffectText.text = perkButton.perk.perkEffectText;
+            selectedPerkNameText.text = perkButton.perk.perkName;
 
             selectButton.interactable = true;
         }
 
+        public void AddRemovePerk()
+        {
+            if (selectedPerk.active)
+            {
+                selectedPerk.transform.SetParent(perkPanel.transform);
+                selectedPerk.active = false;
+                perkPoints += selectedPerk.perk.perkCost;
+                perkPointsUI.text = perkPoints.ToString();
+            }
+            else
+            {
+                if (perkPoints >= selectedPerk.perk.perkCost)
+                {
+                    perkChoices.Add(selectedPerk.perk);
+                    selectedPerk.transform.SetParent(perkChoicePanel.transform);
+                    selectedPerk.active = true;
+                    perkPoints -= selectedPerk.perk.perkCost;
+                    perkPointsUI.text = perkPoints.ToString();
+                }
+            }
+        }
+
 
         public void Select()
-        {           
+        {
             mainMenu.StartGame();
         }
 
