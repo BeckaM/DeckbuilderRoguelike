@@ -189,6 +189,7 @@ namespace Assets.Scripts
 
         public void ReturnFromCardgame(bool win, Card cardReward, int goldReward)
         {
+           
             dungeonUI.deckPanelObject.SetActive(false);
             dungeonUI.UpdateLifeText();
 

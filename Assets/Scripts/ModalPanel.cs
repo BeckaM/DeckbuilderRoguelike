@@ -199,7 +199,7 @@ namespace Assets.Scripts
             selectedCard = card;
             prayButton.interactable = true;
 
-            if (GameManager.instance.gold >= 10)
+            if (GameManager.instance.gold >= 50)
             {
                 anvilUpgradeButton.interactable = true;
             }
@@ -208,7 +208,7 @@ namespace Assets.Scripts
                 anvilUpgradeButton.interactable = false;
             }
 
-            if (GameManager.instance.gold >= 3)
+            if (GameManager.instance.gold >= 20)
             {
                 anvilDestroyButton.interactable = true;
             }
@@ -294,7 +294,7 @@ namespace Assets.Scripts
         }
 
 
-        void ClearPanel()
+        private void ClearPanel()
         {
             this.title.text = "";
             this.subText.text = "";
@@ -314,5 +314,17 @@ namespace Assets.Scripts
 
             prayButton.onClick.RemoveAllListeners();
         }
+
+        public void PayForAnvil(string type)
+        {
+            if(type == "Destroy")
+            {
+                GameManager.instance.ModifyGold(-20);
+            }
+            if (type == "Upgrade")
+            {
+                GameManager.instance.ModifyGold(-50);
+            }
+        }                
     }
 }

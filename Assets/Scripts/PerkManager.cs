@@ -12,6 +12,9 @@ namespace Assets.Scripts
     {
         public List<Perk> activePerks;
 
+        public int bonusInitialDraw;
+        public float goldIncrease=1.0F;
+
         public void ActivatePerks()
         {
             foreach (Perk perk in activePerks)
@@ -31,14 +34,38 @@ namespace Assets.Scripts
                         GameManager.instance.lifeHolder += 5;
                         break;
                     }
+                case "Thirst for Blood":
+                    {
+                        GameManager.instance.maxLife += 10;
+                        GameManager.instance.lifeHolder += 10;
+                        break;
+                    }
+                case "Wisdom From Below":
+                    {
+                        bonusInitialDraw++;
+                        break;
+                    }
+                case "Mind Over Matter":
+                    {
+                        bonusInitialDraw+=2;
+                        break;
+                    }
+                case "Fools Greed":
+                    {
+                        goldIncrease += 0.1F;
+                        break;
+                    }
+                case "Buried Fortune":
+                    {
+                        goldIncrease += 0.2F;
+                        break;
+                    }
                 default:
                     {
                         Debug.LogError("Perk: " + perk.perkName + " . Not implemented!");
                         break;
                     }
-
             }
-
         }
 
     }

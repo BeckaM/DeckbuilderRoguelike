@@ -17,7 +17,8 @@ namespace Assets.Scripts
 
         public void PopulateGold(int goldValue)
         {
-            this.goldValue = goldValue;
+            var gold = goldValue * GameManager.instance.perkManager.goldIncrease;
+            this.goldValue =(int)gold;
             goldDescription.text = "" + goldValue + " Gold Pieces.";            
             goldName.text = "Gold!";
         }

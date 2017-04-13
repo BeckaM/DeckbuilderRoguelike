@@ -130,7 +130,7 @@ namespace Assets.Scripts
         private void GetShrines(int Level)
         {
 
-            //Determine number of shrines based on current level number, based on a logarithmic progression
+            //Determine number of shrines
             int shrineCount = 1;
 
             for (int i = 0; i < shrineCount; i++)
@@ -147,9 +147,13 @@ namespace Assets.Scripts
 
         private void GetAnvils(int Level)
         {
+            int anvilCount=0;
 
-            //Determine number of shrines based on current level number, based on a logarithmic progression
-            int anvilCount = 1;
+            //Determine number of Anvils         
+            if (Level % 2 == 0)
+            {
+                anvilCount = 1;
+            }
 
             for (int i = 0; i < anvilCount; i++)
             {

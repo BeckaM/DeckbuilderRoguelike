@@ -71,43 +71,7 @@ namespace Assets.Scripts
         {
             this.gameObject.SetActive(false);
             GameManager.instance.doingSetup = false;
-        }
-
-        //private void Duplication()
-        //{
-        //    Debug.Log("Prayer of Duplication triggered");
-        //    GameManager.instance.deckPanel.DuplicateCardPanel();
-
-        //    this.gameObject.SetActive(false);
-        //    GameManager.instance.doingSetup = false;
-        //}
-
-        //private void RandomDestroyThree()
-        //{
-        //    Debug.Log("Prayer of Chaos triggered");
-        //    GameManager.instance.deckPanel.DestroyRandomCardsPanel(3);
-
-        //    this.gameObject.SetActive(false);
-        //    GameManager.instance.doingSetup = false;
-        //}
-
-        //private void Destruction()
-        //{
-        //    Debug.Log("Prayer of Destruction triggered");
-        //    GameManager.instance.deckPanel.DestroyCardPanel();
-
-        //    this.gameObject.SetActive(false);
-        //    GameManager.instance.doingSetup = false;
-        //}
-
-        //private void Upgrade()
-        //{
-        //    Debug.Log("Prayer of Evolution triggered");
-        //    GameManager.instance.deckPanel.UpgradeCardPanel();
-
-        //    this.gameObject.SetActive(false);
-        //    GameManager.instance.doingSetup = false;
-        //}
+        }              
     }
 }
 

@@ -65,9 +65,15 @@ namespace Assets.Scripts
 
         private void DrawStartingHands()
         {
-            for (var i = 0; i < 3; i++)
+            var playerStartHand = 3 + GameManager.instance.perkManager.bonusInitialDraw;
+            for (var i = 0; i < playerStartHand; i++)
             {
-                DeckManager.player.Draw();
+                DeckManager.player.Draw();               
+            }
+
+            var monsterStarthand = 3;
+            for (var i = 0; i < monsterStarthand; i++)
+            {                
                 DeckManager.monster.Draw();
             }
         }

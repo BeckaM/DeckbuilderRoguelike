@@ -20,7 +20,7 @@ namespace Assets.Scripts
         private Dictionary<System.Delegate, EventDelegate> delegateLookup = new Dictionary<System.Delegate, EventDelegate>();
         private Dictionary<System.Delegate, System.Delegate> onceLookups = new Dictionary<System.Delegate, System.Delegate>();
 
-        public bool processingQueue=false;
+        public bool processingQueue = false;
 
         // override so we don't have the typecast the object
         public static EventManager Instance
@@ -103,6 +103,9 @@ namespace Assets.Scripts
             delegates.Clear();
             delegateLookup.Clear();
             onceLookups.Clear();
+
+            fast_eventQueue.Clear();
+            seq_eventQueue.Clear();
         }
 
         public bool HasListener<T>(EventDelegate<T> del) where T : GameEvent
@@ -112,7 +115,7 @@ namespace Assets.Scripts
 
         public void TriggerEvent(GameEvent e)
         {
-            
+
             EventDelegate del;
             if (delegates.TryGetValue(e.GetType(), out del))
             {
@@ -166,8 +169,8 @@ namespace Assets.Scripts
             seq_eventQueue.Enqueue(evt);
             return true;
         }
-        
-       
+
+
 
         //Every update cycle the queue is processed, if the queue processing is limited,
         //a maximum processing time per update can be set after which the events will have
@@ -198,8 +201,8 @@ namespace Assets.Scripts
 
                 GameEvent evt = seq_eventQueue.Dequeue() as GameEvent;
                 TriggerEvent(evt);
-                
-               
+
+
             }
         }
 
