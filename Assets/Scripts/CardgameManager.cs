@@ -223,7 +223,7 @@ namespace Assets.Scripts
                 cardRewards.Add(cardReward);
             }
                         
-            //goldReward = Random.Range(5 + enemy.enemy.BaseEnemyLevel, 10 + enemy.enemy.BaseEnemyLevel);
+            var goldReward = Random.Range(5 + enemy.enemy.BaseEnemyLevel, 10 + enemy.enemy.BaseEnemyLevel);
 
             player.mana = 1;
             player.maxMana = 1;
@@ -233,7 +233,7 @@ namespace Assets.Scripts
             GameManager.instance.GainXP(enemy.experienceReward);
             GameManager.instance.lifeHolder = player.life;
 
-            EventManager.Instance.QueueAnimation(new EndGame_GUI(win, cardRewards));
+            EventManager.Instance.QueueAnimation(new EndGame_GUI(win, cardRewards, goldReward));
         }
 
 
@@ -253,9 +253,7 @@ namespace Assets.Scripts
                 this.selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
             }
             this.selectedCard = selectedCard;
-            //   selectedCard.GetComponent<CardManager>().cardDescription.SetActive(true);
             selectedCard.GetComponent<Selectable>().outline.enabled = true;
-            //   selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(true);
             selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
         }
 

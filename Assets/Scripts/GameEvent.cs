@@ -26,13 +26,13 @@ namespace Assets.Scripts
     {
         public bool playerWon { get; private set; }
         public List<Card> cardRewards { get; private set; }
-      //  public int goldReward { get; private set; }
+        public int goldReward { get; private set; }
 
-        public EndGame_GUI(bool playerWon, List<Card> cardRewards)
+        public EndGame_GUI(bool playerWon, List<Card> cardRewards, int goldReward)
         {
             this.playerWon = playerWon;
             this.cardRewards = cardRewards;
-            //this.goldReward = goldReward;
+            this.goldReward = goldReward;
         }
     }
 

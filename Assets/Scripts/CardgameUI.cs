@@ -129,7 +129,7 @@ namespace Assets.Scripts
             DeckManager.player.Cleanup();
             DeckManager.monster.Cleanup();
 
-            GameManager.instance.ReturnFromCardgame(end.playerWon, end.cardRewards);
+            GameManager.instance.ReturnFromCardgame(end.playerWon, end.cardRewards, end.goldReward);
 
             EventManager.Instance.processingQueue = false;
 

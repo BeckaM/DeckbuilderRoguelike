@@ -187,7 +187,7 @@ namespace Assets.Scripts
         }
 
 
-        public void ReturnFromCardgame(bool win, List<Card> cardRewards)
+        public void ReturnFromCardgame(bool win, List<Card> cardRewards, int goldReward)
         {
             dungeonUI.deckPanelObject.SetActive(false);
             dungeonUI.UpdateLifeText();
@@ -197,22 +197,8 @@ namespace Assets.Scripts
                 GameOver();
             }
             else
-            {
-
-                // cardLoot = cardRewards;
-                //  goldLoot = goldReward;
-                //var rand = UnityEngine.Random.Range(0, 10);
-                //if (rand < 5)
-                //{
-                //    modalPanel.Chest("Victory!", "The monster drops a card. Add to your deck?", cardReward, AddLoot, DeclineLoot);
-                //    lootType = Content.Card;
-                //}
-                //else
-                //{
-                //    modalPanel.Chest("Victory!", "The monster drops some gold.", goldReward, AddLoot);
-                //    lootType = Content.Gold;
-                //}
-                modalPanel.MonsterLoot(cardRewards, AddLoot);
+            {                                
+                modalPanel.MonsterLoot(cardRewards, goldReward, AddLoot);
                 progressManager.CumulativeMetric(ProgressManager.Metric.Monsters_Killed, 1);
             }
         }

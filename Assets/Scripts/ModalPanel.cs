@@ -110,7 +110,7 @@ namespace Assets.Scripts
             closeButton.gameObject.SetActive(true);
         }
 
-        internal void MonsterLoot(List<Card> cardRewards, UnityAction complete)
+        internal void MonsterLoot(List<Card> cardRewards, int goldReward,  UnityAction complete)
         {
             modalPanelObject.SetActive(true);
             isActive = true;
@@ -130,6 +130,12 @@ namespace Assets.Scripts
                 var cardScript = tempCard.GetComponent<CardManager>();
                 cardScript.PopulateCard(card);
             }
+
+            var gold = Instantiate(goldObject);
+            selections.Add(gold);
+            gold.transform.SetParent(choicesPanel.transform, false);
+            var goldscript = gold.GetComponent<Gold>();
+            goldscript.PopulateGold(goldReward);
 
             addButton.onClick.AddListener(complete);
             addButton.onClick.AddListener(ClosePanel);
@@ -286,23 +292,64 @@ namespace Assets.Scripts
             anvilUpgradeButton.interactable = false;
         }
 
-
         internal void Select(GameObject selection)
         {
-            if (currentSelection)
+            addButton.GetComponent<Button>().interactable = true;
+            if (this.currentSelection)
             {
+
+                if (selection == currentSelection)
+                {
+                    if(selection.tag == "Card")
+                    {
+                        selection.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+                    }                    
+                    selection.GetComponent<Selectable>().outline.enabled = false;
+                    currentSelection = null;
+                    return;
+                }
+
                 currentSelection.GetComponent<Selectable>().outline.enabled = false;
+                if (currentSelection.tag == "Card")
+                {
+                    currentSelection.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+                }                
             }
             currentSelection = selection;
             selection.GetComponent<Selectable>().outline.enabled = true;
-            addButton.GetComponent<Button>().interactable = true;
-
-            if (currentSelection.tag == "Card")
+            if (selection.tag == "Card")
             {
+                selection.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
                 GameManager.instance.cardLoot = currentSelection.GetComponent<CardManager>().card;
                 GameManager.instance.lootType = GameManager.Content.Card;
             }
+            else if (selection.tag == "Gold")
+            {
+                GameManager.instance.goldLoot = currentSelection.GetComponent<Gold>().goldValue;
+                GameManager.instance.lootType = GameManager.Content.Gold;
+            }
         }
+        //internal void Select(GameObject selection)
+        //{
+        //    if (currentSelection)
+        //    {
+        //        currentSelection.GetComponent<Selectable>().outline.enabled = false;
+        //    }
+        //    currentSelection = selection;
+        //    selection.GetComponent<Selectable>().outline.enabled = true;
+        //    addButton.GetComponent<Button>().interactable = true;
+
+        //    if (currentSelection.tag == "Card")
+        //    {
+        //        GameManager.instance.cardLoot = currentSelection.GetComponent<CardManager>().card;
+        //        GameManager.instance.lootType = GameManager.Content.Card;
+        //    }
+        //    else if (currentSelection.tag == "Gold")
+        //    {
+        //        GameManager.instance.goldLoot = currentSelection.GetComponent<Gold>().goldValue;
+        //        GameManager.instance.lootType = GameManager.Content.Gold;
+        //    }
+        //}
 
 
         void ClosePanel()

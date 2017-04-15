@@ -49,12 +49,9 @@ namespace Assets.Scripts
                 this.selectedCard.GetComponent<Selectable>().outline.enabled = false;
                 this.selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
             }
-            this.selectedCard = selectedCard;
-            //   selectedCard.GetComponent<CardManager>().cardDescription.SetActive(true);
-            selectedCard.GetComponent<Selectable>().outline.enabled = true;
-            //   selectedCard.GetComponent<CardManager>().descriptionPanel.SetActive(true);
+            this.selectedCard = selectedCard;            
+            selectedCard.GetComponent<Selectable>().outline.enabled = true;            
             selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
-
         }
 
 
