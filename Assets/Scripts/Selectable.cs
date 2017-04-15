@@ -10,6 +10,7 @@ namespace Assets.Scripts
     public class Selectable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
     {
         public Outline outline;
+        public bool muliganKeep;
 
         public void OnPointerClick(PointerEventData eventData)
         {
@@ -24,8 +25,34 @@ namespace Assets.Scripts
             }
             else if (CardgameManager.instance.isActiveAndEnabled)
             {
-                CardgameManager.instance.Select(selection);
+               
+                if (CardgameManager.instance.cardgameUI.muliganPanelScript.isActiveAndEnabled)
+                {
+                    CardgameManager.instance.cardgameUI.muliganPanelScript.Select(selection);
+                }
+                else
+                {
+                    CardgameManager.instance.Select(selection);
+                }
             }
+        }
+
+        public void RedOutline()
+        {
+            outline.enabled = true;
+            outline.effectColor = Color.red;
+        }
+
+        public void GreenOutline()
+        {
+            outline.enabled = true;
+            outline.effectColor = Color.green;
+        }
+
+        public void ClearOutline()
+        {
+            outline.enabled = false;
+            
         }
 
         public void OnPointerDown(PointerEventData eventData)

@@ -21,6 +21,8 @@ namespace Assets.Scripts
         public TMP_Text monsterDiscardCount;
 
         public Button endTurnButton;
+        public GameObject muliganPanel;
+        public MuliganPanel muliganPanelScript;
 
         void OnEnable()
         {

@@ -14,6 +14,9 @@ namespace Assets.Scripts
     public class DeckManager : MonoBehaviour
     {
         public static DeckManager player = null;
+
+       
+
         public static DeckManager monster = null;
         CardManager cardManager;
         public string instancename;
@@ -234,6 +237,22 @@ namespace Assets.Scripts
             }
         }
 
+        internal List<GameObject> GetMuliganCards()
+        {
+            int muliganCount = 3 + GameManager.instance.perkManager.bonusInitialDraw;
+            List<GameObject> muliganCards = new List<GameObject>();
+            for (var i = 0; i < muliganCount; i++)
+            {
+                if (cardsInDeck.Count > 0)
+                {
+                    int random = Random.Range(0, cardsInDeck.Count);
+                    GameObject tempCard = cardsInDeck[random];
+                    muliganCards.Add(tempCard);
+                    tempCard.GetComponent<Selectable>().muliganKeep = true;
+                }
+            }
+            return muliganCards;
+        }
         public void Draw()
         {
             if (cardsInDeck.Count > 0)
