@@ -202,8 +202,8 @@ namespace Assets.Scripts
 
         private void EndGame(bool win)
         {
-            Card cardReward = new Card();
-            int goldReward;
+            List<Card> cardRewards = new List<Card>();
+            //int goldReward;
 
             List<Card> monsterCards = new List<Card>();
 
@@ -216,8 +216,14 @@ namespace Assets.Scripts
                     monsterCards.Add(card.card);
                 }
             }
-            cardReward = monsterCards[Random.Range(0, monsterCards.Count)];
-            goldReward = Random.Range(5 + enemy.enemy.BaseEnemyLevel, 10 + enemy.enemy.BaseEnemyLevel);
+
+            for (var i = 0; i < 3; i++)
+            {
+                var cardReward = monsterCards[Random.Range(0, monsterCards.Count)];
+                cardRewards.Add(cardReward);
+            }
+                        
+            //goldReward = Random.Range(5 + enemy.enemy.BaseEnemyLevel, 10 + enemy.enemy.BaseEnemyLevel);
 
             player.mana = 1;
             player.maxMana = 1;
@@ -227,7 +233,7 @@ namespace Assets.Scripts
             GameManager.instance.GainXP(enemy.experienceReward);
             GameManager.instance.lifeHolder = player.life;
 
-            EventManager.Instance.QueueAnimation(new EndGame_GUI(win, cardReward, goldReward));
+            EventManager.Instance.QueueAnimation(new EndGame_GUI(win, cardRewards));
         }
 
 

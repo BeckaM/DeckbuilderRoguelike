@@ -34,7 +34,7 @@ namespace Assets.Scripts
             else
             {
                 content = Content.Gold;
-                goldReward = UnityEngine.Random.Range(5 + level, 10 + level);
+                goldReward = UnityEngine.Random.Range(10 + level, 20 + level);
 
                 subText = "It contains some Gold.";
             }

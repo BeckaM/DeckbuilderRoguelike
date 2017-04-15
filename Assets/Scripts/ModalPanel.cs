@@ -17,7 +17,7 @@ namespace Assets.Scripts
         public GameObject choicesPanel;
         public GameObject goldObject;
         public GameObject cardObject;
-        public GameObject prayerObject;
+        //public GameObject prayerObject;
 
         public Button addButton;
         public Button closeButton;
@@ -110,6 +110,34 @@ namespace Assets.Scripts
             closeButton.gameObject.SetActive(true);
         }
 
+        internal void MonsterLoot(List<Card> cardRewards, UnityAction complete)
+        {
+            modalPanelObject.SetActive(true);
+            isActive = true;
+
+            ClearPanel();
+
+            selectFromThreePanel.SetActive(true);
+
+            this.title.text = "You are victorious";
+            this.subText.text = "Choose a reward from your dead foe.";
+
+            foreach (Card card in cardRewards)
+            {
+                var tempCard = Instantiate(cardObject);
+                selections.Add(tempCard);
+                tempCard.transform.SetParent(choicesPanel.transform, false);
+                var cardScript = tempCard.GetComponent<CardManager>();
+                cardScript.PopulateCard(card);
+            }
+
+            addButton.onClick.AddListener(complete);
+            addButton.onClick.AddListener(ClosePanel);
+
+            addButton.GetComponent<Button>().interactable = false;
+            addButton.gameObject.SetActive(true);
+        }
+
 
         internal void LevelUp(List<Card> cardRewards, UnityAction complete)
         {
@@ -127,7 +155,7 @@ namespace Assets.Scripts
             {
                 var tempCard = Instantiate(cardObject);
                 selections.Add(tempCard);
-                tempCard.transform.SetParent(choicesPanel.transform);
+                tempCard.transform.SetParent(choicesPanel.transform, false);
                 var cardScript = tempCard.GetComponent<CardManager>();
                 cardScript.PopulateCard(card);
             }

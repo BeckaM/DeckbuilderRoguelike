@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 namespace Assets.Scripts
 {
     public class GameEvent
@@ -24,14 +25,14 @@ namespace Assets.Scripts
     public class EndGame_GUI : GameEvent
     {
         public bool playerWon { get; private set; }
-        public Card cardReward { get; private set; }
-        public int goldReward { get; private set; }
+        public List<Card> cardRewards { get; private set; }
+      //  public int goldReward { get; private set; }
 
-        public EndGame_GUI(bool playerWon, Card cardReward, int goldReward)
+        public EndGame_GUI(bool playerWon, List<Card> cardRewards)
         {
             this.playerWon = playerWon;
-            this.cardReward = cardReward;
-            this.goldReward = goldReward;;
+            this.cardRewards = cardRewards;
+            //this.goldReward = goldReward;
         }
     }
 

@@ -43,9 +43,6 @@ namespace Assets.Scripts.Menu
                 lockPanel.SetActive(false);
             }
         }
-
-
     }
-
 }
 

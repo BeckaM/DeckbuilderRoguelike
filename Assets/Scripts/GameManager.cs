@@ -28,7 +28,7 @@ namespace Assets.Scripts
 
         public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
 
-        public PerkManager perkManager= new PerkManager();
+        public PerkManager perkManager = new PerkManager();
 
         public GameObject monsterDeck;
 
@@ -187,9 +187,8 @@ namespace Assets.Scripts
         }
 
 
-        public void ReturnFromCardgame(bool win, Card cardReward, int goldReward)
+        public void ReturnFromCardgame(bool win, List<Card> cardRewards)
         {
-           
             dungeonUI.deckPanelObject.SetActive(false);
             dungeonUI.UpdateLifeText();
 
@@ -199,20 +198,21 @@ namespace Assets.Scripts
             }
             else
             {
-                cardLoot = cardReward;
-                goldLoot = goldReward;
-                var rand = UnityEngine.Random.Range(0, 10);
-                if (rand < 5)
-                {
-                    modalPanel.Chest("Victory!", "The monster drops a card. Add to your deck?", cardReward, AddLoot, DeclineLoot);
-                    lootType = Content.Card;
-                }
-                else
-                {
-                    modalPanel.Chest("Victory!", "The monster drops some gold.", goldReward, AddLoot);
-                    lootType = Content.Gold;
-                }
 
+                // cardLoot = cardRewards;
+                //  goldLoot = goldReward;
+                //var rand = UnityEngine.Random.Range(0, 10);
+                //if (rand < 5)
+                //{
+                //    modalPanel.Chest("Victory!", "The monster drops a card. Add to your deck?", cardReward, AddLoot, DeclineLoot);
+                //    lootType = Content.Card;
+                //}
+                //else
+                //{
+                //    modalPanel.Chest("Victory!", "The monster drops some gold.", goldReward, AddLoot);
+                //    lootType = Content.Gold;
+                //}
+                modalPanel.MonsterLoot(cardRewards, AddLoot);
                 progressManager.CumulativeMetric(ProgressManager.Metric.Monsters_Killed, 1);
             }
         }
@@ -226,7 +226,7 @@ namespace Assets.Scripts
             }
             else
             {
-                DeckManager.player.AddCardtoDeck(cardLoot.cardName);
+                DeckManager.player.AddCardtoDeck(cardLoot);
             }
 
             doingSetup = false;
@@ -280,6 +280,16 @@ namespace Assets.Scripts
             dungeonUI.UpdateXPText();
         }
 
+        public void GainLife(int gain)
+        {
+            lifeHolder += gain;
+            if (lifeHolder > maxLife)
+            {
+                lifeHolder = maxLife;
+            }
+            dungeonUI.UpdateLifeText();
+        }
+
 
         internal void LevelUp()
         {
@@ -298,6 +308,7 @@ namespace Assets.Scripts
         {
             AddLoot();
             playerLevel++;
+            lifeHolder = maxLife;
             var increase = 1.4 * nextLVLXP;
             nextLVLXP = nextLVLXP + (int)increase;
             dungeonUI.UpdateXPText();

@@ -332,43 +332,43 @@ namespace Assets.Scripts
                 switch (e.type)
                 {
                     case CardEffect.Effect.AddMaxMana:
-                        {                            
+                        {
                             text.text = "Max Mana Increased +" + e.value + "!";
                             StartCoroutine(EffectText(Color.blue));
                             break;
                         }
                     case CardEffect.Effect.DealDamage:
-                        {                            
+                        {
                             text.text = "" + e.value + " Damage!";
                             StartCoroutine(EffectText(Color.red));
                             break;
                         }
                     case CardEffect.Effect.Heal:
-                        {                            
+                        {
                             text.text = "" + e.value + " Life Restored!";
                             StartCoroutine(EffectText(Color.green));
                             break;
                         }
                     case CardEffect.Effect.ReduceDamage:
-                        {                            
+                        {
                             text.text = "+" + e.value + " Damage Reduction!";
                             StartCoroutine(EffectText(Color.grey));
                             break;
                         }
                     case CardEffect.Effect.IncreaseDamage:
-                        {                            
+                        {
                             text.text = "+" + e.value + " Damage Boost!";
                             StartCoroutine(EffectText(Color.yellow));
                             break;
                         }
                     case CardEffect.Effect.SelfDamage:
-                        {                           
+                        {
                             text.text = "" + e.value + " Self Damage!";
                             StartCoroutine(EffectText(Color.red));
                             break;
                         }
                     case CardEffect.Effect.DiscardCard:
-                        {                            
+                        {
                             text.text = "Discard " + e.value + " Card!";
                             StartCoroutine(EffectText(Color.red));
                             break;
@@ -379,14 +379,7 @@ namespace Assets.Scripts
                             EventManager.Instance.processingQueue = false;
                             break;
                         }
-                   
-
                 }
-
-
-
-
-
             }
         }
 
@@ -530,13 +523,16 @@ namespace Assets.Scripts
 
         internal void DestroyCardGUI(DestroyCard_GUI e)
         {
-            var text = cardEffectText.GetComponent<Text>();
+            if (e.card == this)
+            {
+                var text = cardEffectText.GetComponent<Text>();
 
-            text.text = "Card Consumed!";
+                text.text = "Card Consumed!";
 
-            StartCoroutine(EffectText(Color.red));
+                StartCoroutine(EffectText(Color.red));
 
-            Invoke("DestroyCard", 1.5f);
+                Invoke("DestroyCard", 1.5f);
+            }
         }
 
         private void DestroyCard()
@@ -558,6 +554,10 @@ namespace Assets.Scripts
                 if (cardeffect.trigger == CardEffect.Trigger.Passive)
                 {
                     RemoveEffect(cardeffect);
+                }
+                else if (cardeffect.trigger == CardEffect.Trigger.OnExpire)
+                {
+                    ApplyEffect(cardeffect);
                 }
             }
             EventManager.Instance.AddListener<MoveCard_GUI>(Move);
