@@ -60,13 +60,14 @@ namespace Assets.Scripts
             EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
 
             //Draw our starting hand
-            DrawStartingHands();
+            ShowMuligan();
+            
         }
 
-        private void DrawStartingHands()
+        public void DrawStartingHands(int cardsMuliganed)
         {
-            var playerStartHand = 3 + GameManager.instance.perkManager.bonusInitialDraw;
-            for (var i = 0; i < playerStartHand; i++)
+            
+            for (var i = 0; i < cardsMuliganed; i++)
             {
                 DeckManager.player.Draw();               
             }
@@ -78,6 +79,10 @@ namespace Assets.Scripts
             }
         }
 
+        private void ShowMuligan()
+        {
+            cardgameUI.muliganPanel.SetActive(true);
+        }
 
         private void SetOpponents()
         {
