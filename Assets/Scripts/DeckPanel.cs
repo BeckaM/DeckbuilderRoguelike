@@ -209,7 +209,10 @@ namespace Assets.Scripts
         {
             if (selectedCard)
             {
-                selectedCard.GetComponent<Selectable>().outline.enabled = false;
+                selectedCard.GetComponent<Selectable>().ClearOutline();
+                selectedCard.GetComponent<CardManager>().imagePanel.ResetPanel();
+                selectedCard = null;
+
             }
             isActive = false;
             deckPanelObject.SetActive(false);

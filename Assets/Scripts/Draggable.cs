@@ -76,15 +76,15 @@ namespace Assets.Scripts
         {
             var card = GetComponent<CardManager>();
             if (!card.isDragable) return;
-
-            //  Debug.Log("OnEndDrag");
+                       
             this.transform.SetParent(parentToReturnTo);
             this.transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
-            GetComponent<CanvasGroup>().blocksRaycasts = true;
-
+            GetComponent<CanvasGroup>().blocksRaycasts = true;            
             Destroy(placeholder);
-            if (placeholderParent.name == "Tabletop" && card.isPlayable)
+            Debug.Log("OnEndDrag. Card is playabe: " + card.isPlayable.ToString() + ". Was dropped on: " + placeholderParent.name);
+            if (parentToReturnTo.name == "Tabletop" && card.isPlayable)
             {
+
                 CardgameManager.instance.PlaceCard(card);
             }
         }

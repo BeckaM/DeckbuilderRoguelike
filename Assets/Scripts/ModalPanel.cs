@@ -36,6 +36,7 @@ namespace Assets.Scripts
         public GameObject cardSelectText;
         public GameObject selectedCard;
         public GameObject selectedCardHolder;
+        public Button selectCardButton;
 
         public GameObject selectFromThreePanel;
 
@@ -110,7 +111,7 @@ namespace Assets.Scripts
             closeButton.gameObject.SetActive(true);
         }
 
-        internal void MonsterLoot(List<Card> cardRewards, int goldReward,  UnityAction complete)
+        internal void MonsterLoot(List<Card> cardRewards, int goldReward, UnityAction complete)
         {
             modalPanelObject.SetActive(true);
             isActive = true;
@@ -174,7 +175,7 @@ namespace Assets.Scripts
         }
 
 
-        internal void Shrine(string title, string subText, UnityAction prayer, UnityAction noEvent, bool needsCardSelection)
+        internal void Shrine(string title, string subText, UnityAction prayer, UnityAction noEvent, bool needsCardSelection, UnityAction shrineSpent)
         {
             modalPanelObject.SetActive(true);
             isActive = true;
@@ -189,6 +190,8 @@ namespace Assets.Scripts
             this.subText.text = subText;
 
             prayButton.onClick.AddListener(prayer);
+            prayButton.onClick.AddListener(shrineSpent);            
+            prayButton.interactable = true;
 
             if (needsCardSelection)
             {
@@ -232,6 +235,7 @@ namespace Assets.Scripts
             card.transform.SetParent(selectedCardHolder.transform);
             selectedCard = card;
             prayButton.interactable = true;
+            
 
             if (GameManager.instance.gold >= 50)
             {
@@ -252,16 +256,15 @@ namespace Assets.Scripts
             }
         }
 
-        public void PrayerSpent()
+        internal void PrayerSpent()
         {
             prayButton.interactable = false;
+            selectCardButton.interactable = false;
         }
-
 
         public void DestroySelectedCard()
         {
             DeckManager.player.DestroyCard(selectedCard);
-
         }
 
         public void DuplicateSelectedCard()
@@ -300,10 +303,10 @@ namespace Assets.Scripts
 
                 if (selection == currentSelection)
                 {
-                    if(selection.tag == "Card")
+                    if (selection.tag == "Card")
                     {
                         selection.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
-                    }                    
+                    }
                     selection.GetComponent<Selectable>().outline.enabled = false;
                     currentSelection = null;
                     return;
@@ -313,7 +316,7 @@ namespace Assets.Scripts
                 if (currentSelection.tag == "Card")
                 {
                     currentSelection.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
-                }                
+                }
             }
             currentSelection = selection;
             selection.GetComponent<Selectable>().outline.enabled = true;
@@ -329,28 +332,6 @@ namespace Assets.Scripts
                 GameManager.instance.lootType = GameManager.Content.Gold;
             }
         }
-        //internal void Select(GameObject selection)
-        //{
-        //    if (currentSelection)
-        //    {
-        //        currentSelection.GetComponent<Selectable>().outline.enabled = false;
-        //    }
-        //    currentSelection = selection;
-        //    selection.GetComponent<Selectable>().outline.enabled = true;
-        //    addButton.GetComponent<Button>().interactable = true;
-
-        //    if (currentSelection.tag == "Card")
-        //    {
-        //        GameManager.instance.cardLoot = currentSelection.GetComponent<CardManager>().card;
-        //        GameManager.instance.lootType = GameManager.Content.Card;
-        //    }
-        //    else if (currentSelection.tag == "Gold")
-        //    {
-        //        GameManager.instance.goldLoot = currentSelection.GetComponent<Gold>().goldValue;
-        //        GameManager.instance.lootType = GameManager.Content.Gold;
-        //    }
-        //}
-
 
         void ClosePanel()
         {
@@ -360,6 +341,8 @@ namespace Assets.Scripts
             }
             if (selectedCard)
             {
+                selectedCard.GetComponent<Selectable>().ClearOutline();
+                selectedCard.GetComponent<CardManager>().imagePanel.ResetPanel();
                 selectedCard.transform.SetParent(DeckManager.player.deckHolder.transform);
             }
             selections.Clear();
@@ -379,6 +362,7 @@ namespace Assets.Scripts
             selectFromThreePanel.SetActive(false);
             selectCardPanel.SetActive(false);
             cardSelectText.SetActive(true);
+            selectCardButton.interactable = true;
 
 
             closeButton.gameObject.SetActive(false);
@@ -392,7 +376,7 @@ namespace Assets.Scripts
 
         public void PayForAnvil(string type)
         {
-            if(type == "Destroy")
+            if (type == "Destroy")
             {
                 GameManager.instance.ModifyGold(-20);
             }
@@ -400,6 +384,6 @@ namespace Assets.Scripts
             {
                 GameManager.instance.ModifyGold(-50);
             }
-        }                
+        }
     }
 }

@@ -94,7 +94,7 @@ namespace Assets.Scripts
                 }
             }
 
-            SaveProgress();
+           // SaveProgress();
         }
 
 

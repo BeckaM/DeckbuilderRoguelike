@@ -33,7 +33,7 @@ namespace Assets.Scripts
             monsterLevel = level;
             enemy = enemytoget;
 
-            int HPperlevel = enemy.BaseEnemyHP / 10;
+            int HPperlevel = enemy.BaseEnemyHP / 8;
             int HPbonus = HPperlevel * (monsterLevel - enemy.BaseEnemyLevel);
             life = enemy.BaseEnemyHP + (HPperlevel * HPbonus);
             maxLife = life;
@@ -60,13 +60,16 @@ namespace Assets.Scripts
 
         internal IEnumerator initAI()
         {
+            Debug.Log("initAI");
             MonsterBrain.PlayCards();
+
+            Debug.Log("Waiting for anumations to finish");
 
             while (EventManager.Instance.processingQueue == true)
             {
                 yield return new WaitForSeconds(1);
             }
-
+            
             CardgameManager.instance.EndTurn();
         }
     }

@@ -34,7 +34,10 @@ namespace Assets.Scripts
             else
             {
                 content = Content.Gold;
-                goldReward = UnityEngine.Random.Range(10 + level, 20 + level);
+                float baseGold = UnityEngine.Random.Range(10 + level, 20 + level);
+                var bonusGold = Math.Ceiling(baseGold * GameManager.instance.perkManager.goldIncrease);
+
+                goldReward = (int)bonusGold;
 
                 subText = "It contains some Gold.";
             }

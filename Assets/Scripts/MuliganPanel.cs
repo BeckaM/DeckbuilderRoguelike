@@ -15,14 +15,14 @@ namespace Assets.Scripts
         public GameObject muliganCardHolder;
         public int discardCards;
 
-        public void Start()
+        public void StartMuligan()
         {
+            this.gameObject.SetActive(true);
             muliganCards = DeckManager.player.GetMuliganCards();
             foreach (GameObject card in muliganCards)
             {
                 card.transform.SetParent(muliganCardHolder.transform, false);
             }
-
         }
         /**
          * Moves the cards the player muliganed to your hand and discards the rest. Disables the
@@ -41,18 +41,16 @@ namespace Assets.Scripts
                     card.GetComponent<CardManager>().SetCardPosition(CardManager.CardStatus.InHand);
                     card.transform.SetParent(DeckManager.player.hand.transform);
                     selectScript.ClearOutline();
-                    card.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
-
+                    card.GetComponent<CardManager>().imagePanel.ResetPanel();
                 }
                 else
                 {
                     card.GetComponent<CardManager>().SetCardPosition(CardManager.CardStatus.InDiscard);
                     card.transform.SetParent(DeckManager.player.deckHolder.transform);
                     selectScript.ClearOutline();
-                    card.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+                    card.GetComponent<CardManager>().imagePanel.ResetPanel();
                     discardCards++;
                 }
-
             }
             CardgameManager.instance.DrawStartingHands(discardCards);
             this.gameObject.SetActive(false);

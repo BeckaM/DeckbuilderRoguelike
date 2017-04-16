@@ -16,8 +16,7 @@ namespace Assets.Scripts
         public Team turn = Team.Me;
 
         public CardgameUI cardgameUI;
-
-
+        
         public GameObject playerDiscard;
         public GameObject monsterDiscard;
 
@@ -52,6 +51,7 @@ namespace Assets.Scripts
             SetOpponents();
 
             turn = Team.Me;
+            cardgameUI.endTurnButton.interactable = true;
 
             //Update life and mana in the GUI.
             EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
@@ -81,7 +81,8 @@ namespace Assets.Scripts
 
         private void ShowMuligan()
         {
-            cardgameUI.muliganPanel.SetActive(true);
+            cardgameUI.muliganPanelScript.StartMuligan();
+
         }
 
         private void SetOpponents()
@@ -159,6 +160,7 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - player.ward, player.ward, enemy.damageBoost, Team.Me));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             }
+            CheckWinConditions();
         }
 
 
@@ -227,8 +229,11 @@ namespace Assets.Scripts
                 var cardReward = monsterCards[Random.Range(0, monsterCards.Count)];
                 cardRewards.Add(cardReward);
             }
-                        
-            var goldReward = Random.Range(5 + enemy.enemy.BaseEnemyLevel, 10 + enemy.enemy.BaseEnemyLevel);
+
+            float baseGold = Random.Range(10 + enemy.enemy.BaseEnemyLevel, 20 + enemy.enemy.BaseEnemyLevel);
+            var bonusGold = Math.Ceiling(baseGold * GameManager.instance.perkManager.goldIncrease);
+
+            var goldReward = (int)bonusGold;
 
             player.mana = 1;
             player.maxMana = 1;
@@ -249,16 +254,16 @@ namespace Assets.Scripts
                 if (selectedCard == this.selectedCard)
                 {
                     selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
-                    selectedCard.GetComponent<Selectable>().outline.enabled = false;
+                    selectedCard.GetComponent<Selectable>().ClearOutline();
                     this.selectedCard = null;
                     return;
                 }
 
-                this.selectedCard.GetComponent<Selectable>().outline.enabled = false;
+                this.selectedCard.GetComponent<Selectable>().ClearOutline();
                 this.selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
             }
             this.selectedCard = selectedCard;
-            selectedCard.GetComponent<Selectable>().outline.enabled = true;
+            selectedCard.GetComponent<Selectable>().GreenOutline();
             selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
         }
 
@@ -266,10 +271,12 @@ namespace Assets.Scripts
         //Triggered by end turn button.
         public void EndTurn()
         {
+            
             EventManager.Instance.TriggerEvent(new TableCard_Trigger(turn, CardEffect.Trigger.EndOfTurn));
 
             if (turn == Team.Opponent)
             {
+                Debug.Log("AI ended the turn");
                 DeckManager.player.Draw();
                 turn = Team.Me;
                 player.mana = player.maxMana;
@@ -285,14 +292,16 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
 
                 StartCoroutine(enemy.initAI());
-                //enemy.initAI();
+                Debug.Log("Turn was ended, AI starting to play.");
+               
             }
         }
 
 
         public void PlaceCard(CardManager card)
         {
-
+            card.GetComponent<Selectable>().ClearOutline();
+            card.GetComponent<CardManager>().imagePanel.ResetPanel();
             //Pay the mana cost.
             Debug.Log("Playing a new card: " + card.card.cardName);
             if (card.owner == Team.Me)
@@ -356,8 +365,7 @@ namespace Assets.Scripts
                 EventManager.Instance.AddListener<MoveCard_GUI>(card.Move);
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.table));
                 card.moveCounter++;
-            }
-            CheckWinConditions();            
+            }                    
         }
     }
 }

@@ -5,8 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace Assets.Scripts
-{
-
+{    
     public class ShrineManager : MonoBehaviour
     {
         public List<Sprite> sprites;
@@ -15,6 +14,7 @@ namespace Assets.Scripts
         public string shrineType;
         public string shrineDescription;
         public bool needsCardSelection;
+        public bool isSpent=false; 
 
         public List<string> shrineTypes = new List<string> {"Shrine of Duplication", "Shrine of Chaos", "Shrine of Destruction", "Shrine of Evolution" };
 
@@ -37,7 +37,7 @@ namespace Assets.Scripts
                 needsCardSelection = false;
                 prayer = new UnityAction(GameManager.instance.deckPanel.DestroyRandomCardsPanel);
 
-                shrineSprite.color = Color.grey;
+                shrineSprite.color = Color.cyan;
             }
 
             else if (shrineType == "Shrine of Destruction")
@@ -63,13 +63,24 @@ namespace Assets.Scripts
 
         internal void OpenShrine()
         {
-            GameManager.instance.modalPanel.Shrine(shrineType, shrineDescription, prayer, Decline, needsCardSelection);
+            GameManager.instance.modalPanel.Shrine(shrineType, shrineDescription, prayer, Decline, needsCardSelection, ShrineSpent);
             GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Shrines_Opened, 1);
+        }
+
+        public void ShrineSpent()
+        {
+            isSpent = true;
+
         }
 
         private void Decline()
         {
-            this.gameObject.SetActive(false);
+            if (isSpent)
+            {
+                shrineSprite.color = Color.grey;
+                GetComponent<Collider>().enabled = false;
+            }
+            
             GameManager.instance.doingSetup = false;
         }              
     }

@@ -248,6 +248,7 @@ namespace Assets.Scripts
                     int random = Random.Range(0, cardsInDeck.Count);
                     GameObject tempCard = cardsInDeck[random];
                     muliganCards.Add(tempCard);
+                    cardsInDeck.Remove(tempCard);
                     tempCard.GetComponent<Selectable>().muliganKeep = true;
                 }
             }

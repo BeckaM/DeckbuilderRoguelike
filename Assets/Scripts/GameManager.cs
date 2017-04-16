@@ -104,7 +104,6 @@ namespace Assets.Scripts
 
         void OnDisable()
         {
-
             SceneManager.sceneLoaded -= OnLevelFinishedLoading;
         }
 
@@ -135,6 +134,8 @@ namespace Assets.Scripts
             modalPanel.gameObject.SetActive(false);
             deckPanel.gameObject.SetActive(false);
             cardGameCanvas.SetActive(false);
+
+            LevelUpCheck();
 
             dungeonUI.UpdateLifeText();
             dungeonUI.UpdateGoldText();
@@ -197,7 +198,7 @@ namespace Assets.Scripts
                 GameOver();
             }
             else
-            {                                
+            {
                 modalPanel.MonsterLoot(cardRewards, goldReward, AddLoot);
                 progressManager.CumulativeMetric(ProgressManager.Metric.Monsters_Killed, 1);
             }
@@ -239,9 +240,10 @@ namespace Assets.Scripts
         //GameOver is called when the player reaches 0 life points
         public void GameOver()
         {
-            dungeonUI.gameOverScript.UpdateNewUnlocks(progressManager.GetNewClassUnlocks(), progressManager.GetNewPerkUnlocks());
             dungeonUI.gameOverScript.UpdateGameOverText(level, playerLevel);
             progressManager.EndRun();
+            dungeonUI.gameOverScript.UpdateNewUnlocks(progressManager.GetNewClassUnlocks(), progressManager.GetNewPerkUnlocks());
+            progressManager.SaveProgress();
 
             dungeonUI.gameOverScript.GameOver();
         }
@@ -257,14 +259,19 @@ namespace Assets.Scripts
         public void GainXP(int XP)
         {
             playerXP = playerXP + XP;
+            LevelUpCheck();
+            dungeonUI.UpdateXPText();            
+        }
 
-            //Check if player leveled up
+        //Check if player leveled up
+        internal void LevelUpCheck()
+        {
             if (playerXP >= nextLVLXP)
             {
                 dungeonUI.LevelUpButton.SetActive(true);
             }
-            dungeonUI.UpdateXPText();
         }
+
 
         public void GainLife(int gain)
         {

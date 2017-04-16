@@ -17,8 +17,7 @@ namespace Assets.Scripts
         }
 
         private void Decline()
-        {
-            this.gameObject.SetActive(false);
+        {            
             GameManager.instance.doingSetup = false;
         }
 
