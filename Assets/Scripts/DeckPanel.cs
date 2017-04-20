@@ -60,7 +60,7 @@ namespace Assets.Scripts
         {
             deckPanelObject.SetActive(true);
             isActive = true;
-            GameManager.instance.modalPanel.isActive = false;
+            GameManager.instance.dungeonUI.modalPanel.isActive = false;
                         
             selectButton.gameObject.SetActive(true);
             selectButton.interactable = false;           
@@ -71,7 +71,7 @@ namespace Assets.Scripts
 
         private void SelectCard()
         {
-            GameManager.instance.modalPanel.SelectCard(selectedCard);
+            GameManager.instance.dungeonUI.modalPanel.SelectCard(selectedCard);
         }
 
 

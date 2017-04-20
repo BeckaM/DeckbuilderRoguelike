@@ -15,13 +15,13 @@ namespace Assets.Scripts
         public void OnPointerClick(PointerEventData eventData)
         {
             var selection = eventData.pointerPress;
-            if (GameManager.instance.modalPanel.isActive)
+            if (GameManager.instance.dungeonUI.modalPanel.isActive)
             {
-                GameManager.instance.modalPanel.Select(selection);
+                GameManager.instance.dungeonUI.modalPanel.Select(selection);
             }
-            else if (GameManager.instance.deckPanel.isActive)
+            else if (GameManager.instance.dungeonUI.deckPanel.isActive)
             {
-                GameManager.instance.deckPanel.Select(selection);
+                GameManager.instance.dungeonUI.deckPanel.Select(selection);
             }
             else if (CardgameManager.instance.isActiveAndEnabled)
             {

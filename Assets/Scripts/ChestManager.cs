@@ -47,11 +47,11 @@ namespace Assets.Scripts
         {
             if (content == Content.Gold)
             {
-                GameManager.instance.modalPanel.Chest("You found a chest!", subText, goldReward, AddReward);
+                GameManager.instance.dungeonUI.modalPanel.Chest("You found a chest!", subText, goldReward, AddReward);
             }
             else
             {
-                GameManager.instance.modalPanel.Chest("You found a chest!", subText, cardReward, AddReward, DeclineReward);
+                GameManager.instance.dungeonUI.modalPanel.Chest("You found a chest!", subText, cardReward, AddReward, DeclineReward);
             }
             GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Chests_Opened,1);
         }

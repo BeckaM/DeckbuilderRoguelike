@@ -15,11 +15,11 @@ namespace Assets.Scripts
         public GameObject levelImage;
         public TMP_Text levelText;
 
-        public GameObject gameOverPanel;
-        public GameOverPanel gameOverScript;
+       // public GameObject gameOverPanel;
+        public GameOverPanel gameOverPanel;
 
-        public GameObject modalPanelObject;
-        public GameObject deckPanelObject;
+        public ModalPanel modalPanel;
+        public DeckPanel deckPanel;
 
         
 

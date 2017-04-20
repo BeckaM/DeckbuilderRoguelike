@@ -26,7 +26,7 @@ namespace Assets.Scripts
             {                
                 shrineDescription = "Choose a card in your deck and duplicate it.";
                 needsCardSelection = true;
-                prayer = new UnityAction(GameManager.instance.modalPanel.DuplicateSelectedCard);
+                prayer = new UnityAction(GameManager.instance.dungeonUI.modalPanel.DuplicateSelectedCard);
 
                 shrineSprite.color = Color.blue;
             }
@@ -35,7 +35,7 @@ namespace Assets.Scripts
             {                
                 shrineDescription = "Destroy three random cards in your deck.";
                 needsCardSelection = false;
-                prayer = new UnityAction(GameManager.instance.deckPanel.DestroyRandomCardsPanel);
+                prayer = new UnityAction(GameManager.instance.dungeonUI.deckPanel.DestroyRandomCardsPanel);
 
                 shrineSprite.color = Color.cyan;
             }
@@ -45,7 +45,7 @@ namespace Assets.Scripts
                 
                 shrineDescription = "Choose a card in your deck and destroy it.";
                 needsCardSelection = true;
-                prayer = new UnityAction(GameManager.instance.modalPanel.DestroySelectedCard);
+                prayer = new UnityAction(GameManager.instance.dungeonUI.modalPanel.DestroySelectedCard);
 
                 shrineSprite.color = Color.red;
             }
@@ -54,7 +54,7 @@ namespace Assets.Scripts
             {                
                 shrineDescription = "Choose a card in your deck and replace it with a random one of higher level.";
                 needsCardSelection = true;
-                prayer = new UnityAction(GameManager.instance.modalPanel.UpgradeSelectedCard);
+                prayer = new UnityAction(GameManager.instance.dungeonUI.modalPanel.UpgradeSelectedCard);
 
                 shrineSprite.color = Color.red;
             }
@@ -63,7 +63,7 @@ namespace Assets.Scripts
 
         internal void OpenShrine()
         {
-            GameManager.instance.modalPanel.Shrine(shrineType, shrineDescription, prayer, Decline, needsCardSelection, ShrineSpent);
+            GameManager.instance.dungeonUI.modalPanel.Shrine(shrineType, shrineDescription, prayer, Decline, needsCardSelection, ShrineSpent);
             GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Shrines_Opened, 1);
         }
 

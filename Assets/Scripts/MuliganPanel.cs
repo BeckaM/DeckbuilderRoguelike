@@ -39,14 +39,14 @@ namespace Assets.Scripts
                 if (selectScript.muliganKeep)
                 {
                     card.GetComponent<CardManager>().SetCardPosition(CardManager.CardStatus.InHand);
-                    card.transform.SetParent(DeckManager.player.hand.transform);
+                    card.transform.SetParent(DeckManager.player.hand.transform, false);
                     selectScript.ClearOutline();
                     card.GetComponent<CardManager>().imagePanel.ResetPanel();
                 }
                 else
                 {
                     card.GetComponent<CardManager>().SetCardPosition(CardManager.CardStatus.InDiscard);
-                    card.transform.SetParent(DeckManager.player.deckHolder.transform);
+                    card.transform.SetParent(DeckManager.player.deckHolder.transform, false);
                     selectScript.ClearOutline();
                     card.GetComponent<CardManager>().imagePanel.ResetPanel();
                     discardCards++;

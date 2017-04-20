@@ -35,18 +35,20 @@ namespace Assets.Scripts
         public Player player;
         public GameObject selectedCard;
 
-        public Button endTurnButton;
-
+        public Camera cam;
+      
         void Awake()
         {
             instance = this;
 
         }
-
-
+        
         // Use this for initialization
         public void Setup()
         {
+            this.gameObject.SetActive(true);
+            cardgameUI.gameObject.SetActive(true);
+
             //Sets opponent profile images and texts.
             SetOpponents();
 
@@ -281,11 +283,11 @@ namespace Assets.Scripts
                 turn = Team.Me;
                 player.mana = player.maxMana;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
-                endTurnButton.interactable = true;
+                cardgameUI.endTurnButton.interactable = true;
             }
             else if (turn == Team.Me)
             {
-                endTurnButton.interactable = false;
+                cardgameUI.endTurnButton.interactable = false;
                 DeckManager.monster.Draw();
                 turn = Team.Opponent;
                 enemy.mana = enemy.maxMana;

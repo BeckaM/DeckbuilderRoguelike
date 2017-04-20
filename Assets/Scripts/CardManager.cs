@@ -165,6 +165,7 @@ namespace Assets.Scripts
 
             //By storing the reciprocal of the move time we can use it by multiplying instead of dividing, this is more efficient.
             adjustedMoveTime = Screen.width;
+            adjustedMoveTime = 100;
         }
 
 
@@ -248,6 +249,13 @@ namespace Assets.Scripts
             duration = card.cardDuration;
             bottomPanel.ShowBottomPanel(true);
             imagePanel.ShowFullDescription(false);
+        }
+
+        public void ResetTransform()
+        {
+            GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5F);
+            GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5F);
+            GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
         }
 
 
@@ -413,7 +421,7 @@ namespace Assets.Scripts
                 StartCoroutine(SmoothMovement(move.start, move.end));
             }
         }
-
+               
 
         protected IEnumerator SmoothMovement(GameObject start, GameObject end)
         {
@@ -421,18 +429,18 @@ namespace Assets.Scripts
             Vector3 endpos = new Vector3();
             // Vector3 endsize = new Vector3();
 
-            transform.SetParent(start.transform);
+         //   transform.SetParent(start.transform, false);
 
-            this.transform.localScale = Vector3.one;
-            yield return new WaitForSeconds(0.1f);
-            Vector3 startpos = new Vector3();
-            startpos = this.transform.position;
+            //this.transform.localScale = Vector3.one;
+            //yield return new WaitForSeconds(0.1f);
+            //Vector3 startpos = new Vector3();
+            //startpos = this.transform.position;
 
             //if we have no cards at this position, make a test place and get the new position from that.
             if (end.transform.childCount == 0)
             {
                 this.GetComponent<CanvasGroup>().alpha = (0f);
-                transform.SetParent(end.transform);
+                transform.SetParent(end.transform, false);
                 //this.transform.localScale = Vector3.one;
                 //transform.SetParent(endPoint.transform);
                 yield return new WaitForEndOfFrame();
@@ -449,7 +457,7 @@ namespace Assets.Scripts
                 //  endsize = lastChild.transform.localScale;
 
             }
-            this.transform.SetParent(start.transform);
+            this.transform.SetParent(start.transform, false);
             yield return new WaitForSeconds(0.1f);
 
             GetComponent<CanvasGroup>().alpha = (1f);
@@ -484,18 +492,19 @@ namespace Assets.Scripts
                 EventManager.Instance.RemoveListener<MoveCard_GUI>(Move);
             }
 
+            transform.SetParent(end.transform, false);
             //this.transform.localScale = endsize;
 
             //yield return new WaitForSeconds(3f);
 
-            if (end == discard)
-            {
-                transform.SetParent(deckManager.deckHolder.transform);
-            }
-            else
-            {
-                transform.SetParent(end.transform);
-            }
+            //if (end == discard)
+            //{
+            //    transform.SetParent(deckManager.deckHolder.transform, false);
+            //}
+            //else
+            //{
+            //    transform.SetParent(end.transform, false);
+            //}
 
             yield return new WaitForSeconds(0.3f);
             EventManager.Instance.processingQueue = false;

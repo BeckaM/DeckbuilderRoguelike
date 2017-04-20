@@ -10,7 +10,10 @@ namespace Assets.Scripts
     {
 
         public Transform parentToReturnTo = null;
-        public Transform placeholderParent = null;
+        public Transform placeholderParent = null;        
+        public GameObject panel;
+
+        public float distance;
 
         GameObject placeholder = null;
 
@@ -23,7 +26,7 @@ namespace Assets.Scripts
             //Debug.Log("OnBeginDrag");
 
             placeholder = new GameObject();
-            placeholder.transform.SetParent(this.transform.parent);
+            placeholder.transform.SetParent(this.transform.parent, false);
             LayoutElement le = placeholder.AddComponent<LayoutElement>();
             le.preferredWidth = this.GetComponent<LayoutElement>().preferredWidth;
             le.preferredHeight = this.GetComponent<LayoutElement>().preferredHeight;
@@ -34,7 +37,7 @@ namespace Assets.Scripts
 
             parentToReturnTo = this.transform.parent;
             placeholderParent = parentToReturnTo;
-            this.transform.SetParent(this.transform.parent.parent);
+            this.transform.SetParent(this.transform.parent.parent, false);
 
             GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
@@ -44,10 +47,22 @@ namespace Assets.Scripts
 
             var card = GetComponent<CardManager>();
             if (!card.isDragable) return;
-
+            
             //Debug.Log ("OnDrag");
 
-            this.transform.position = eventData.position;
+            // this.transform.localPosition = new Vector3(eventData.position.x, eventData.position.y);
+            Ray ray = Camera.main.ScreenPointToRay(eventData.position);
+            // Vector3 rayPoint = ray.GetPoint(distance);
+             distance = Vector3.Distance(transform.position, CardgameManager.instance.cam.ScreenToWorldPoint(eventData.position));
+           
+            
+            var point = ray.GetPoint(distance);
+
+            transform.position = new Vector3(point.x, point.y);
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y);
+
+
+            // this.transform.position.x = eventData.position.x;
 
             if (placeholder.transform.parent != placeholderParent)
                 placeholder.transform.SetParent(placeholderParent);
@@ -77,7 +92,7 @@ namespace Assets.Scripts
             var card = GetComponent<CardManager>();
             if (!card.isDragable) return;
                        
-            this.transform.SetParent(parentToReturnTo);
+            this.transform.SetParent(parentToReturnTo, false);
             this.transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
             GetComponent<CanvasGroup>().blocksRaycasts = true;            
             Destroy(placeholder);

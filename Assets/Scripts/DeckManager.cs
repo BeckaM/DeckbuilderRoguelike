@@ -26,18 +26,18 @@ namespace Assets.Scripts
             {
                 if (team == CardgameManager.Team.Me)
                 {
-                    return GameManager.instance.deckPanel.cardArea;
+                    return GameManager.instance.dungeonUI.deckPanel.cardArea;
                 }
                 else
                 {
-                    return this.gameObject;
+                    return CardgameManager.instance.monsterDeck;
                 }
             }
         }
 
         public List<string> deckStringHolder;
 
-        public GameObject deckManager
+        public GameObject deck
         {
             get
             {
@@ -183,6 +183,22 @@ namespace Assets.Scripts
             }
         }
 
+       internal void InitCardGameDeck()
+        {
+            var stackOffset = 0;
+            foreach (GameObject card in cardsInDeck)
+            {
+                card.transform.SetParent(deck.transform, false);
+
+                stackOffset -= 2;
+                card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, stackOffset);
+
+                card.GetComponent<CardManager>().ResetTransform();                
+
+            }
+        }
+
+        
 
         public GameObject AddCardtoDeck(string cardToCreate)
         {
@@ -210,8 +226,9 @@ namespace Assets.Scripts
 
             cardManager.owner = team;
             cardsInDeck.Add(cardManager.gameObject);
-            instance.transform.SetParent(deckHolder.transform);
-            instance.transform.localScale = new Vector3(1f, 1f, 1f);
+            instance.transform.SetParent(deckHolder.transform, false);
+            //instance.transform.localScale = new Vector3(1f, 1f, 1f);
+            //instance.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
 
             cardManager.PopulateCard(card);
             return instance;
@@ -270,7 +287,7 @@ namespace Assets.Scripts
 
                 //Queue up a move card animation.
                 EventManager.Instance.AddListener<MoveCard_GUI>(manager.Move);
-                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, deckManager, hand));
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, deck, hand));
                 manager.moveCounter++;
 
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));

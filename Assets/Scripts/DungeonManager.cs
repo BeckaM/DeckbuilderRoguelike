@@ -20,19 +20,18 @@ namespace Assets.Scripts
 
         int enemyCount;
 
-        public List<int> enemyLevels;
+       // public List<int> enemyLevels;
 
         public List<GameObject> dungeonObjects;
 
-        private MapGenerator mapGen;                                  //A variable to store a reference to the transform of our Board object.
+        public MapGenerator mapGen;                                  //A variable to store a reference to the transform of our Board object.
 
 
 
         //SetupScene initializes our level and calls the previous functions to lay out the game board
         public void SetupScene(int level)
         {
-            var m = GameObject.Find("Map Generator");
-            mapGen = m.GetComponent<MapGenerator>();
+            GetComponent<MapGenerator>();
             var size = 50 + level * 2;
 
             mapGen.width = size;
@@ -61,6 +60,8 @@ namespace Assets.Scripts
 
         private void GetEnemies(int Level)
         {
+            var enemyLevels = GameManager.instance.enemyLevels;
+
             Debug.Log("Getting enemylist for level " + Level);
             if (Level == 1)
             {
@@ -100,6 +101,8 @@ namespace Assets.Scripts
 
                 var instance = Instantiate(enemyPrefab);
 
+                instance.transform.SetParent(mapGen.transform);
+
                 var script = instance.GetComponent<EnemyManager>();
 
                 script.PopulateEnemy(enemyChoice, enemyLevel);
@@ -117,6 +120,7 @@ namespace Assets.Scripts
             for (int i = 0; i < chestCount; i++)
             {
                 var instance = Instantiate(chestPrefab);
+                instance.transform.SetParent(mapGen.transform);
 
                 var script = instance.GetComponent<ChestManager>();
 
@@ -136,6 +140,7 @@ namespace Assets.Scripts
             for (int i = 0; i < shrineCount; i++)
             {
                 var instance = Instantiate(shrinePrefab);
+                instance.transform.SetParent(mapGen.transform);
 
                 var script = instance.GetComponent<ShrineManager>();
 
@@ -158,7 +163,8 @@ namespace Assets.Scripts
             for (int i = 0; i < anvilCount; i++)
             {
                 var instance = Instantiate(anvilPrefab);
-                            
+                instance.transform.SetParent(mapGen.transform);
+
                 dungeonObjects.Add(instance);
             }
         }
