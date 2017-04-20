@@ -7,7 +7,7 @@ namespace Assets.Scripts.DAL
 {
     public static class PlayerSaveDAL
     {
-        private const string playerSave = @".\Assets\JSON\player";
+        private static string playerSave = Application.persistentDataPath + "/";
 
         public static bool PlayerExists(int player)
         {

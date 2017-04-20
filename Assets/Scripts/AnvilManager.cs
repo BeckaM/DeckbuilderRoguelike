@@ -21,22 +21,22 @@ namespace Assets.Scripts
             GameManager.instance.doingSetup = false;
         }
 
-        private void Destruction()
-        {            
-            GameManager.instance.deckPanel.DestroyCardPanel();
+        //private void Destruction()
+        //{            
+        //    GameManager.instance.deckPanel.DestroyCardPanel();
 
-            this.gameObject.SetActive(false);
-            GameManager.instance.doingSetup = false;
-        }
+        //    this.gameObject.SetActive(false);
+        //    GameManager.instance.doingSetup = false;
+        //}
 
-        private void Upgrade()
-        {
-            Debug.Log("Prayer of Evolution triggered");
-            GameManager.instance.deckPanel.UpgradeCardPanel();
+        //private void Upgrade()
+        //{
+        //    Debug.Log("Prayer of Evolution triggered");
+        //    GameManager.instance.deckPanel.UpgradeCardPanel();
 
-            this.gameObject.SetActive(false);
-            GameManager.instance.doingSetup = false;
-        }
+        //    this.gameObject.SetActive(false);
+        //    GameManager.instance.doingSetup = false;
+        //}
     }
 }
 

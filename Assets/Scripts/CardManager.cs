@@ -150,14 +150,8 @@ namespace Assets.Scripts
             }
         }
 
-        public float moveTime = 1f;
-        private float inverseMoveTime;
-
-        //public GameObject startPoint;
-        //public GameObject endPoint;
-
-        //private Vector3 startSize;
-        //private Vector3 endSize;
+        public float adjustedMoveTime;
+       
         public int effectCounter;
         public int moveCounter;
 
@@ -170,7 +164,7 @@ namespace Assets.Scripts
             rb2D = GetComponent<Rigidbody2D>();
 
             //By storing the reciprocal of the move time we can use it by multiplying instead of dividing, this is more efficient.
-            inverseMoveTime = 1f / moveTime;
+            adjustedMoveTime = Screen.width;
         }
 
 
@@ -430,7 +424,7 @@ namespace Assets.Scripts
             transform.SetParent(start.transform);
 
             this.transform.localScale = Vector3.one;
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.1f);
             Vector3 startpos = new Vector3();
             startpos = this.transform.position;
 
@@ -456,7 +450,7 @@ namespace Assets.Scripts
 
             }
             this.transform.SetParent(start.transform);
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.1f);
 
             GetComponent<CanvasGroup>().alpha = (1f);
             //  yield return new WaitForSeconds(1f);
@@ -468,26 +462,13 @@ namespace Assets.Scripts
             //While that distance is greater than a very small amount (Epsilon, almost zero):
             while (sqrRemainingDistance > 0.001f)
             {
-                //    var scaleRate = 0.02f;
-
-                //    if (startSize.x < endsize.x && transform.localScale.x < endsize.x)
-                //    {
-                //        transform.localScale += endsize * scaleRate;
-                //    }
-                //    else if (startSize.x > endsize.x && transform.localScale.x > endsize.x)
-                //    {
-
-                //        transform.localScale -= endsize * scaleRate;
-
-                //    }
-
+                
+                            
                 //Find a new position proportionally closer to the end, based on the moveTime
-                Vector3 newPostion = Vector3.MoveTowards(rb2D.position, endpos, inverseMoveTime * Time.deltaTime);
-
-
-
+                Vector3 newPostion = Vector3.MoveTowards(transform.position, endpos, adjustedMoveTime * Time.deltaTime);
+             
                 //Call MovePosition on attached Rigidbody2D and move it to the calculated position.
-                rb2D.MovePosition(newPostion);
+                transform.position= newPostion;
 
                 //Recalculate the remaining distance after moving.
                 sqrRemainingDistance = (transform.position - endpos).sqrMagnitude;

@@ -11,7 +11,8 @@ namespace Assets.Scripts
     {
         public bool isActive;
         public Button closeButton;
-        public Button chooseButton;
+        public Button selectButton;
+        public Button applyButton;
 
         private static DeckPanel deckPanel;
         public GameObject deckPanelObject;
@@ -34,7 +35,7 @@ namespace Assets.Scripts
 
         internal void Select(GameObject selectedCard)
         {
-            chooseButton.interactable = true;
+            selectButton.interactable = true;
             if (this.selectedCard)
             {
 
@@ -60,14 +61,11 @@ namespace Assets.Scripts
             deckPanelObject.SetActive(true);
             isActive = true;
             GameManager.instance.modalPanel.isActive = false;
-
-            closeButton.gameObject.SetActive(false);
-
-            chooseButton.gameObject.SetActive(true);
-            chooseButton.interactable = false;
-            chooseButton.onClick.RemoveAllListeners();
-            chooseButton.onClick.AddListener(SelectCard);
-            chooseButton.onClick.AddListener(closePanel);
+                        
+            selectButton.gameObject.SetActive(true);
+            selectButton.interactable = false;           
+            selectButton.onClick.AddListener(SelectCard);
+            selectButton.onClick.AddListener(closePanel);
         }
 
 
@@ -82,37 +80,31 @@ namespace Assets.Scripts
             deckPanelObject.SetActive(true);
             isActive = true;
 
-            closeButton.gameObject.SetActive(true);
-            closeButton.onClick.RemoveAllListeners();
-            closeButton.onClick.AddListener(closePanel);
-
-            chooseButton.gameObject.SetActive(false);
+            closeButton.gameObject.SetActive(true);            
+            closeButton.onClick.AddListener(closePanel);            
         }
 
 
-        internal void DuplicateCardPanel()
-        {
-            deckPanelObject.SetActive(true);
-            isActive = true;
+        //internal void DuplicateCardPanel()
+        //{
+        //    deckPanelObject.SetActive(true);
+        //    isActive = true;            
 
-            closeButton.gameObject.SetActive(false);
-
-            chooseButton.gameObject.SetActive(true);
-            chooseButton.onClick.RemoveAllListeners();
-            chooseButton.onClick.AddListener(Duplicate);
-        }
+        //    selectButton.gameObject.SetActive(true);            
+        //    selectButton.onClick.AddListener(Duplicate);
+        //}
 
 
-        private void Duplicate()
-        {
-            DeckManager.player.AddCardtoDeck(selectedCard.GetComponent<CardManager>().card.cardName);
+        //private void Duplicate()
+        //{
+        //    DeckManager.player.AddCardtoDeck(selectedCard.GetComponent<CardManager>().card.cardName);
 
-            closeButton.gameObject.SetActive(true);
-            closeButton.onClick.RemoveAllListeners();
-            closeButton.onClick.AddListener(closePanel);
+        //    closeButton.gameObject.SetActive(true);
+        //    closeButton.onClick.RemoveAllListeners();
+        //    closeButton.onClick.AddListener(closePanel);
 
-            chooseButton.gameObject.SetActive(false);
-        }
+        //    selectButton.gameObject.SetActive(false);
+        //}
 
 
         internal void DestroyRandomCardsPanel()
@@ -122,9 +114,9 @@ namespace Assets.Scripts
 
             closeButton.gameObject.SetActive(false);
 
-            chooseButton.gameObject.SetActive(true);
-            chooseButton.onClick.RemoveAllListeners();
-            chooseButton.onClick.AddListener(DestroyRandom);
+            applyButton.gameObject.SetActive(true);
+            applyButton.onClick.RemoveAllListeners();
+            applyButton.onClick.AddListener(DestroyRandom);
         }
 
 
@@ -138,74 +130,82 @@ namespace Assets.Scripts
             closeButton.onClick.RemoveAllListeners();
             closeButton.onClick.AddListener(closePanel);
 
-            chooseButton.gameObject.SetActive(false);
+            selectButton.gameObject.SetActive(false);
         }
 
 
-        internal void DestroyCardPanel()
-        {
-            deckPanelObject.SetActive(true);
-            isActive = true;
+        //internal void DestroyCardPanel()
+        //{
+        //    deckPanelObject.SetActive(true);
+        //    isActive = true;
 
-            closeButton.gameObject.SetActive(false);
+        //    closeButton.gameObject.SetActive(false);
 
-            chooseButton.gameObject.SetActive(true);
-            chooseButton.onClick.RemoveAllListeners();
-            chooseButton.onClick.AddListener(Destroy);
-        }
-
-
-        private void Destroy()
-        {
-            DeckManager.player.DestroyCard(selectedCard);
-
-            closeButton.gameObject.SetActive(true);
-            closeButton.onClick.RemoveAllListeners();
-            closeButton.onClick.AddListener(closePanel);
-
-            chooseButton.gameObject.SetActive(false);
-        }
+        //    selectButton.gameObject.SetActive(true);
+        //    selectButton.onClick.RemoveAllListeners();
+        //    selectButton.onClick.AddListener(Destroy);
+        //}
 
 
-        internal void UpgradeCardPanel()
-        {
-            deckPanelObject.SetActive(true);
-            isActive = true;
+        //private void Destroy()
+        //{
+        //    DeckManager.player.DestroyCard(selectedCard);
 
-            closeButton.gameObject.SetActive(false);
+        //    closeButton.gameObject.SetActive(true);
+        //    closeButton.onClick.RemoveAllListeners();
+        //    closeButton.onClick.AddListener(closePanel);
 
-            chooseButton.gameObject.SetActive(true);
-            chooseButton.onClick.RemoveAllListeners();
-            chooseButton.onClick.AddListener(Upgrade);
-        }
+        //    selectButton.gameObject.SetActive(false);
+        //}
 
 
-        private void Upgrade()
-        {
-            var level = selectedCard.GetComponent<CardManager>().card.level;
-            DeckManager.player.DestroyCard(selectedCard);
+        //internal void UpgradeCardPanel()
+        //{
+        //    deckPanelObject.SetActive(true);
+        //    isActive = true;
 
-            var newCard = new Card();
+        //    closeButton.gameObject.SetActive(false);
 
-            if (selectedCard.GetComponent<CardManager>().card.type == Card.Type.ClassCard)
-            {
-                newCard = DAL.ObjectDAL.GetRandomClassCard(level + 1, level + 1);
-            }
-            else
-            {
-                newCard = DAL.ObjectDAL.GetRandomCard(level + 1, level + 1);
-            }
-            DeckManager.player.AddCardtoDeck(newCard.cardName);
+        //    selectButton.gameObject.SetActive(true);
+        //    selectButton.onClick.RemoveAllListeners();
+        //    selectButton.onClick.AddListener(Upgrade);
+        //}
 
-            closeButton.gameObject.SetActive(true);
-            closeButton.onClick.RemoveAllListeners();
-            closeButton.onClick.AddListener(closePanel);
 
-            chooseButton.gameObject.SetActive(false);
-        }
+        //private void Upgrade()
+        //{
+        //    var level = selectedCard.GetComponent<CardManager>().card.level;
+        //    DeckManager.player.DestroyCard(selectedCard);
+
+        //    var newCard = new Card();
+
+        //    if (selectedCard.GetComponent<CardManager>().card.type == Card.Type.ClassCard)
+        //    {
+        //        newCard = DAL.ObjectDAL.GetRandomClassCard(level + 1, level + 1);
+        //    }
+        //    else
+        //    {
+        //        newCard = DAL.ObjectDAL.GetRandomCard(level + 1, level + 1);
+        //    }
+        //    DeckManager.player.AddCardtoDeck(newCard.cardName);
+
+        //    closeButton.gameObject.SetActive(true);
+        //    closeButton.onClick.RemoveAllListeners();
+        //    closeButton.onClick.AddListener(closePanel);
+
+        //    selectButton.gameObject.SetActive(false);
+        //}
 
 
         private void closePanel()
+        {
+            
+            isActive = false;
+            ClearPanel();
+            deckPanelObject.SetActive(false);
+        }
+
+        private void ClearPanel()
         {
             if (selectedCard)
             {
@@ -214,8 +214,12 @@ namespace Assets.Scripts
                 selectedCard = null;
 
             }
-            isActive = false;
-            deckPanelObject.SetActive(false);
+            selectButton.gameObject.SetActive(false);
+            selectButton.onClick.RemoveAllListeners();
+            applyButton.gameObject.SetActive(false);
+            applyButton.onClick.RemoveAllListeners();
+            closeButton.gameObject.SetActive(false);
+            closeButton.onClick.RemoveAllListeners();
         }
     }
 }

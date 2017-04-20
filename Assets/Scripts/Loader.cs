@@ -12,7 +12,7 @@ namespace Assets.Scripts
 
         void Awake ()
 		{
-           
+            Application.targetFrameRate = 60;           
             //Check if a GameManager has already been assigned to static variable instance or if it's still null
             if (GameManager.instance == null)
 				
@@ -25,6 +25,9 @@ namespace Assets.Scripts
 				//Instantiate SoundManager prefab
 				Instantiate(soundManager);                     
                 
+
+
+
         }
 	}
 }

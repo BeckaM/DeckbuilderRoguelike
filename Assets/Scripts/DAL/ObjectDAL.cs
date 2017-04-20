@@ -7,10 +7,16 @@ namespace Assets.Scripts.DAL
 {
     public static class ObjectDAL
     {
-        public const string EnemyPath = @".\Assets\JSON\Enemies";
-        public const string CardPath = @".\Assets\JSON\Cards";
-        public const string ClassPath = @".\Assets\JSON\PlayerClasses";
-        public const string PerkPath = @".\Assets\JSON\Perks";
+
+        public const string EnemyPath = @".\Resources\Enemies.json";
+        public const string CardPath = @".\Resources\Cards.json";
+        public const string ClassPath = @".\Resources\PlayerClasses.json";
+        public const string PerkPath = @".\Resources\Perks.json";
+
+        //public const string EnemyPath = @".\Assets\JSON\Enemies";
+        //public const string CardPath = @".\Assets\JSON\Cards";
+        //public const string ClassPath = @".\Assets\JSON\PlayerClasses";
+        //public const string PerkPath = @".\Assets\JSON\Perks";
 
 
 
@@ -160,29 +166,29 @@ namespace Assets.Scripts.DAL
 
         internal static EnemyWrapper GetAllEnemies()
         {
-            string text = File.ReadAllText(EnemyPath);
-            return JsonUtility.FromJson<EnemyWrapper>(text);
+            TextAsset file = Resources.Load<TextAsset>("Enemies");           
+            return JsonUtility.FromJson<EnemyWrapper>(file.text);
         }
 
 
         internal static CardWrapper GetAllCards()
         {
-            string text = File.ReadAllText(CardPath);
-            return JsonUtility.FromJson<CardWrapper>(text);
+            TextAsset file = Resources.Load<TextAsset>("Cards");
+            return JsonUtility.FromJson<CardWrapper>(file.text);
         }
 
 
         internal static PlayerClassWrapper GetAllClasses()
         {
-            string text = File.ReadAllText(ClassPath);
-            return JsonUtility.FromJson<PlayerClassWrapper>(text);
+            TextAsset file = Resources.Load<TextAsset>("PlayerClasses");
+            return JsonUtility.FromJson<PlayerClassWrapper>(file.text);
         }
 
 
         internal static PerkWrapper GetAllPerks()
         {
-            string text = File.ReadAllText(PerkPath);
-            return JsonUtility.FromJson<PerkWrapper>(text);
+            TextAsset file = Resources.Load<TextAsset>("Perks");
+            return JsonUtility.FromJson<PerkWrapper>(file.text);
         }
     }
 }

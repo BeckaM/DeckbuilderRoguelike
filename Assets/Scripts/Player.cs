@@ -22,7 +22,7 @@ namespace Assets.Scripts
         public bool right = false;
         public GameObject playerBody;
         public float restartLevelDelay = 1f;        //Delay time in seconds to restart level.
-        public
+        public float moveSpeed= 7.0f;
 
         void Start()
         {
@@ -31,7 +31,7 @@ namespace Assets.Scripts
 
         void Update()
         {
-            velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * 10;
+            velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
 
             if (Input.GetAxisRaw("Horizontal") > 0 && !right)
             {
@@ -43,8 +43,14 @@ namespace Assets.Scripts
                 playerBody.transform.Rotate(0, 180, 0);
                 right = false;
             }
-        }
 
+            if (Input.GetMouseButton(0))
+            {
+                var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                targetPos.y = transform.position.y;
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+            }
+        }
 
         void FixedUpdate()
         {
