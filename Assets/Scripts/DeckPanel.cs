@@ -77,6 +77,7 @@ namespace Assets.Scripts
 
         internal void ShowDeckPanel()
         {
+            //GameManager.instance.dungeonManager.gameObject.SetActive(false);
             deckPanelObject.SetActive(true);
             isActive = true;
 
@@ -203,6 +204,7 @@ namespace Assets.Scripts
             isActive = false;
             ClearPanel();
             deckPanelObject.SetActive(false);
+            //GameManager.instance.dungeonUI.modalPanel.isActive = true;
         }
 
         private void ClearPanel()

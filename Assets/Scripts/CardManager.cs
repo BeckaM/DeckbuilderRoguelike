@@ -184,18 +184,18 @@ namespace Assets.Scripts
             {
                 // cardDescription.SetActive(false);
                 ResetCard();
-                deckManager.cardsInDiscard.Add(this.gameObject);
+                deckManager.cardsInDiscard.Add(this);
                 EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(deckManager.cardsInDeck.Count, deckManager.cardsInDiscard.Count, owner));
             }
             else if (status == CardStatus.InHand)
             {
                 // cardDescription.SetActive(true);
-                deckManager.cardsInHand.Add(this.gameObject);
+                deckManager.cardsInHand.Add(this);
             }
             else if (status == CardStatus.InDeck)
             {
                 // cardDescription.SetActive(false);
-                deckManager.cardsInDeck.Add(this.gameObject);
+                deckManager.cardsInDeck.Add(this);
                 ResetCard();
             }
         }
@@ -427,24 +427,14 @@ namespace Assets.Scripts
         {
             Debug.Log("Starting move card animation");
             Vector3 endpos = new Vector3();
-            // Vector3 endsize = new Vector3();
-
-         //   transform.SetParent(start.transform, false);
-
-            //this.transform.localScale = Vector3.one;
-            //yield return new WaitForSeconds(0.1f);
-            //Vector3 startpos = new Vector3();
-            //startpos = this.transform.position;
+          
 
             //if we have no cards at this position, make a test place and get the new position from that.
             if (end.transform.childCount == 0)
             {
                 this.GetComponent<CanvasGroup>().alpha = (0f);
-                transform.SetParent(end.transform, false);
-                //this.transform.localScale = Vector3.one;
-                //transform.SetParent(endPoint.transform);
-                yield return new WaitForEndOfFrame();
-                //endsize = this.transform.localScale;
+                transform.SetParent(end.transform, false);               
+                yield return new WaitForEndOfFrame();                
                 endpos = this.transform.position;
             }
 
@@ -453,26 +443,21 @@ namespace Assets.Scripts
             {
                 this.GetComponent<CanvasGroup>().alpha = (0f);
                 var lastChild = end.transform.GetChild(end.transform.childCount - 1);
-                endpos = lastChild.transform.position;
-                //  endsize = lastChild.transform.localScale;
-
+                endpos = lastChild.transform.position;              
             }
             this.transform.SetParent(start.transform, false);
             yield return new WaitForSeconds(0.1f);
 
             GetComponent<CanvasGroup>().alpha = (1f);
-            //  yield return new WaitForSeconds(1f);
-
+          
             //Calculate the remaining distance to move based on the square magnitude of the difference between current position and end parameter. 
             //Square magnitude is used instead of magnitude because it's computationally cheaper.
             float sqrRemainingDistance = (transform.position - endpos).sqrMagnitude;
 
             //While that distance is greater than a very small amount (Epsilon, almost zero):
             while (sqrRemainingDistance > 0.001f)
-            {
-                
-                            
-                //Find a new position proportionally closer to the end, based on the moveTime
+            {               
+                                            //Find a new position proportionally closer to the end, based on the moveTime
                 Vector3 newPostion = Vector3.MoveTowards(transform.position, endpos, adjustedMoveTime * Time.deltaTime);
              
                 //Call MovePosition on attached Rigidbody2D and move it to the calculated position.
@@ -493,19 +478,8 @@ namespace Assets.Scripts
             }
 
             transform.SetParent(end.transform, false);
-            //this.transform.localScale = endsize;
-
-            //yield return new WaitForSeconds(3f);
-
-            //if (end == discard)
-            //{
-            //    transform.SetParent(deckManager.deckHolder.transform, false);
-            //}
-            //else
-            //{
-            //    transform.SetParent(end.transform, false);
-            //}
-
+      
+            GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
             yield return new WaitForSeconds(0.3f);
             EventManager.Instance.processingQueue = false;
         }
@@ -527,7 +501,7 @@ namespace Assets.Scripts
 
         private void DestroyCard()
         {
-            DeckManager.player.DestroyCard(this.gameObject);
+            DeckManager.player.DestroyCard(this);
 
         }
 

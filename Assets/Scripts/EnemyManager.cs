@@ -2,6 +2,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
@@ -50,11 +51,20 @@ namespace Assets.Scripts
         }
 
         //Create all the cards in the scene for the monsters deck when the player fights it. 
-        internal void InitMonsterDeck()
+        internal List<CardManager> InitMonsterDeck()
         {
             var enemyDeck = EnemyDeckBuilder.BuildMonsterDeck(enemy.Components, monsterLevel);
 
-            DeckManager.monster.AddCardstoDeck(enemyDeck);
+            var returnList = DeckManager.monster.CreateCardObjects(enemyDeck);
+
+            foreach (CardManager card in returnList)
+            {
+                card.owner = CardgameManager.Team.Opponent;
+                DeckManager.monster.cardsInDeck.Add(card);
+            }
+
+            return returnList;
+                        
 
         }
 

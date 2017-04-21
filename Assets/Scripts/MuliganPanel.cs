@@ -40,6 +40,7 @@ namespace Assets.Scripts
                 {
                     card.GetComponent<CardManager>().SetCardPosition(CardManager.CardStatus.InHand);
                     card.transform.SetParent(DeckManager.player.hand.transform, false);
+                    card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
                     selectScript.ClearOutline();
                     card.GetComponent<CardManager>().imagePanel.ResetPanel();
                 }

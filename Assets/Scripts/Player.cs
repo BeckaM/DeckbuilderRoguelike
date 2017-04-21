@@ -14,6 +14,8 @@ namespace Assets.Scripts
         public int mana = 1;
         public int maxMana = 1;
 
+        public float zComp = 3.5f;
+        public float xComp = -0.3f;
         public PlayerClass playerClass;
         public Sprite playerImage;
         public Sprite[] sprites;
@@ -44,10 +46,12 @@ namespace Assets.Scripts
                 right = false;
             }
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0) && GameManager.instance.doingSetup == false)
             {
                 var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 targetPos.y = transform.position.y;
+                targetPos.x += xComp;
+                targetPos.z += zComp;
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
             }
         }

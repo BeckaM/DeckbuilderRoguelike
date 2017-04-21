@@ -308,14 +308,14 @@ namespace Assets.Scripts
             Debug.Log("Playing a new card: " + card.card.cardName);
             if (card.owner == Team.Me)
             {
-                DeckManager.player.cardsInHand.Remove(card.gameObject);
+                DeckManager.player.cardsInHand.Remove(card);
                 player.mana = player.mana - card.card.cost;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, card.owner));
                 GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Cards_Played, 1);
             }
             else
             {
-                DeckManager.monster.cardsInHand.Remove(card.gameObject);
+                DeckManager.monster.cardsInHand.Remove(card);
                 enemy.mana = enemy.mana - card.card.cost;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, card.owner));
             }

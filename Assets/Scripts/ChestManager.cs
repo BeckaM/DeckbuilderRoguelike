@@ -70,7 +70,7 @@ namespace Assets.Scripts
             }
             else
             {
-                DeckManager.player.AddCardtoDeck(cardReward.cardName);
+                DeckManager.player.AddCardtoDeck(DeckManager.player.CreateCardObject(cardReward));
 
             }
             this.gameObject.SetActive(false);

@@ -12,12 +12,11 @@ namespace Assets.Scripts
             get
             {
                 List<CardManager> cardlist = new List<CardManager>();
-                foreach (GameObject card in DeckManager.monster.cardsInHand)
-                {
-                    var manager = card.GetComponent<CardManager>();
-                    if (manager.isPlayable)
+                foreach (CardManager card in DeckManager.monster.cardsInHand)
+                {                   
+                    if (card.isPlayable)
                     {
-                        cardlist.Add(manager);
+                        cardlist.Add(card);
                     }
                 }
                 return cardlist;

@@ -264,20 +264,22 @@ namespace Assets.Scripts
 
         public void DestroySelectedCard()
         {
-            DeckManager.player.DestroyCard(selectedCard);
+            var card = selectedCard.GetComponent<CardManager>();
+            DeckManager.player.DestroyCard(card);
         }
 
         public void DuplicateSelectedCard()
         {
-            DeckManager.player.AddCardtoDeck(selectedCard.GetComponent<CardManager>().card);
+            DeckManager.player.AddCardtoDeck(DeckManager.player.CreateCardObject(selectedCard.GetComponent<CardManager>().card));
         }
 
 
         public void UpgradeSelectedCard()
         {
-            var level = selectedCard.GetComponent<CardManager>().card.level;
-            var type = selectedCard.GetComponent<CardManager>().card.type;
-            DeckManager.player.DestroyCard(selectedCard);
+            var manager = selectedCard.GetComponent<CardManager>();
+            var level = manager.card.level;
+            var type = manager.card.type;
+            DeckManager.player.DestroyCard(manager);
 
             var newCard = new Card();
 
@@ -289,9 +291,9 @@ namespace Assets.Scripts
             {
                 newCard = DAL.ObjectDAL.GetRandomCard(level + 1, level + 1);
             }
-            var card = DeckManager.player.AddCardtoDeck(newCard);
+            var card = DeckManager.player.AddCardtoDeck(DeckManager.player.CreateCardObject(newCard));
             card.transform.SetParent(selectedCardHolder.transform);
-            selectedCard = card;
+            selectedCard = card.gameObject;
             anvilUpgradeButton.interactable = false;
         }
 

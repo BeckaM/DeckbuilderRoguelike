@@ -19,12 +19,9 @@ namespace Assets.Scripts
 
         public List<CardEffect> effects;
 
-        //-1 = permanent, 0 = instant 
-        public int cardDuration;
-
+        public int cardDuration;      //-1 = permanent, 0 = instant 
 
         //Card Appearance
-
         public string cardText;
         public int spriteIcon;
         public Color spriteColor;

@@ -34,7 +34,7 @@ namespace Assets.Scripts
 
         public CardgameManager cardGameManager;
         public DungeonUI dungeonUI;
-        private DungeonManager dungeonManager;                    //Store a reference to our dungeon manager which will set up the level.
+        public DungeonManager dungeonManager;                    //Store a reference to our dungeon manager which will set up the level.
         private CardgameUI cardGameUI;
         public enum Content { Gold, Consumable, Card };
         public Content lootType;
@@ -130,7 +130,7 @@ namespace Assets.Scripts
 
         private void FindLevelObjects()
         {
-            
+
             dungeonManager = GameObject.Find("Dungeon").GetComponent<DungeonManager>();
             dungeonUI = GameObject.Find("DungeonUI").GetComponent<DungeonUI>();
             cardGameManager = GameObject.Find("CardGame").GetComponent<CardgameManager>();
@@ -140,19 +140,19 @@ namespace Assets.Scripts
 
         public void InitCardgame(Collider monster, Player player)
         {
-            doingSetup = true;           
+            doingSetup = true;
             //Create the monster deck and instantiate the cards.
             var enemyManager = monster.gameObject.GetComponent<EnemyManager>();
 
-            enemyManager.InitMonsterDeck();
+            // enemyManager.InitMonsterDeck();
 
             //Send the Player and Monster to the card game.
             CardgameManager.instance.enemy = enemyManager;
             CardgameManager.instance.player = player;
-                        
+
             //Remove the monster from game view. Either it dies or the player does.
             monster.gameObject.SetActive(false);
-            
+
             //Prevent player from moving while in card game.
             doingSetup = true;
             player.gameObject.SetActive(false);
@@ -160,6 +160,7 @@ namespace Assets.Scripts
             //Enable the card game Canvas, which also starts the CardgameManager script.        
             cardGameManager.gameObject.SetActive(true);
             DeckManager.player.InitCardGameDeck();
+
             enemyManager.InitMonsterDeck();
             DeckManager.monster.InitCardGameDeck();
 
@@ -195,7 +196,7 @@ namespace Assets.Scripts
             }
             else
             {
-                DeckManager.player.AddCardtoDeck(cardLoot);
+                DeckManager.player.AddCardtoDeck(DeckManager.player.CreateCardObject(cardLoot));
             }
 
             doingSetup = false;

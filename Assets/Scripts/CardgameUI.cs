@@ -29,7 +29,7 @@ namespace Assets.Scripts
             EventManager.Instance.AddListener<UpdateMana_GUI>(GUIUpdateMana);
             EventManager.Instance.AddListener<UpdateLife_GUI>(GUIUpdateLife);
             EventManager.Instance.AddListener<ApplyDamage_GUI>(ApplyDamageGUI);
-            EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
+         //   EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
             EventManager.Instance.AddListener<EndGame_GUI>(EndGame);
         }
 
@@ -38,31 +38,31 @@ namespace Assets.Scripts
             EventManager.Instance.RemoveAll();
         }
 
-        private void GUIUpdateDeckDiscardText(UpdateDeckTexts_GUI updates)
-        {
-            if (updates.team == CardgameManager.Team.Me)
-            {
-                playerDeckCount.text = updates.decktext.ToString();
-                playerDiscardCount.text = updates.discardtext.ToString();
-            }
-            else
-            {
-                monsterDeckCount.text = updates.decktext.ToString();
-                monsterDiscardCount.text = updates.discardtext.ToString();
-            }
-            EventManager.Instance.processingQueue = false;
-        }
+        //private void GUIUpdateDeckDiscardText(UpdateDeckTexts_GUI updates)
+        //{
+        //    if (updates.team == CardgameManager.Team.Me)
+        //    {
+        //        playerDeckCount.text = updates.decktext.ToString();
+        //        playerDiscardCount.text = updates.discardtext.ToString();
+        //    }
+        //    else
+        //    {
+        //        monsterDeckCount.text = updates.decktext.ToString();
+        //        monsterDiscardCount.text = updates.discardtext.ToString();
+        //    }
+        //    EventManager.Instance.processingQueue = false;
+        //}
 
         private void GUIUpdateMana(UpdateMana_GUI e)
         {
             //Update Mana text in UI.
             if (e.team == CardgameManager.Team.Me)
             {
-                playerManaText.text = "Mana:" + e.mana + "/" + e.maxMana;
+                playerManaText.text =  e.mana.ToString() + "/" + e.maxMana.ToString();
             }
             else
             {
-                monsterManaText.text = "Mana:" + e.mana + "/" + e.maxMana;
+                monsterManaText.text = e.mana.ToString() + "/" + e.maxMana.ToString();
             }
 
             EventManager.Instance.processingQueue = false;
@@ -73,11 +73,11 @@ namespace Assets.Scripts
             //Update Mana text in UI.
             if (e.team == CardgameManager.Team.Me)
             {
-                playerLifeText.text = "Life:" + e.life + "/" + e.maxLife;
+                playerLifeText.text = e.life.ToString() + "/" + e.maxLife.ToString();
             }
             else
             {
-                monsterLifeText.text = "Life:" + e.life + "/" + e.maxLife;
+                monsterLifeText.text = e.life.ToString() + "/" + e.maxLife.ToString();
             }
 
             EventManager.Instance.processingQueue = false;
