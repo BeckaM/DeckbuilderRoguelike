@@ -38,7 +38,7 @@ namespace Assets.Scripts
         public GameObject selectedCardHolder;
         public Button selectCardButton;
 
-        public GameObject selectFromThreePanel;
+      //  public GameObject selectFromThreePanel;
 
         public GameObject anvilPanel;
         public Button anvilDestroyButton;
@@ -64,7 +64,7 @@ namespace Assets.Scripts
 
             ClearPanel();
 
-            selectFromThreePanel.SetActive(true);
+            choicesPanel.SetActive(true);
 
             addButton.onClick.AddListener(yesEvent);
             addButton.onClick.AddListener(ClosePanel);
@@ -77,7 +77,7 @@ namespace Assets.Scripts
 
             var card = Instantiate(cardObject);
             selections.Add(card);
-            card.transform.SetParent(choicesPanel.transform);
+            card.transform.SetParent(choicesPanel.transform, false);
             var cardScript = card.GetComponent<CardManager>();
             cardScript.PopulateCard(reward);
 
@@ -94,7 +94,7 @@ namespace Assets.Scripts
 
             ClearPanel();
 
-            selectFromThreePanel.SetActive(true);
+            choicesPanel.SetActive(true);
 
             closeButton.onClick.AddListener(yesEvent);
             closeButton.onClick.AddListener(ClosePanel);
@@ -104,7 +104,7 @@ namespace Assets.Scripts
 
             var gold = Instantiate(goldObject);
             selections.Add(gold);
-            gold.transform.SetParent(choicesPanel.transform);
+            gold.transform.SetParent(choicesPanel.transform, false);
             var goldscript = gold.GetComponent<Gold>();
             goldscript.PopulateGold(goldReward);
 
@@ -118,7 +118,7 @@ namespace Assets.Scripts
 
             ClearPanel();
 
-            selectFromThreePanel.SetActive(true);
+            choicesPanel.SetActive(true);
 
             this.title.text = "You are victorious";
             this.subText.text = "Choose a reward from your dead foe.";
@@ -153,7 +153,7 @@ namespace Assets.Scripts
 
             ClearPanel();
 
-            selectFromThreePanel.SetActive(true);
+            choicesPanel.SetActive(true);
 
             this.title.text = "Level Up!";
             this.subText.text = "Choose a reward.";
@@ -190,7 +190,8 @@ namespace Assets.Scripts
             this.subText.text = subText;
 
             prayButton.onClick.AddListener(prayer);
-            prayButton.onClick.AddListener(shrineSpent);            
+            prayButton.onClick.AddListener(shrineSpent);
+            prayButton.onClick.AddListener(PrayerSpent);
             prayButton.interactable = true;
 
             if (needsCardSelection)
@@ -255,7 +256,7 @@ namespace Assets.Scripts
                 anvilDestroyButton.interactable = false;
             }
         }
-
+        
         internal void PrayerSpent()
         {
             prayButton.interactable = false;
@@ -361,7 +362,7 @@ namespace Assets.Scripts
 
             anvilPanel.SetActive(false);
             prayerPanel.SetActive(false);
-            selectFromThreePanel.SetActive(false);
+            choicesPanel.SetActive(false);
             selectCardPanel.SetActive(false);
             cardSelectText.SetActive(true);
             selectCardButton.interactable = true;

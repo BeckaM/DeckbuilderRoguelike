@@ -36,20 +36,20 @@ namespace Assets.Scripts
         }
     }
 
-    public class UpdateDeckTexts_GUI : GameEvent
-    {
-        public int decktext { get; private set; }
-        public int discardtext { get; private set; }
-        public CardgameManager.Team team { get; private set; }
+    //public class UpdateDeckTexts_GUI : GameEvent
+    //{
+    //    public int decktext { get; private set; }
+    //    public int discardtext { get; private set; }
+    //    public CardgameManager.Team team { get; private set; }
 
-        public UpdateDeckTexts_GUI(int decktext, int discardtext, CardgameManager.Team team)
-        {
-            this.decktext = decktext;
-            this.discardtext = discardtext;
-            this.team = team;
+    //    public UpdateDeckTexts_GUI(int decktext, int discardtext, CardgameManager.Team team)
+    //    {
+    //        this.decktext = decktext;
+    //        this.discardtext = discardtext;
+    //        this.team = team;
 
-        }
-    }
+    //    }
+    //}
 
     public class UpdateMana_GUI : GameEvent
     {
@@ -77,6 +77,32 @@ namespace Assets.Scripts
         {
             this.life = life;
             this.maxLife = maxLife;
+            this.team = team;
+
+        }
+    }
+
+    public class UpdateArmor_GUI : GameEvent
+    {
+        public int armor { get; private set; }        
+        public CardgameManager.Team team { get; private set; }
+
+        public UpdateArmor_GUI(int armor, CardgameManager.Team team)
+        {
+            this.armor = armor;            
+            this.team = team;
+
+        }
+    }
+
+    public class UpdateDamageIncrease_GUI : GameEvent
+    {
+        public int boost { get; private set; }
+        public CardgameManager.Team team { get; private set; }
+
+        public UpdateDamageIncrease_GUI(int boost, CardgameManager.Team team)
+        {
+            this.boost = boost;
             this.team = team;
 
         }

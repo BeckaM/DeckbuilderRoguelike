@@ -44,6 +44,7 @@ namespace Assets.Scripts
                     selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
                     selectedCard.GetComponent<Selectable>().outline.enabled = false;
                     this.selectedCard = null;
+                    selectButton.interactable = false;
                     return;
                 }
 
@@ -132,6 +133,7 @@ namespace Assets.Scripts
             closeButton.onClick.AddListener(closePanel);
 
             selectButton.gameObject.SetActive(false);
+            applyButton.gameObject.SetActive(false);
         }
 
 

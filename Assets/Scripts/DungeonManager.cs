@@ -60,37 +60,38 @@ namespace Assets.Scripts
 
         private void GetEnemies(int Level)
         {
-            var enemyLevels = GameManager.instance.enemyLevels;
-
+           
             Debug.Log("Getting enemylist for level " + Level);
             if (Level == 1)
             {
-                enemyLevels = new List<int> { 1, 1, 1 };
+                GameManager.instance.enemyLevels = new List<int> { 1, 1, 1 };               
             }
             else
             {
-                Debug.Log("Old enemylist" + enemyLevels.Count);
+               
+                Debug.Log("Old enemylist" + GameManager.instance.enemyLevels.Count);
                 //Determine number of enemies based on current level number, based on a logarithmic progression
                 enemyCount = (int)Mathf.Log(Level, 2f) + 3;
 
                 //if we should have more enemies, add one to the end of list. It will be the lowest level enemy from the last level.
-                if (enemyCount > enemyLevels.Count)
+                if (enemyCount > GameManager.instance.enemyLevels.Count)
                 {
                     Debug.Log("Enemy count increased");
-                    var newEnemy = enemyLevels[enemyLevels.Count - 1];
-                    enemyLevels.Add(newEnemy);
+                    var newEnemy = GameManager.instance.enemyLevels[GameManager.instance.enemyLevels.Count - 1];
+                    GameManager.instance.enemyLevels.Add(newEnemy);
                 }
 
                 //Gradually increase the levels of all enemies in the list
                 //Remove the lowest level enemy.
-                enemyLevels.RemoveAt(enemyLevels.Count - 1);
+                GameManager.instance.enemyLevels.RemoveAt(GameManager.instance.enemyLevels.Count - 1);
 
                 //Add a new enemy with the same leves as the second biggest monster+1. This gives a good progression.
-                var highEnemy = enemyLevels[1] + 1;
-                enemyLevels.Insert(0, highEnemy);
+                var highEnemy = GameManager.instance.enemyLevels[1] + 1;
+                GameManager.instance.enemyLevels.Insert(0, highEnemy);
             }
-            Debug.Log("New enemylist" + enemyLevels.Count);
+            Debug.Log("New enemylist" + GameManager.instance.enemyLevels.Count);
 
+            var enemyLevels = GameManager.instance.enemyLevels;
             //Get all enemies with level lower than current dungeon Level
             var enemiesToChooseFrom = DAL.ObjectDAL.GetEnemies(Level);
             // List<Enemy> enemyList = new List<Enemy>();

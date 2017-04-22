@@ -180,7 +180,11 @@ namespace Assets.Scripts
 
             foreach (Card card in cardobjects)
             {
-                AddCardtoDeck(CreateCardObject(card));
+                var cardMan =CreateCardObject(card);
+                cardMan.owner = CardgameManager.Team.Me;
+                cardsInDeck.Add(cardMan);
+                cardMan.transform.SetParent(deckHolder.transform, false);
+
             }
         }
 
@@ -305,7 +309,7 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(tempCard, deck, hand));
                 tempCard.moveCounter++;
 
-                EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
+              //  EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
 
                 //Check for objects that trigger on draw card.
                 EventManager.Instance.TriggerEvent(new TableCard_Trigger(tempCard.owner, CardEffect.Trigger.OnDraw));
@@ -332,7 +336,7 @@ namespace Assets.Scripts
                 card.SetCardPosition(CardManager.CardStatus.InDeck);
             }
             cardsInDiscard.Clear();
-            EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
+       //     EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
         }
 
 

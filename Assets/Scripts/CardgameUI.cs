@@ -11,14 +11,18 @@ namespace Assets.Scripts
         public Image playerPortrait;
         public TMP_Text playerLifeText;
         public TMP_Text playerManaText;
-        public TMP_Text playerDeckCount;
-        public TMP_Text playerDiscardCount;
+        public TMP_Text playerArmorText;
+        public TMP_Text playerDamageIncreaseText;
+        // public TMP_Text playerDeckCount;
+        // public TMP_Text playerDiscardCount;
 
         public Image monsterPortrait;
         public TMP_Text monsterLifeText;
         public TMP_Text monsterManaText;
-        public TMP_Text monsterDeckCount;
-        public TMP_Text monsterDiscardCount;
+        public TMP_Text monsterArmorText;
+        public TMP_Text monsterDamageIncreaseText;
+        // public TMP_Text monsterDeckCount;
+        // public TMP_Text monsterDiscardCount;
 
         public Button endTurnButton;
         public GameObject muliganPanel;
@@ -29,7 +33,9 @@ namespace Assets.Scripts
             EventManager.Instance.AddListener<UpdateMana_GUI>(GUIUpdateMana);
             EventManager.Instance.AddListener<UpdateLife_GUI>(GUIUpdateLife);
             EventManager.Instance.AddListener<ApplyDamage_GUI>(ApplyDamageGUI);
-         //   EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
+            EventManager.Instance.AddListener<UpdateArmor_GUI>(GUIUpdateArmor);
+            EventManager.Instance.AddListener<UpdateDamageIncrease_GUI>(GUIUpdateDamageIncrease);
+            //   EventManager.Instance.AddListener<UpdateDeckTexts_GUI>(GUIUpdateDeckDiscardText);
             EventManager.Instance.AddListener<EndGame_GUI>(EndGame);
         }
 
@@ -78,6 +84,36 @@ namespace Assets.Scripts
             else
             {
                 monsterLifeText.text = e.life.ToString() + "/" + e.maxLife.ToString();
+            }
+
+            EventManager.Instance.processingQueue = false;
+        }
+
+        private void GUIUpdateArmor(UpdateArmor_GUI e)
+        {
+            //Update Mana text in UI.
+            if (e.team == CardgameManager.Team.Me)
+            {
+                playerArmorText.text = e.armor.ToString();
+            }
+            else
+            {
+                monsterArmorText.text = e.armor.ToString();
+            }
+
+            EventManager.Instance.processingQueue = false;
+        }
+
+        private void GUIUpdateDamageIncrease(UpdateDamageIncrease_GUI e)
+        {
+            //Update Mana text in UI.
+            if (e.team == CardgameManager.Team.Me)
+            {
+                playerDamageIncreaseText.text = e.boost.ToString();
+            }
+            else
+            {
+                monsterDamageIncreaseText.text = e.boost.ToString();
             }
 
             EventManager.Instance.processingQueue = false;

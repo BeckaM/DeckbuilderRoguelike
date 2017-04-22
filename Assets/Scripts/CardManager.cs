@@ -185,7 +185,7 @@ namespace Assets.Scripts
                 // cardDescription.SetActive(false);
                 ResetCard();
                 deckManager.cardsInDiscard.Add(this);
-                EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(deckManager.cardsInDeck.Count, deckManager.cardsInDiscard.Count, owner));
+              //  EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(deckManager.cardsInDeck.Count, deckManager.cardsInDiscard.Count, owner));
             }
             else if (status == CardStatus.InHand)
             {

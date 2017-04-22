@@ -12,7 +12,7 @@ namespace Assets.Scripts
         public int damageBoost = 0;
 
         public int mana = 1;
-        public int maxMana = 1;
+        public int maxMana = 5;
 
         public float zComp = 3.5f;
         public float xComp = -0.3f;
@@ -104,7 +104,7 @@ namespace Assets.Scripts
         private void Restart()
         {
             //Load the last scene loaded, in this case Main, the only scene in the game.
-            SceneManager.LoadScene("Scene 3D");
+            SceneManager.LoadScene("Main");
         }
     }
 }

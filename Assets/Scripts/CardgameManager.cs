@@ -126,10 +126,12 @@ namespace Assets.Scripts
             if (team == Team.Me)
             {
                 player.ward += value;
+                EventManager.Instance.QueueAnimation(new UpdateArmor_GUI(player.ward, Team.Me));
             }
             else
             {
                 enemy.ward += value;
+                EventManager.Instance.QueueAnimation(new UpdateArmor_GUI(enemy.ward, Team.Opponent));
             }
         }
 
@@ -139,10 +141,12 @@ namespace Assets.Scripts
             if (team == Team.Me)
             {
                 player.damageBoost += value;
+                EventManager.Instance.QueueAnimation(new UpdateDamageIncrease_GUI(player.damageBoost, Team.Me));
             }
             else
             {
                 enemy.damageBoost += value;
+                EventManager.Instance.QueueAnimation(new UpdateDamageIncrease_GUI(enemy.damageBoost, Team.Opponent));
             }
         }
 
