@@ -9,7 +9,7 @@ namespace Assets.Scripts
     [Serializable]
     public class ClassProgress
     {
-        public string className;
+        public PlayerClass.ClassName className;
 
         public MyDictionary cumulativeMetrics = new MyDictionary();
         public MyDictionary highestAchievedMetrics = new MyDictionary();

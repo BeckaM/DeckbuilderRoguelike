@@ -282,16 +282,8 @@ namespace Assets.Scripts
             var type = manager.card.type;
             DeckManager.player.DestroyCard(manager);
 
-            var newCard = new Card();
-
-            if (type == Card.Type.ClassCard)
-            {
-                newCard = DAL.ObjectDAL.GetRandomClassCard(level + 1, level + 1);
-            }
-            else
-            {
-                newCard = DAL.ObjectDAL.GetRandomCard(level + 1, level + 1);
-            }
+            var newCard = DAL.ObjectDAL.GetRandomCard(level + 1, level + 1, type);                       
+                       
             var card = DeckManager.player.AddCardtoDeck(DeckManager.player.CreateCardObject(newCard));
             card.transform.SetParent(selectedCardHolder.transform);
             selectedCard = card.gameObject;

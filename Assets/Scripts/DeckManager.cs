@@ -89,7 +89,7 @@ namespace Assets.Scripts
 
             }
             //If instance already exists and it's not this:
-            else if (name == "MonsterDeck")
+            else if (name == "CardGame")
             {
                 instancename = "AI";
                 monster = this;
@@ -132,8 +132,9 @@ namespace Assets.Scripts
                     {
                         card.moveCounter = 0;
                         card.effectCounter = 0;
-                        card.transform.SetParent(deckHolder.transform);
-                        // card.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
+                        card.transform.SetParent(deckHolder.transform, false);
+                        card.transform.localScale = new Vector3(1f, 1f, 1f);
+                        card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
                         card.SetCardPosition(CardManager.CardStatus.InDeck);
                         //  cardsInDeck.Add(card.gameObject);
                     }

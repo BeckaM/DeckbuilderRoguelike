@@ -99,7 +99,7 @@ namespace Assets.Scripts
 
         public void ResetPanel()
         {
-            this.transform.rotation = Quaternion.identity;
+            this.transform.localRotation = Quaternion.identity;
             fullDescription.SetActive(false);
             backgroundGlow.gameObject.SetActive(true);
             cardImage.gameObject.SetActive(true);

@@ -12,8 +12,10 @@ namespace Assets.Scripts
         public string cardName;
 
         //Card Stats
-        public enum Type { MonsterCard, ClassCard, Consumable }
-        public Type type;
+        public enum Type {ManaSource, BasicAttack, Utility, Consumable}
+        public Type type;        
+        public PlayerClass.ClassName classOwner;
+                
         public int level;
         public int cost;
 

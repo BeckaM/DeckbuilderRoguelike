@@ -12,6 +12,7 @@ public class InspectorCard : Editor
         CardEditor myScript = (CardEditor)target;
         if (GUILayout.Button("Get all cards"))
         {
+            UnityEditor.AssetDatabase.Refresh();
             myScript.GetCardsToEdit();
         }
 

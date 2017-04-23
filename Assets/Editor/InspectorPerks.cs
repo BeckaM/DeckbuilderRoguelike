@@ -12,6 +12,7 @@ public class InspectorPerk : Editor
         PerkEditor myScript = (PerkEditor)target;
         if (GUILayout.Button("Get all perks"))
         {
+            UnityEditor.AssetDatabase.Refresh();
             myScript.GetPerksToEdit();
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Assets.Scripts
 {
@@ -10,7 +11,7 @@ namespace Assets.Scripts
     {
         public GameObject goldObject;
         public Sprite goldImage;
-        public Text goldValueText;
+        public TMP_Text goldValueText;
         public int goldValue;
 
         public void PopulateGold(int goldValue)

@@ -15,7 +15,7 @@ namespace Assets.Scripts
 
         public void PopulateUnlock(PlayerClass unlock)
         {
-            unlockText.text = "New Class unlocked: " + unlock.ClassName;
+            unlockText.text = "New Class unlocked: " + unlock.className;
             metricText.text = unlock.conditionText;
         }
 

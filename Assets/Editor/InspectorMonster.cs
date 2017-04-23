@@ -7,21 +7,22 @@ using Assets.Scripts.DAL;
 
 
 [CustomEditor(typeof(MonsterEditor))]
-    public class InspectorMonster : Editor
+public class InspectorMonster : Editor
+{
+    public override void OnInspectorGUI()
     {
-        public override void OnInspectorGUI()
+        DrawDefaultInspector();
+
+        MonsterEditor myScript = (MonsterEditor)target;
+        if (GUILayout.Button("Get all Monsters"))
         {
-            DrawDefaultInspector();
+            UnityEditor.AssetDatabase.Refresh();
+            myScript.GetMonstersToEdit();
+        }
 
-            MonsterEditor myScript = (MonsterEditor)target;
-            if (GUILayout.Button("Get all Monsters"))
-            {
-                myScript.GetMonstersToEdit();
-            }
-
-            if (GUILayout.Button("Save"))
-            {
-                myScript.SaveMonsters();
-            }
+        if (GUILayout.Button("Save"))
+        {
+            myScript.SaveMonsters();
         }
     }
+}

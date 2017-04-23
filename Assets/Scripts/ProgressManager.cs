@@ -113,7 +113,7 @@ namespace Assets.Scripts
             foreach (PlayerClass pClass in newClassUnlocks)
             {
                 var unlockedClass = new ClassProgress();
-                unlockedClass.className = pClass.ClassName;
+                unlockedClass.className = pClass.className;
                 totalProgress.classProgressList.Add(unlockedClass);                
             }
 
@@ -187,9 +187,9 @@ namespace Assets.Scripts
         {
             var allClasses = DAL.ObjectDAL.GetAllClasses();
 
-            foreach (PlayerClass playerClass in allClasses.PlayerClasses)
+            foreach (PlayerClass playerClass in allClasses.playerClasses)
             {
-                if (CheckClassUnlock(playerClass.ClassName))
+                if (CheckClassUnlock(playerClass.className))
                 {
                     unlockedClasses.Add(playerClass);
                 }
@@ -219,7 +219,7 @@ namespace Assets.Scripts
         }
 
 
-        public bool CheckClassUnlock(string className)
+        public bool CheckClassUnlock(PlayerClass.ClassName className)
         {
             var classcheck = totalProgress.classProgressList.Exists(item => item.className.Equals(className));
 
@@ -236,7 +236,7 @@ namespace Assets.Scripts
 
         internal void SetProgressClass(PlayerClass selectedClass)
         {
-            currentClass = totalProgress.classProgressList.Find(item => item.className.Equals(selectedClass.ClassName));
+            currentClass = totalProgress.classProgressList.Find(item => item.className.Equals(selectedClass.className));
         }
 
 

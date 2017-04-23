@@ -8,10 +8,10 @@ namespace Assets.Scripts.DAL
     public static class ObjectDAL
     {
 
-        public const string EnemyPath = @".\Resources\Enemies.json";
-        public const string CardPath = @".\Resources\Cards.json";
-        public const string ClassPath = @".\Resources\PlayerClasses.json";
-        public const string PerkPath = @".\Resources\Perks.json";
+        public const string EnemyPath = @".\Assets\Resources\Enemies.json";
+        public const string CardPath = @".\Assets\Resources\Cards.json";
+        public const string ClassPath = @".\Assets\Resources\PlayerClasses.json";
+        public const string PerkPath = @".\Assets\Resources\Perks.json";
 
         //public const string EnemyPath = @".\Assets\JSON\Enemies";
         //public const string CardPath = @".\Assets\JSON\Cards";
@@ -20,30 +20,30 @@ namespace Assets.Scripts.DAL
 
 
 
-        internal static List<PlayerClass> GetClasses(List<string> classesToGet)
-        {
-            var playerclasses = GetAllClasses();
-            var classReturn = new List<PlayerClass>();
+        //internal static List<PlayerClass> GetClasses(List<string> classesToGet)
+        //{
+        //    var playerclasses = GetAllClasses();
+        //    var classReturn = new List<PlayerClass>();
 
-            foreach (string classtoget in classesToGet)
-            {
-                var playerclass = playerclasses.PlayerClasses.Find(item => item.ClassName.Equals(classtoget));
-                classReturn.Add(playerclass);
-            }
+        //    foreach (string classtoget in classesToGet)
+        //    {
+        //        var playerclass = playerclasses.playerClasses.Find(item => item.ClassName.Equals(classtoget));
+        //        classReturn.Add(playerclass);
+        //    }
 
-            return classReturn;
-        }
+        //    return classReturn;
+        //}
 
-        internal static Card GetRandomConsumable(int level)
-        {
-            var cards = GetAllCards();
+        //internal static Card GetRandomConsumable(int level)
+        //{
+        //    var cards = GetAllCards();
 
-            var consumables = cards.cardItems.FindAll(item => item.type.Equals(Card.Type.Consumable) && item.level <= level);
+        //    var consumables = cards.cardItems.FindAll(item => item.type.Equals(Card.Type.Consumable) && item.level <= level);
 
-            Card cardReturn = consumables[UnityEngine.Random.Range(0, consumables.Count)];
+        //    Card cardReturn = consumables[UnityEngine.Random.Range(0, consumables.Count)];
 
-            return cardReturn;
-        }
+        //    return cardReturn;
+        //}
 
 
         internal static List<Card> GetCards(List<string> cardsToGet)
@@ -69,24 +69,31 @@ namespace Assets.Scripts.DAL
             return card;
         }
 
-        internal static Card GetRandomCard(int minLevel, int maxLevel)
+        internal static Card GetRandomCard(int minLevel, int maxLevel, Card.Type type)
         {
             var cards = GetAllCards();
 
-            var levelCards = new List<Card>();
+            //var levelCards = new List<Card>();
 
-            while (levelCards.Count == 0)
-            {
-                levelCards = cards.cardItems.FindAll(item => item.level >= minLevel && item.level <= maxLevel && item.type.Equals(Card.Type.MonsterCard));
-                minLevel--;
-            }
+            var levelCards = cards.cardItems.FindAll(item => item.level >= minLevel && item.level <= maxLevel && item.type.Equals(type));
 
             Card cardReturn = levelCards[UnityEngine.Random.Range(0, levelCards.Count)];
 
             return cardReturn;
         }
 
-        internal static Card GetRandomClassCard(int minLevel, int maxLevel)
+        internal static Card GetRandomCard(int minLevel, int maxLevel)
+        {
+            var cards = GetAllCards();
+                        
+            var levelCards = cards.cardItems.FindAll(item => item.level >= minLevel && item.level <= maxLevel && item.type != (Card.Type.Consumable));
+                        
+            Card cardReturn = levelCards[UnityEngine.Random.Range(0, levelCards.Count)];
+
+            return cardReturn;
+        }
+
+        internal static List<Card> GetClassCards(int minLevel, int maxLevel, PlayerClass.ClassName classType)
         {
             var cards = GetAllCards();
 
@@ -94,13 +101,11 @@ namespace Assets.Scripts.DAL
 
             while (levelCards.Count == 0)
             {
-                levelCards = cards.cardItems.FindAll(item => item.level >= minLevel && item.level <= maxLevel && item.type.Equals(Card.Type.ClassCard));
+                levelCards = cards.cardItems.FindAll(item => item.level >= minLevel && item.level <= maxLevel && item.classOwner.Equals(classType));
                 minLevel--;
             }
 
-            Card cardReturn = levelCards[UnityEngine.Random.Range(0, levelCards.Count)];
-
-            return cardReturn;
+            return levelCards;
         }
 
 
@@ -119,10 +124,9 @@ namespace Assets.Scripts.DAL
 
         internal static void SaveCards(CardWrapper cardsToEdit)
         {
-
-
             if (!File.Exists(CardPath))
             {
+                Debug.LogError("No file at" + CardPath);
                 return;
             }
             string jsonCard = JsonUtility.ToJson(cardsToEdit);
@@ -133,6 +137,7 @@ namespace Assets.Scripts.DAL
         {
             if (!File.Exists(EnemyPath))
             {
+                Debug.LogError("No file at" + EnemyPath);
                 return;
             }
             string jsonEnemy = JsonUtility.ToJson(awesomeNewMonster);
@@ -144,6 +149,7 @@ namespace Assets.Scripts.DAL
         {
             if (!File.Exists(ClassPath))
             {
+                Debug.LogError("No file at" + ClassPath);
                 return;
             }
             string jsonClass = JsonUtility.ToJson(classesToEdit);
@@ -156,6 +162,7 @@ namespace Assets.Scripts.DAL
         {
             if (!File.Exists(PerkPath))
             {
+                Debug.LogError("No file at" + PerkPath);
                 return;
             }
             string jsonPerks = JsonUtility.ToJson(perksToEdit);
@@ -166,7 +173,7 @@ namespace Assets.Scripts.DAL
 
         internal static EnemyWrapper GetAllEnemies()
         {
-            TextAsset file = Resources.Load<TextAsset>("Enemies");           
+            TextAsset file = Resources.Load<TextAsset>("Enemies");
             return JsonUtility.FromJson<EnemyWrapper>(file.text);
         }
 

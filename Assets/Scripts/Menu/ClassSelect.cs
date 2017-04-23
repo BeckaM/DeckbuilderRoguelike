@@ -33,7 +33,7 @@ namespace Assets.Scripts.Menu
 
             var playerClasses = DAL.ObjectDAL.GetAllClasses();
 
-            foreach (PlayerClass pClass in playerClasses.PlayerClasses)
+            foreach (PlayerClass pClass in playerClasses.playerClasses)
             {
                 var classButton = Instantiate(classButtonObj);
                 classButton.transform.SetParent(classPanel.transform, false);
@@ -42,7 +42,7 @@ namespace Assets.Scripts.Menu
 
                 cbScript.PopulateClassButton(pClass);
 
-                cbScript.LockClass(!GameManager.instance.progressManager.CheckClassUnlock(pClass.ClassName));
+                cbScript.LockClass(!GameManager.instance.progressManager.CheckClassUnlock(pClass.className));
             }
         }
 
@@ -74,8 +74,9 @@ namespace Assets.Scripts.Menu
             else
             {
                 selectedClass = playerClass;
-                selectedClassImage.sprite = GameManager.instance.classImages[playerClass.SpriteIcon];
-                selectedClassText.text = playerClass.ClassName;
+                selectedClassImage.sprite = GameManager.instance.classImages[playerClass.spriteIcon];
+                selectedClassImage.color = Color.white;
+                selectedClassText.text = playerClass.className.ToString();
 
                 selectButton.interactable = true;
             }
@@ -86,7 +87,7 @@ namespace Assets.Scripts.Menu
         {
             GameManager.instance.playerClass = selectedClass;
             GameManager.instance.progressManager.SetProgressClass(selectedClass);
-            DeckManager.player.StartingDeck(selectedClass.Startingdeck);
+            DeckManager.player.StartingDeck(selectedClass.startingDeck);
             mainMenu.ShowPerkSelect();            
         }
 

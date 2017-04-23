@@ -47,7 +47,9 @@ namespace Assets.Scripts
                 else
                 {
                     card.GetComponent<CardManager>().SetCardPosition(CardManager.CardStatus.InDiscard);
-                    card.transform.SetParent(DeckManager.player.deckHolder.transform, false);
+                    card.transform.SetParent(CardgameManager.instance.playerDiscard.transform, false);
+                    card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
+                    card.GetComponent<CardManager>().ResetTransform();
                     selectScript.ClearOutline();
                     card.GetComponent<CardManager>().imagePanel.ResetPanel();
                     discardCards++;

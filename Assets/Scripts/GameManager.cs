@@ -172,8 +172,10 @@ namespace Assets.Scripts
 
 
         public void ReturnFromCardgame(bool win, List<Card> cardRewards, int goldReward)
-        {
-            dungeonUI.deckPanel.gameObject.SetActive(false);
+        {           
+            dungeonManager.gameObject.SetActive(true);
+            dungeonUI.gameObject.SetActive(true);
+          //  dungeonUI.deckPanel.gameObject.SetActive(false);
             dungeonUI.UpdateLifeText();
 
             if (win == false)
@@ -269,12 +271,10 @@ namespace Assets.Scripts
 
         internal void LevelUp()
         {
+            var newCards = DAL.ObjectDAL.GetClassCards(playerLevel - 1, playerLevel + 1, playerClass.className);
+
             List<Card> rewardList = new List<Card>();
-            for (var i = 0; i < 3; i++)
-            {
-                var newCard = DAL.ObjectDAL.GetRandomClassCard(level - 1, level + 1);
-                rewardList.Add(newCard);
-            }
+            rewardList.AddRange(newCards);
 
             dungeonUI.modalPanel.LevelUp(rewardList, LevelUpComplete);
         }

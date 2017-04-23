@@ -100,7 +100,7 @@ namespace Assets.Scripts
             cardgameUI.monsterPortrait.color = enemy.enemy.spriteColor;
 
             // player.UpdateLife();            
-            player.playerImage = player.sprites[GameManager.instance.playerClass.SpriteIcon];
+            player.playerImage = player.sprites[GameManager.instance.playerClass.spriteIcon];
 
             cardgameUI.playerPortrait.sprite = player.playerImage;
         }
@@ -155,15 +155,17 @@ namespace Assets.Scripts
         {
             if (team == Team.Me)
             {
-                enemy.life -= ((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0;
-                EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - enemy.ward, enemy.ward, player.damageBoost, Team.Opponent));
+                var amount = ((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0;
+                enemy.life -= amount;
+                EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(amount, Team.Opponent));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
                 GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Damage_Dealt,((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0);
             }
             else
             {
-                player.life -= ((value + enemy.damageBoost) - player.ward) > 0 ? ((value + enemy.damageBoost) - player.ward) : 0;
-                EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(value - player.ward, player.ward, enemy.damageBoost, Team.Me));
+                var amount = ((value + enemy.damageBoost) - player.ward) > 0 ? ((value + enemy.damageBoost) - player.ward) : 0;
+                player.life -= amount;
+                EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(amount, Team.Me));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
             }
             CheckWinConditions();

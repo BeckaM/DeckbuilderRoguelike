@@ -17,17 +17,19 @@ namespace Assets.Scripts
 
         internal void PopulateChest(int level)
         {
-            var rand = UnityEngine.Random.Range(0, 10);
+            var adjustedLevel = Math.Ceiling((float)level / 2);
+            var rand = UnityEngine.Random.Range(0, 6);
             if (rand == 0)
             {
+                
                 content = Content.Card;
-                cardReward = DAL.ObjectDAL.GetRandomCard(level, level + 1);
+                cardReward = DAL.ObjectDAL.GetRandomCard((int)adjustedLevel, (int)adjustedLevel+1);
                 subText = "It contains a powerful card. Add it to your deck?";
             }
-            else if (rand > 0 && rand < 6)
+            else if (rand > 0 && rand < 4)
             {
                 content = Content.Consumable;
-                cardReward = DAL.ObjectDAL.GetRandomConsumable(level);
+                cardReward = DAL.ObjectDAL.GetRandomCard((int)adjustedLevel-1, (int)adjustedLevel + 1, Card.Type.Consumable);
                 subText = "It contains a consumable. Add it to your deck?";
 
             }

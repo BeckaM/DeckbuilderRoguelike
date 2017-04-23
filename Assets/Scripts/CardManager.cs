@@ -315,8 +315,8 @@ namespace Assets.Scripts
                     {
                         deckManager.DiscardRandomCard();
                         break;
-                    }
-                default:
+                    }               
+                        default:
                     {
                         Debug.LogError("Card effect not implemented yet!");
                         break;
@@ -330,7 +330,7 @@ namespace Assets.Scripts
         {
             if (e.card == this)
             {
-                var text = cardEffectText.GetComponent<Text>();
+                var text = cardEffectText.GetComponent<TMP_Text>();
                 switch (e.type)
                 {
                     case CardEffect.Effect.AddMaxMana:
@@ -388,7 +388,7 @@ namespace Assets.Scripts
 
         private IEnumerator EffectText(Color color)
         {
-            var text = cardEffectText.GetComponent<Text>();
+            var text = cardEffectText.GetComponent<TMP_Text>();
             text.color = color;
             cardEffectText.SetActive(true);
 
@@ -476,10 +476,10 @@ namespace Assets.Scripts
             {
                 EventManager.Instance.RemoveListener<MoveCard_GUI>(Move);
             }
-
-            transform.SetParent(end.transform, false);
-      
+           
+            transform.SetParent(end.transform, false);            
             GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
+            ResetTransform();
             yield return new WaitForSeconds(0.3f);
             EventManager.Instance.processingQueue = false;
         }
@@ -489,7 +489,7 @@ namespace Assets.Scripts
         {
             if (e.card == this)
             {
-                var text = cardEffectText.GetComponent<Text>();
+                var text = cardEffectText.GetComponent<TMP_Text>();
 
                 text.text = "Card Consumed!";
 
@@ -502,7 +502,6 @@ namespace Assets.Scripts
         private void DestroyCard()
         {
             DeckManager.player.DestroyCard(this);
-
         }
 
 

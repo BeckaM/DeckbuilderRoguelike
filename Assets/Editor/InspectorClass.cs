@@ -12,6 +12,7 @@ public class InspectorClass : Editor
         PlayerClassEditor myScript = (PlayerClassEditor)target;
         if (GUILayout.Button("Get all classes"))
         {
+            UnityEditor.AssetDatabase.Refresh();
             myScript.GetClassesToEdit();
         }
 

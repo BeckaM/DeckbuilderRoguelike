@@ -17,6 +17,7 @@ namespace Assets.Scripts
         // public TMP_Text playerDiscardCount;
 
         public Image monsterPortrait;
+        public TMP_Text monsterNameText;
         public TMP_Text monsterLifeText;
         public TMP_Text monsterManaText;
         public TMP_Text monsterArmorText;
@@ -122,18 +123,8 @@ namespace Assets.Scripts
 
         internal void ApplyDamageGUI(ApplyDamage_GUI a)
         {
-            var damageText = "" + a.damage + " Damage!";
-            var reduceText = "" + a.reduced + " Reduced";
-            var effectText = "";
-            if (a.reduced > 0)
-            {
-                effectText = damageText + " " + reduceText;
-            }
-            else
-            {
-                effectText = damageText;
-            }
 
+            var effectText = "-" + a.damage.ToString();
             if (a.team == CardgameManager.Team.Me)
             {
                 StartCoroutine(EffectText(Color.red, playerLifeText, effectText, 3));
@@ -172,6 +163,9 @@ namespace Assets.Scripts
             EventManager.Instance.processingQueue = false;
 
             this.gameObject.SetActive(false);
+            CardgameManager.instance.player.gameObject.SetActive(true);
+            CardgameManager.instance.gameObject.SetActive(false);
+
         }
     }
 }

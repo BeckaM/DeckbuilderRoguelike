@@ -24,8 +24,8 @@ namespace Assets.Scripts.Menu
         public void PopulateClassButton(PlayerClass playerClass)
         {
             this.playerClass = playerClass;
-            classImage.sprite = GameManager.instance.classImages[playerClass.SpriteIcon];
-            className.text = playerClass.ClassName;
+            classImage.sprite = GameManager.instance.classImages[playerClass.spriteIcon];
+            className.text = playerClass.className.ToString();
         }
 
         public void LockClass(bool locked)

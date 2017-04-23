@@ -14,6 +14,7 @@ public class CardEditorInspector : Editor
         FullCardEditor myScript = (FullCardEditor)target;
         if (GUILayout.Button("Get All Cards"))
         {
+            UnityEditor.AssetDatabase.Refresh();
             myScript.GetCardsToEdit();
         }
 
@@ -39,6 +40,7 @@ public class CardEditorInspector : Editor
 
         if (GUILayout.Button("Get Enemy Deck"))
         {
+            UnityEditor.AssetDatabase.Refresh();
             myScript.GetMonsterDeck();
         }
     }

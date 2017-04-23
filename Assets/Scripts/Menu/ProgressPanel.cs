@@ -50,7 +50,7 @@ namespace Assets.Scripts.Menu
         public void ShowClassProgress(PlayerClass selectedClass)
         {
             var progress = GameManager.instance.progressManager.totalProgress;
-            var currentClass = progress.classProgressList.Find(item => item.className.Equals(selectedClass.ClassName));
+            var currentClass = progress.classProgressList.Find(item => item.className.Equals(selectedClass.className));
             classPanel.SetActive(true);
 
             monsterKillsClass.text = currentClass.cumulativeMetrics[ProgressManager.Metric.Monsters_Killed].ToString();
