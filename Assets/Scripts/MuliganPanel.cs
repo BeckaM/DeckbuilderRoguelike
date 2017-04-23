@@ -11,7 +11,7 @@ namespace Assets.Scripts
      **/
     public class MuliganPanel : MonoBehaviour
     {
-        public List<GameObject> muliganCards;
+        public List<CardManager> muliganCards;
         public GameObject muliganCardHolder;
         public int discardCards;
 
@@ -19,7 +19,7 @@ namespace Assets.Scripts
         {
             this.gameObject.SetActive(true);
             muliganCards = DeckManager.player.GetMuliganCards();
-            foreach (GameObject card in muliganCards)
+            foreach (CardManager card in muliganCards)
             {
                 card.transform.SetParent(muliganCardHolder.transform, false);
             }
@@ -33,12 +33,12 @@ namespace Assets.Scripts
         public void MuliganComplete()
         {
             discardCards = 0;
-            foreach (GameObject card in muliganCards)
+            foreach (CardManager card in muliganCards)
             {
                 var selectScript = card.GetComponent<Selectable>();
                 if (selectScript.muliganKeep)
                 {
-                    card.GetComponent<CardManager>().SetCardPosition(CardManager.CardStatus.InHand);
+                    card.SetCardPosition(CardManager.CardStatus.InHand);
                     card.transform.SetParent(DeckManager.player.hand.transform, false);
                     card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
                     selectScript.ClearOutline();
@@ -46,12 +46,13 @@ namespace Assets.Scripts
                 }
                 else
                 {
-                    card.GetComponent<CardManager>().SetCardPosition(CardManager.CardStatus.InDiscard);
+                    card.SetCardPosition(CardManager.CardStatus.InDiscard);
                     card.transform.SetParent(CardgameManager.instance.playerDiscard.transform, false);
-                    card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
-                    card.GetComponent<CardManager>().ResetTransform();
+                    card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, card.deckManager.discardOffset);
+                    card.deckManager.discardOffset -= 2;
+                    //   card.GetComponent<CardManager>().ResetTransform();
                     selectScript.ClearOutline();
-                    card.GetComponent<CardManager>().imagePanel.ResetPanel();
+                    card.imagePanel.ResetPanel();
                     discardCards++;
                 }
             }

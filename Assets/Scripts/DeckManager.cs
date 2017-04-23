@@ -15,7 +15,7 @@ namespace Assets.Scripts
     {
         public static DeckManager player = null;
 
-       
+
 
         public static DeckManager monster = null;
         CardManager cardManager;
@@ -24,19 +24,14 @@ namespace Assets.Scripts
         {
             get
             {
-                if (team == CardgameManager.Team.Me)
-                {
-                    return GameManager.instance.dungeonUI.deckPanel.cardArea;
-                }
-                else
-                {
-                    return CardgameManager.instance.monsterDeck;
-                }
+                return GameManager.instance.dungeonUI.deckPanel.cardArea;
             }
         }
 
+
         public List<string> deckStringHolder;
 
+        public int deckOffset;
         public GameObject deck
         {
             get
@@ -63,6 +58,21 @@ namespace Assets.Scripts
                 else
                 {
                     return CardgameManager.instance.monsterHand;
+                }
+            }
+        }
+        public int discardOffset;
+        public GameObject discard
+        {
+            get
+            {
+                if (team == CardgameManager.Team.Me)
+                {
+                    return CardgameManager.instance.playerDiscard;
+                }
+                else
+                {
+                    return CardgameManager.instance.monsterDiscard;
                 }
             }
         }
@@ -133,10 +143,10 @@ namespace Assets.Scripts
                         card.moveCounter = 0;
                         card.effectCounter = 0;
                         card.transform.SetParent(deckHolder.transform, false);
-                        card.transform.localScale = new Vector3(1f, 1f, 1f);
-                        card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
+                        //card.transform.localScale = new Vector3(1f, 1f, 1f);
+                        //card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
                         card.SetCardPosition(CardManager.CardStatus.InDeck);
-                        //  cardsInDeck.Add(card.gameObject);
+                        card.ResetCard(deck);
                     }
 
                     else
@@ -172,7 +182,7 @@ namespace Assets.Scripts
                 AddCardtoDeck(card);
             }
         }
-                   
+
 
         internal void InitDeck()
         {
@@ -181,7 +191,7 @@ namespace Assets.Scripts
 
             foreach (Card card in cardobjects)
             {
-                var cardMan =CreateCardObject(card);
+                var cardMan = CreateCardObject(card);
                 cardMan.owner = CardgameManager.Team.Me;
                 cardsInDeck.Add(cardMan);
                 cardMan.transform.SetParent(deckHolder.transform, false);
@@ -189,22 +199,22 @@ namespace Assets.Scripts
             }
         }
 
-       internal void InitCardGameDeck()
+        internal void InitCardGameDeck()
         {
-            var stackOffset = 0;
+            deckOffset = 0;
             cardsInDeck.Shuffle(new System.Random());
             foreach (CardManager card in cardsInDeck)
             {
                 card.transform.SetParent(deck.transform, false);
+                                
+                card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, deckOffset);
+                deckOffset -= 2;
 
-                stackOffset -= 2;
-                card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, stackOffset);
-
-                card.GetComponent<CardManager>().ResetTransform();
+                //  card.GetComponent<CardManager>().ResetTransform();
             }
         }
 
-        
+
         public CardManager AddCardtoDeck(CardManager card)
         {
             //var cardobject = ObjectDAL.GetCard(cardToCreate);
@@ -216,7 +226,7 @@ namespace Assets.Scripts
             //  var deck = this.transform;
 
             //var card = CreateCardObject(cardobject);
-             return card;
+            return card;
         }
 
 
@@ -232,8 +242,8 @@ namespace Assets.Scripts
         internal CardManager CreateCardObject(Card card)
         {
             GameObject instance = Instantiate(cardObject) as GameObject;
-            cardManager = instance.GetComponent<CardManager>();                     
-                     
+            cardManager = instance.GetComponent<CardManager>();
+
             cardManager.PopulateCard(card);
             return cardManager;
         }
@@ -241,7 +251,7 @@ namespace Assets.Scripts
         internal List<CardManager> CreateCardObjects(List<Card> cards)
         {
             var returnList = new List<CardManager>();
-            foreach(Card card in cards)
+            foreach (Card card in cards)
             {
                 var cardManager = CreateCardObject(card);
                 returnList.Add(cardManager);
@@ -273,22 +283,23 @@ namespace Assets.Scripts
         private CardManager GetTopCard()
         {
             var topCard = cardsInDeck[cardsInDeck.Count - 1];
-            return topCard; 
+            return topCard;
         }
 
 
-        internal List<GameObject> GetMuliganCards()
+        internal List<CardManager> GetMuliganCards()
         {
-            int muliganCount = 3 + GameManager.instance.perkManager.bonusInitialDraw;
-            List<GameObject> muliganCards = new List<GameObject>();
+            int muliganCount = 4 + GameManager.instance.perkManager.bonusInitialDraw;
+            List<CardManager> muliganCards = new List<CardManager>();
             for (var i = 0; i < muliganCount; i++)
             {
                 if (cardsInDeck.Count > 0)
                 {
 
                     CardManager tempCard = GetTopCard();
-                    muliganCards.Add(tempCard.gameObject);
+                    muliganCards.Add(tempCard);
                     cardsInDeck.Remove(tempCard);
+                    deckOffset += 2;
                     tempCard.GetComponent<Selectable>().muliganKeep = true;
                 }
             }
@@ -304,20 +315,20 @@ namespace Assets.Scripts
                 //Prepare the card for being moved
                 tempCard.SetCardPosition(CardManager.CardStatus.InHand);
                 cardsInDeck.Remove(tempCard);
-
+                
                 //Queue up a move card animation.
                 EventManager.Instance.AddListener<MoveCard_GUI>(tempCard.Move);
                 EventManager.Instance.QueueAnimation(new MoveCard_GUI(tempCard, deck, hand));
                 tempCard.moveCounter++;
 
-              //  EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
+                //  EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
 
                 //Check for objects that trigger on draw card.
                 EventManager.Instance.TriggerEvent(new TableCard_Trigger(tempCard.owner, CardEffect.Trigger.OnDraw));
             }
             else
             {
-                ShuffleDeck();
+                ShuffleDiscardIntoDeck();
                 if (cardsInDeck.Count != 0)
                 {
                     Draw();
@@ -330,14 +341,19 @@ namespace Assets.Scripts
         }
 
 
-        private void ShuffleDeck()
+        private void ShuffleDiscardIntoDeck()
         {
             foreach (CardManager card in cardsInDiscard)
-            {               
+            {
                 card.SetCardPosition(CardManager.CardStatus.InDeck);
+                EventManager.Instance.AddListener<MoveCard_GUI>(card.Move);
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, discard, deck));
+                card.moveCounter++;
             }
             cardsInDiscard.Clear();
-       //     EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
+        //    discardOffset = 0;
+
+            //     EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
         }
 
 
@@ -345,7 +361,7 @@ namespace Assets.Scripts
         {
             cardsInDeck.Remove(card);
             deckStringHolder.Remove(card.GetComponent<CardManager>().card.cardName);
-            Destroy(card.gameObject);            
+            Destroy(card.gameObject);
         }
 
         public void DestroyRandomCard()
