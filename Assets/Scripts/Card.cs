@@ -25,12 +25,12 @@ namespace Assets.Scripts
 
         //Card Appearance
         public string cardText;
-        public int spriteIcon;
-        public Color spriteColor;
-        public Color spriteHighlightColor;
-        public Color spriteGlowColor;
-        public Color spriteBackgroundColor;
-        public Color backgroundGlowColor;
+        public string spriteIcon;
+        //public Color spriteColor;
+        //public Color spriteHighlightColor;
+        //public Color spriteGlowColor;
+        //public Color spriteBackgroundColor;
+        //public Color backgroundGlowColor;
 
         public Color backgroundColor;
     }

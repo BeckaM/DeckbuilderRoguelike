@@ -9,14 +9,14 @@ namespace Assets.Scripts
     public class CardImagePanel : MonoBehaviour
     {
 
-        public Sprite[] sprites;
-        public Sprite[] highlights;
-        public Sprite[] glows;
+        //public Sprite[] sprites;
+        //public Sprite[] highlights;
+        //public Sprite[] glows;
         public Image cardImage;
-        public Image highlight;
-        public Image glow;
-        public Image imageBackground;
-        public Image backgroundGlow;
+        //public Image highlight;
+        //public Image glow;
+        //public Image imageBackground;
+        //public Image backgroundGlow;
 
         public GameObject fullDescription;
         public bool descriptionToggle=false;
@@ -24,16 +24,28 @@ namespace Assets.Scripts
 
         public void PopulateCardImage(Card card)
         {
-            //Set Image                       
-            cardImage.sprite = sprites[card.spriteIcon];
-            cardImage.color = card.spriteColor;
-            highlight.sprite = highlights[card.spriteIcon];
-            highlight.color = card.spriteHighlightColor;
-            glow.sprite = glows[card.spriteIcon];
-            glow.color = card.spriteGlowColor;
+            //Set Image 
+            Sprite image = Resources.Load("CardImages/" + card.spriteIcon, typeof(Sprite)) as Sprite;
 
-            imageBackground.color = card.spriteBackgroundColor;
-            backgroundGlow.color = card.backgroundGlowColor;
+            if (image == null)
+            {
+                cardImage.sprite = Resources.Load("CardImages/" + "Placeholder", typeof(Sprite)) as Sprite;
+            }
+            else
+            {
+                cardImage.sprite = image;
+            }
+            
+                                  
+            //cardImage.sprite = sprites[card.spriteIcon];
+            //cardImage.color = card.spriteColor;
+            //highlight.sprite = highlights[card.spriteIcon];
+            //highlight.color = card.spriteHighlightColor;
+            //glow.sprite = glows[card.spriteIcon];
+            //glow.color = card.spriteGlowColor;
+
+            //imageBackground.color = card.spriteBackgroundColor;
+            //backgroundGlow.color = card.backgroundGlowColor;
         }
 
 
@@ -61,7 +73,7 @@ namespace Assets.Scripts
             yield return StartCoroutine(Flip(90));
 
             fullDescription.SetActive(true);
-            backgroundGlow.gameObject.SetActive(false);
+         //   backgroundGlow.gameObject.SetActive(false);
             cardImage.gameObject.SetActive(false);
 
             yield return StartCoroutine(Flip(90));
@@ -72,7 +84,7 @@ namespace Assets.Scripts
             yield return StartCoroutine(Flip(90));
 
             fullDescription.SetActive(false);
-            backgroundGlow.gameObject.SetActive(true);
+       //     backgroundGlow.gameObject.SetActive(true);
             cardImage.gameObject.SetActive(true);
 
             yield return StartCoroutine(Flip(90));
@@ -101,7 +113,7 @@ namespace Assets.Scripts
         {
             this.transform.localRotation = Quaternion.identity;
             fullDescription.SetActive(false);
-            backgroundGlow.gameObject.SetActive(true);
+     //       backgroundGlow.gameObject.SetActive(true);
             cardImage.gameObject.SetActive(true);
 
         } 
