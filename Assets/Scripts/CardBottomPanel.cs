@@ -91,11 +91,7 @@ namespace Assets.Scripts
         {
             this.gameObject.SetActive(show);
         }
-
-
-
-
-
+        
         public void ShowDamageIcon(int damage)
         {
             

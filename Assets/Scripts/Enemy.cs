@@ -14,7 +14,9 @@ namespace Assets.Scripts
         public Color spriteColor;
         public int BaseEnemyLevel;
         public int BaseEnemyHP;
-
+        public int HPPerLevel;
+        public enum MonsterType {Basic, Boss }
+        public MonsterType type;
         public List<DeckComponent> Components;
     }
 

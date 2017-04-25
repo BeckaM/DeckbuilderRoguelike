@@ -10,8 +10,7 @@ namespace Assets.Scripts
 
         public GameObject placeChecker;
         public List<GameObject> placeCheckers = new List<GameObject>();
-        public GameObject player;
-        public GameObject exit;
+        
         // public LayerMask layerMask = 10;
 
         public int width;
@@ -148,7 +147,7 @@ namespace Assets.Scripts
 
         }
 
-        public void PlacePlayerAndExit()
+        public List<Vector3> GetPlayerAndExitSpots()
         {
             List<Coord> placeListA = new List<Coord>();
             List<Coord> placeListB = new List<Coord>();
@@ -176,17 +175,17 @@ namespace Assets.Scripts
 
                         bestSpotA = placeA;
                         bestSpotB = placeB;
-
                     }
                 }
             }
 
-            player.transform.position = CoordToWorldPoint(bestSpotA);
-            exit.transform.position = CoordToWorldPoint(bestSpotB);
+            var playerPosition = CoordToWorldPoint(bestSpotA);
+            var exitPosition = CoordToWorldPoint(bestSpotB);
             placementSpots.Remove(bestSpotA);
             placementSpots.Remove(bestSpotB);
-            Debug.Log("Placing Player on spot " + bestSpotA.comp + "  " + CoordToWorldPoint(bestSpotA));
-            Debug.Log("Placing Exit on spot " + bestSpotB.comp + "  " + CoordToWorldPoint(bestSpotB));
+            var spots = new List<Vector3>();
+            spots.Add(playerPosition);
+            spots.Add(exitPosition);                  
 
             foreach (Room room in rooms)
             {
@@ -202,6 +201,8 @@ namespace Assets.Scripts
                 }
 
             }
+
+            return spots;
 
         }
 

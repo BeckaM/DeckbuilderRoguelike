@@ -17,6 +17,7 @@ namespace Assets.Scripts
         public GameObject shrinePrefab;
         public GameObject enemyPrefab; //Enemy prefab.
         public GameObject anvilPrefab;
+        public GameObject bossPrefab;
 
         int enemyCount;
 
@@ -26,43 +27,83 @@ namespace Assets.Scripts
 
         public MapGenerator mapGen;                                  //A variable to store a reference to the transform of our Board object.
 
+        private int dungeonLevel;
+
+        public GameObject player;
+        public GameObject exit;
+       
+
 
 
         //SetupScene initializes our level and calls the previous functions to lay out the game board
         public void SetupScene(int level)
         {
+            dungeonLevel = level;
             GetComponent<MapGenerator>();
             var size = 50 + level * 2;
 
             mapGen.width = size;
             mapGen.height = size;
 
-            PrepareMapObjects(level);
+            PrepareMapObjects();
 
             mapGen.GenerateMap();
 
-            mapGen.PlacePlayerAndExit();
+            PlacePlayerAndExit();
 
             mapGen.PlaceObjects(dungeonObjects);
         }
 
 
-        private void PrepareMapObjects(int level)
-        {
-            dungeonObjects = new List<GameObject>();
+        private void PlacePlayerAndExit()
+        {            
+            var spots = mapGen.GetPlayerAndExitSpots();
 
-            GetEnemies(level);
-            GetChests(level);
-            GetShrines(level);
-            GetAnvils(level);
+            player.transform.position = spots[0];
+
+            switch (dungeonLevel)
+            {
+                case 3:
+                    {
+                        exit.transform.position = spots[1];
+                        exit.gameObject.SetActive(false);
+
+                        var boss = Instantiate(bossPrefab);
+
+                        var enemy = DAL.ObjectDAL.GetEnemy("Eliath");
+
+                        boss.GetComponent<EnemyManager>().PopulateEnemy(enemy, dungeonLevel);
+
+                        break;
+                    }
+                default:
+                    {
+                        exit.transform.position = spots[1];
+                        break;
+                    }
+            }
+
+            //exit.transform.position = CoordToWorldPoint(bestSpotB);
+
         }
 
 
-        private void GetEnemies(int Level)
+        private void PrepareMapObjects()
+        {
+            dungeonObjects = new List<GameObject>();
+
+            GetEnemies(dungeonLevel);
+            GetChests(dungeonLevel);
+            GetShrines(dungeonLevel);
+            GetAnvils(dungeonLevel);
+        }
+
+
+        private void GetEnemies(int level)
         {
            
-            Debug.Log("Getting enemylist for level " + Level);
-            if (Level == 1)
+            Debug.Log("Getting enemylist for level " + level);
+            if (level == 1)
             {
                 GameManager.instance.enemyLevels = new List<int> { 1, 1, 1 };               
             }
@@ -71,7 +112,7 @@ namespace Assets.Scripts
                
                 Debug.Log("Old enemylist" + GameManager.instance.enemyLevels.Count);
                 //Determine number of enemies based on current level number, based on a logarithmic progression
-                enemyCount = (int)Mathf.Log(Level, 2f) + 3;
+                enemyCount = (int)Mathf.Log(level, 2f) + 3;
 
                 //if we should have more enemies, add one to the end of list. It will be the lowest level enemy from the last level.
                 if (enemyCount > GameManager.instance.enemyLevels.Count)
@@ -93,7 +134,7 @@ namespace Assets.Scripts
 
             var enemyLevels = GameManager.instance.enemyLevels;
             //Get all enemies with level lower than current dungeon Level
-            var enemiesToChooseFrom = DAL.ObjectDAL.GetEnemies(Level);
+            var enemiesToChooseFrom = DAL.ObjectDAL.GetEnemies(level, Enemy.MonsterType.Basic);
             // List<Enemy> enemyList = new List<Enemy>();
 
             foreach (int enemyLevel in enemyLevels)
@@ -113,10 +154,10 @@ namespace Assets.Scripts
         }
 
 
-        private void GetChests(int Level)
+        private void GetChests(int level)
         {
             //Determine number of chests based on current level number, based on a logarithmic progression
-            int chestCount = (int)Mathf.Log(Level, 2f) + 1;
+            int chestCount = (int)Mathf.Log(level, 2f) + 1;
 
             for (int i = 0; i < chestCount; i++)
             {
@@ -125,16 +166,15 @@ namespace Assets.Scripts
 
                 var script = instance.GetComponent<ChestManager>();
 
-                script.PopulateChest(Level);
+                script.PopulateChest(level);
 
                 dungeonObjects.Add(instance);
             }
         }
 
 
-        private void GetShrines(int Level)
+        private void GetShrines(int level)
         {
-
             //Determine number of shrines
             int shrineCount = 1;
 
@@ -145,18 +185,18 @@ namespace Assets.Scripts
 
                 var script = instance.GetComponent<ShrineManager>();
 
-                script.PopulateShrine(Level);
+                script.PopulateShrine(level);
 
                 dungeonObjects.Add(instance);
             }
         }
 
-        private void GetAnvils(int Level)
+        private void GetAnvils(int level)
         {
             int anvilCount=0;
 
             //Determine number of Anvils         
-            if (Level % 2 == 0)
+            if (level % 2 == 0)
             {
                 anvilCount = 1;
             }

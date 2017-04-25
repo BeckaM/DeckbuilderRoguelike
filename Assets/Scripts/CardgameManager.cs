@@ -103,6 +103,7 @@ namespace Assets.Scripts
             player.playerImage = player.sprites[GameManager.instance.playerClass.spriteIcon];
 
             cardgameUI.playerPortrait.sprite = player.playerImage;
+            cardgameUI.monsterNameText.text = enemy.enemy.EnemyName;
         }
 
 

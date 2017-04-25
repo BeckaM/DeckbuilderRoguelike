@@ -12,40 +12,7 @@ namespace Assets.Scripts.DAL
         public const string CardPath = @".\Assets\Resources\Cards.json";
         public const string ClassPath = @".\Assets\Resources\PlayerClasses.json";
         public const string PerkPath = @".\Assets\Resources\Perks.json";
-
-        //public const string EnemyPath = @".\Assets\JSON\Enemies";
-        //public const string CardPath = @".\Assets\JSON\Cards";
-        //public const string ClassPath = @".\Assets\JSON\PlayerClasses";
-        //public const string PerkPath = @".\Assets\JSON\Perks";
-
-
-
-        //internal static List<PlayerClass> GetClasses(List<string> classesToGet)
-        //{
-        //    var playerclasses = GetAllClasses();
-        //    var classReturn = new List<PlayerClass>();
-
-        //    foreach (string classtoget in classesToGet)
-        //    {
-        //        var playerclass = playerclasses.playerClasses.Find(item => item.ClassName.Equals(classtoget));
-        //        classReturn.Add(playerclass);
-        //    }
-
-        //    return classReturn;
-        //}
-
-        //internal static Card GetRandomConsumable(int level)
-        //{
-        //    var cards = GetAllCards();
-
-        //    var consumables = cards.cardItems.FindAll(item => item.type.Equals(Card.Type.Consumable) && item.level <= level);
-
-        //    Card cardReturn = consumables[UnityEngine.Random.Range(0, consumables.Count)];
-
-        //    return cardReturn;
-        //}
-
-
+        
         internal static List<Card> GetCards(List<string> cardsToGet)
         {
             var cards = GetAllCards();
@@ -109,17 +76,28 @@ namespace Assets.Scripts.DAL
         }
 
 
-        internal static List<Enemy> GetEnemies(int enemyLevel)
+        internal static List<Enemy> GetEnemies(int enemyLevel, Enemy.MonsterType type)
         {
 
             // string text = File.ReadAllText(EnemyPath);
             //var enemyList = JsonUtility.FromJson<EnemyWrapper>(text);
             var enemyList = GetAllEnemies();
 
-            var enemies = enemyList.EnemyItems.FindAll(item => item.BaseEnemyLevel <= enemyLevel);
+            var enemies = enemyList.EnemyItems.FindAll(item => item.BaseEnemyLevel <= enemyLevel && item.type.Equals(type));
 
             return enemies;
+        }
 
+        internal static Enemy GetEnemy(string name)
+        {
+
+            // string text = File.ReadAllText(EnemyPath);
+            //var enemyList = JsonUtility.FromJson<EnemyWrapper>(text);
+            var enemyList = GetAllEnemies();
+
+            var enemy = enemyList.EnemyItems.Find(item => item.EnemyName.Equals(name));
+
+            return enemy;
         }
 
         internal static void SaveCards(CardWrapper cardsToEdit)

@@ -33,14 +33,12 @@ namespace Assets.Scripts
         {
             monsterLevel = level;
             enemy = enemytoget;
-
-            int HPperlevel = enemy.BaseEnemyHP / 8;
-            int HPbonus = HPperlevel * (monsterLevel - enemy.BaseEnemyLevel);
-            life = enemy.BaseEnemyHP + (HPperlevel * HPbonus);
+                       
+            life = enemy.BaseEnemyHP + (enemy.HPPerLevel*level);
             maxLife = life;
             experienceReward = 4 + monsterLevel;
 
-            var transformer = transform;
+          //  var transformer = transform;
 
             //Set Image
             monsterRenderer.sprite = sprites[enemy.SpriteIcon];
