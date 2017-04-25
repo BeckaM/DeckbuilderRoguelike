@@ -68,7 +68,9 @@ namespace Assets.Scripts
                         exit.transform.position = spots[1];
                         exit.gameObject.SetActive(false);
 
-                        var boss = Instantiate(bossPrefab);
+                        var boss = Instantiate(bossPrefab);                        
+                        boss.transform.SetParent(mapGen.transform);
+                        boss.transform.position = spots[1];
 
                         var enemy = DAL.ObjectDAL.GetEnemy("Eliath");
 
@@ -108,8 +110,7 @@ namespace Assets.Scripts
                 GameManager.instance.enemyLevels = new List<int> { 1, 1, 1 };               
             }
             else
-            {
-               
+            {               
                 Debug.Log("Old enemylist" + GameManager.instance.enemyLevels.Count);
                 //Determine number of enemies based on current level number, based on a logarithmic progression
                 enemyCount = (int)Mathf.Log(level, 2f) + 3;

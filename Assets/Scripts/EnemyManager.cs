@@ -22,7 +22,7 @@ namespace Assets.Scripts
         public int monsterLevel;
         public int experienceReward;
 
-        public GameObject enemyObject;
+     //   public GameObject enemyObject;
         public Sprite[] sprites;
         //  public Sprite monsterImage;
         public SpriteRenderer monsterRenderer;

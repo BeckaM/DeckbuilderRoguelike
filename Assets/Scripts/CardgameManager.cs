@@ -243,6 +243,12 @@ namespace Assets.Scripts
             var bonusGold = Math.Ceiling(baseGold * GameManager.instance.perkManager.goldIncrease);
 
             var goldReward = (int)bonusGold;
+           
+            if(enemy.enemy.type == Enemy.MonsterType.Boss)
+            {
+                GameManager.instance.dungeonManager.exit.SetActive(true);
+
+            }
 
             player.mana = 1;
             player.maxMana = 1;
