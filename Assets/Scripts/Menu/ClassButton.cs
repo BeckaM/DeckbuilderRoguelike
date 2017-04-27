@@ -25,7 +25,7 @@ namespace Assets.Scripts.Menu
         {
             this.playerClass = playerClass;
             classImage.sprite = GameManager.instance.classImages[playerClass.spriteIcon];
-            className.text = playerClass.className.ToString();
+            className.text = playerClass.className.ToString().Replace("_", " ");           
         }
 
         public void LockClass(bool locked)

@@ -6,7 +6,7 @@ namespace Assets.Scripts
     [Serializable]
     public class PlayerClass
     {
-        public enum ClassName { Monster, IronSoul, FateWeaver, KeeperOfTheSource }
+        public enum ClassName { Monster, Iron_Soul, Fate_Weaver, Keeper_Of_The_Source }
         public ClassName className;
         public int spriteIcon;
         public List<string> startingDeck;

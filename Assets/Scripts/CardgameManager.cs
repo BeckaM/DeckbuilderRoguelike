@@ -192,7 +192,7 @@ namespace Assets.Scripts
                 {
                     enemy.life = enemy.maxLife;
                 }
-                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, player.maxLife, Team.Opponent));
+                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
             }
         }
 

@@ -14,7 +14,7 @@ namespace Assets.Scripts
 
         public ProgressManager progressManager = new ProgressManager();
 
-        public int gold { get; private set; }
+        public int gold;
 
         public int playerLevel = 0;
         public int playerXP = 0;

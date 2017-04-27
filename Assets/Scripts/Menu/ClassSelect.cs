@@ -75,8 +75,8 @@ namespace Assets.Scripts.Menu
             {
                 selectedClass = playerClass;
                 selectedClassImage.sprite = GameManager.instance.classImages[playerClass.spriteIcon];
-                selectedClassImage.color = Color.white;
-                selectedClassText.text = playerClass.className.ToString();
+                selectedClassImage.color = Color.white;                
+                selectedClassText.text = playerClass.className.ToString().Replace("_", " "); ;
 
                 selectButton.interactable = true;
             }

@@ -44,9 +44,16 @@ namespace Assets.Scripts.DAL
 
             var levelCards = cards.cardItems.FindAll(item => item.level >= minLevel && item.level <= maxLevel && item.type.Equals(type));
 
-            Card cardReturn = levelCards[UnityEngine.Random.Range(0, levelCards.Count)];
+            if (levelCards.Count < 1)
+            {
+                return null;
+            }
+            else
+            {
+                Card cardReturn = levelCards[UnityEngine.Random.Range(0, levelCards.Count)];
 
-            return cardReturn;
+                return cardReturn;
+            }
         }
 
         internal static Card GetRandomCard(int minLevel, int maxLevel)
@@ -54,10 +61,17 @@ namespace Assets.Scripts.DAL
             var cards = GetAllCards();
                         
             var levelCards = cards.cardItems.FindAll(item => item.level >= minLevel && item.level <= maxLevel && item.type != (Card.Type.Consumable));
-                        
-            Card cardReturn = levelCards[UnityEngine.Random.Range(0, levelCards.Count)];
 
-            return cardReturn;
+            if (levelCards.Count < 1)
+            {
+                return null;
+            }
+            else
+            {
+                Card cardReturn = levelCards[UnityEngine.Random.Range(0, levelCards.Count)];
+
+                return cardReturn;
+            }
         }
 
         internal static List<Card> GetClassCards(int minLevel, int maxLevel, PlayerClass.ClassName classType)

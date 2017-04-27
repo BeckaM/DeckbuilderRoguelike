@@ -38,7 +38,7 @@ namespace Assets.Scripts
         public GameObject selectedCardHolder;
         public Button selectCardButton;
 
-      //  public GameObject selectFromThreePanel;
+        //  public GameObject selectFromThreePanel;
 
         public GameObject anvilPanel;
         public Button anvilDestroyButton;
@@ -236,7 +236,7 @@ namespace Assets.Scripts
             card.transform.SetParent(selectedCardHolder.transform);
             selectedCard = card;
             prayButton.interactable = true;
-            
+
 
             if (GameManager.instance.gold >= 50)
             {
@@ -256,7 +256,7 @@ namespace Assets.Scripts
                 anvilDestroyButton.interactable = false;
             }
         }
-        
+
         internal void PrayerSpent()
         {
             prayButton.interactable = false;
@@ -282,8 +282,18 @@ namespace Assets.Scripts
             var type = manager.card.type;
             DeckManager.player.DestroyCard(manager);
 
-            var newCard = DAL.ObjectDAL.GetRandomCard(level + 1, level + 1, type);                       
-                       
+            Card newCard = null;
+            int levelBonus =0;
+            while (newCard == null)
+            {
+                levelBonus++;
+                if (levelBonus > 10)
+                {
+                    newCard = manager.card;
+                }
+                newCard = DAL.ObjectDAL.GetRandomCard(level + levelBonus, level + levelBonus, type);
+            }
+
             var card = DeckManager.player.AddCardtoDeck(DeckManager.player.CreateCardObject(newCard));
             card.transform.SetParent(selectedCardHolder.transform);
             selectedCard = card.gameObject;

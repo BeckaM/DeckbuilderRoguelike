@@ -456,6 +456,7 @@ namespace Assets.Scripts
             {
                 this.GetComponent<CanvasGroup>().alpha = (0f);
                 transform.SetParent(end.transform, false);
+                GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
                 yield return new WaitForEndOfFrame();
                 endpos = this.transform.position;
             }
