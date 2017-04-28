@@ -172,6 +172,13 @@ namespace Assets.Scripts
             CheckWinConditions();
         }
 
+        internal void PlayerCleanup()
+        {
+            player.mana = 1;
+            player.maxMana = 1;
+            player.ward = 0;
+            player.damageBoost = 0;
+        }
 
         internal void ApplyHealing(int value, Team team)
         {
@@ -249,12 +256,7 @@ namespace Assets.Scripts
                 GameManager.instance.dungeonManager.exit.SetActive(true);
 
             }
-
-            player.mana = 1;
-            player.maxMana = 1;
-            player.ward = 0;
-            player.damageBoost = 0;
-
+            
             GameManager.instance.GainXP(enemy.experienceReward);
             GameManager.instance.lifeHolder = player.life;
 

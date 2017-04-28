@@ -41,7 +41,7 @@ namespace Assets.Scripts
         public Card cardLoot;
         public int goldLoot;
 
-        private int level = 0;                                  //Current level number, expressed in game as "Level 1".
+        public int level = 0;                                  //Current level number, expressed in game as "Level 1".
 
         public bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
 
@@ -177,6 +177,7 @@ namespace Assets.Scripts
             dungeonUI.gameObject.SetActive(true);
           //  dungeonUI.deckPanel.gameObject.SetActive(false);
             dungeonUI.UpdateLifeText();
+                       
 
             if (win == false)
             {
@@ -189,6 +190,7 @@ namespace Assets.Scripts
             }
         }
 
+       
 
         private void AddLoot()
         {

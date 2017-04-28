@@ -157,6 +157,7 @@ namespace Assets.Scripts
         {
             DeckManager.player.Cleanup();
             DeckManager.monster.Cleanup();
+            CardgameManager.instance.PlayerCleanup();
 
             GameManager.instance.ReturnFromCardgame(end.playerWon, end.cardRewards, end.goldReward);
 
