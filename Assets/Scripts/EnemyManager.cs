@@ -18,6 +18,7 @@ namespace Assets.Scripts
 
         public int mana = 1;
         public int maxMana = 1;
+        public int manaPerTurn = 1;
 
         public int monsterLevel;
         public int experienceReward;

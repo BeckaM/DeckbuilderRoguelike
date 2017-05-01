@@ -89,8 +89,13 @@ namespace Assets.Scripts
 
         private void SetOpponents()
         {
-            player.mana = player.maxMana;
+
+            player.mana = 1;
+            enemy.mana = 1;
+            /* Old code for non stacking mana
+             * player.mana = player.maxMana;
             enemy.mana = enemy.maxMana;
+            */
 
             player.life = GameManager.instance.lifeHolder;
             player.maxLife = GameManager.instance.maxLife;
@@ -111,7 +116,7 @@ namespace Assets.Scripts
         {
             if (team == Team.Me)
             {
-                player.maxMana += value;
+                player.manaPerTur += value;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
             }
             else
@@ -175,9 +180,10 @@ namespace Assets.Scripts
         internal void PlayerCleanup()
         {
             player.mana = 1;
-            player.maxMana = 1;
+            player.maxMana = 10;
             player.ward = 0;
             player.damageBoost = 0;
+            player.manaPerTur = 1; 
         }
 
         internal void ApplyHealing(int value, Team team)
@@ -296,7 +302,7 @@ namespace Assets.Scripts
                 Debug.Log("AI ended the turn");
                 DeckManager.player.Draw();
                 turn = Team.Me;
-                player.mana = player.maxMana;
+                player.mana += player.manaPerTur;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
                 cardgameUI.endTurnButton.interactable = true;
             }
@@ -305,7 +311,7 @@ namespace Assets.Scripts
                 cardgameUI.endTurnButton.interactable = false;
                 DeckManager.monster.Draw();
                 turn = Team.Opponent;
-                enemy.mana = enemy.maxMana;
+                enemy.mana += enemy.manaPerTurn;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
 
                 StartCoroutine(enemy.initAI());
