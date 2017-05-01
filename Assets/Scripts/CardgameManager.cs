@@ -91,7 +91,7 @@ namespace Assets.Scripts
         {
 
             player.mana = 1;
-            enemy.mana = 1;
+            enemy.mana = 0;
             /* Old code for non stacking mana
              * player.mana = player.maxMana;
             enemy.mana = enemy.maxMana;
@@ -116,12 +116,12 @@ namespace Assets.Scripts
         {
             if (team == Team.Me)
             {
-                player.manaPerTur += value;
+                player.manaPerTurn += value;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
             }
             else
             {
-                enemy.maxMana += value;
+                enemy.manaPerTurn += value;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
             }
         }
@@ -183,7 +183,7 @@ namespace Assets.Scripts
             player.maxMana = 10;
             player.ward = 0;
             player.damageBoost = 0;
-            player.manaPerTur = 1; 
+            player.manaPerTurn = 1; 
         }
 
         internal void ApplyHealing(int value, Team team)
@@ -302,7 +302,7 @@ namespace Assets.Scripts
                 Debug.Log("AI ended the turn");
                 DeckManager.player.Draw();
                 turn = Team.Me;
-                player.mana += player.manaPerTur;
+                player.mana += player.manaPerTurn;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
                 cardgameUI.endTurnButton.interactable = true;
             }

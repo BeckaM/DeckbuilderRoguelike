@@ -13,7 +13,7 @@ namespace Assets.Scripts
 
         public int mana = 1;
         public int maxMana = 10;
-        public int manaPerTur = 1;
+        public int manaPerTurn = 1;
 
         public float zComp = 3.5f;
         public float xComp = -0.3f;

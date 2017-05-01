@@ -19,13 +19,11 @@ namespace Assets.Scripts
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-
             var card = GetComponent<CardManager>();
             if (!card.isDragable) return;
 
             //Debug.Log("OnBeginDrag");
-
-            
+                        
             placeholder = new GameObject("placeholder", typeof(RectTransform));
             placeholder.transform.SetParent(this.transform.parent, false);
             LayoutElement le = placeholder.AddComponent<LayoutElement>();

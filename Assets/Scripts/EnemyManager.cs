@@ -17,7 +17,7 @@ namespace Assets.Scripts
         public int damageBoost = 0;
 
         public int mana = 1;
-        public int maxMana = 1;
+        public int maxMana = 10;
         public int manaPerTurn = 1;
 
         public int monsterLevel;
