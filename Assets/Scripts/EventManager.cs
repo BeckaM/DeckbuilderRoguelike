@@ -198,7 +198,6 @@ namespace Assets.Scripts
             if (seq_eventQueue.Count > 0 && processingQueue == false)
             {
                 processingQueue = true;
-
                 GameEvent evt = seq_eventQueue.Dequeue() as GameEvent;
                 TriggerEvent(evt);
 

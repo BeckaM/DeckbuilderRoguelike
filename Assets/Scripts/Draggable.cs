@@ -25,7 +25,8 @@ namespace Assets.Scripts
 
             //Debug.Log("OnBeginDrag");
 
-            placeholder = new GameObject();
+            
+            placeholder = new GameObject("placeholder", typeof(RectTransform));
             placeholder.transform.SetParent(this.transform.parent, false);
             LayoutElement le = placeholder.AddComponent<LayoutElement>();
             le.preferredWidth = this.GetComponent<LayoutElement>().preferredWidth;
