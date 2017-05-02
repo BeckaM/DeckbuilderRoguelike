@@ -185,34 +185,11 @@ namespace Assets.Scripts
             }
             else
             {
-                dungeonUI.modalPanel.MonsterLoot(cardRewards, goldReward, AddLoot);
+                dungeonUI.modalPanel.MonsterLoot(cardRewards, goldReward);
                 progressManager.CumulativeMetric(ProgressManager.Metric.Monsters_Killed, 1);
             }
         }
-
-       
-
-        private void AddLoot()
-        {
-            if (lootType == Content.Gold)
-            {
-                ModifyGold(goldLoot);
-            }
-            else
-            {
-                DeckManager.player.AddCardtoDeck(DeckManager.player.CreateCardObject(cardLoot));
-            }
-
-            doingSetup = false;
-        }
-
-
-        private void DeclineLoot()
-        {
-            doingSetup = false;
-        }
-
-
+        
         //Hides black image used between levels
         void HideLevelImage()
         {
@@ -283,10 +260,10 @@ namespace Assets.Scripts
 
 
         internal void LevelUpComplete()
-        {
-            AddLoot();
+        {           
             playerLevel++;
             lifeHolder = maxLife;
+            dungeonUI.UpdateLifeText();
             var increase = 1.4 * nextLVLXP;
             nextLVLXP = nextLVLXP + (int)increase;
             dungeonUI.UpdateXPText();

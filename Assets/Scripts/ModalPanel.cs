@@ -9,21 +9,19 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Scripts
 {
-    public class ModalPanel :  EventTrigger
+    public class ModalPanel :  MonoBehaviour
     {
         public TMP_Text title;
         public TMP_Text subText;
-
-        public bool isActive;
+                
         public GameObject choicesPanel;
         public GameObject goldObject;
         public GameObject cardObject;
-        //public GameObject prayerObject;
-
+        
         public Button addButton;
         public Button closeButton;
 
-        public GameObject currentSelection;
+        public GameObject rewardSelection;
         public List<GameObject> selections;
 
         public GameObject modalPanelObject;
@@ -38,9 +36,7 @@ namespace Assets.Scripts
         public GameObject selectedCard;
         public GameObject selectedCardHolder;
         public Button selectCardButton;
-
-        //  public GameObject selectFromThreePanel;
-
+         
         public GameObject anvilPanel;
         public Button anvilDestroyButton;
         public Button anvilUpgradeButton;
@@ -61,8 +57,7 @@ namespace Assets.Scripts
         public void Chest(string title, string subText, Card reward, UnityAction yesEvent, UnityAction noEvent)
         {
             modalPanelObject.SetActive(true);
-            isActive = true;
-
+           
             ClearPanel();
 
             choicesPanel.SetActive(true);
@@ -91,8 +86,7 @@ namespace Assets.Scripts
         public void Chest(string title, string subText, int goldReward, UnityAction yesEvent)
         {
             modalPanelObject.SetActive(true);
-            isActive = true;
-
+           
             ClearPanel();
 
             choicesPanel.SetActive(true);
@@ -112,11 +106,12 @@ namespace Assets.Scripts
             closeButton.gameObject.SetActive(true);
         }
 
-        internal void MonsterLoot(List<Card> cardRewards, int goldReward, UnityAction complete)
+        //Panel shown after killing a monster. Choose between 3 cards, and gold.
+        internal void MonsterLoot(List<Card> cardRewards, int goldReward)
         {
             modalPanelObject.SetActive(true);
-            isActive = true;
-
+            Selectable.selectContext = Selectable.SelectContext.ModalPanel;
+            
             ClearPanel();
 
             choicesPanel.SetActive(true);
@@ -139,18 +134,39 @@ namespace Assets.Scripts
             var goldscript = gold.GetComponent<Gold>();
             goldscript.PopulateGold(goldReward);
 
-            addButton.onClick.AddListener(complete);
+            addButton.onClick.AddListener(AddReward);
             addButton.onClick.AddListener(ClosePanel);
 
             addButton.GetComponent<Button>().interactable = false;
             addButton.gameObject.SetActive(true);
         }
 
+        private void AddReward()
+        {
+            var selected = rewardSelection;
+            Selectable.selectContext = Selectable.SelectContext.NoSelect;
 
+            if (selected.tag == "Card")
+            {
+                DeckManager.player.AddCardtoDeck(selected.GetComponent<CardManager>());
+                selections.Remove(selected);
+
+            }
+            else if(selected.tag == "Gold")
+            {
+                GameManager.instance.ModifyGold(selected.GetComponent<Gold>().goldValue);
+            }
+            
+        }
+
+
+
+        //Panel to choose between 3 cards when leveling up.
         internal void LevelUp(List<Card> cardRewards, UnityAction complete)
         {
+            Selectable.selectContext = Selectable.SelectContext.ModalPanel;
             modalPanelObject.SetActive(true);
-            isActive = true;
+            
 
             ClearPanel();
 
@@ -169,17 +185,18 @@ namespace Assets.Scripts
             }
 
             addButton.onClick.AddListener(complete);
+            addButton.onClick.AddListener(AddReward);
             addButton.onClick.AddListener(ClosePanel);
 
             addButton.GetComponent<Button>().interactable = false;
             addButton.gameObject.SetActive(true);
         }
 
-
+        //Panel shown when opening a shrine
         internal void Shrine(string title, string subText, UnityAction prayer, UnityAction noEvent, bool needsCardSelection, UnityAction shrineSpent)
         {
             modalPanelObject.SetActive(true);
-            isActive = true;
+           
 
             ClearPanel();
             prayerPanel.SetActive(true);
@@ -205,12 +222,11 @@ namespace Assets.Scripts
             closeButton.gameObject.SetActive(true);
         }
 
-
+        //Panel shown when opening an anvil.
         internal void Anvil(string title, string subText, UnityAction noEvent)
         {
             modalPanelObject.SetActive(true);
-            isActive = true;
-
+            
             ClearPanel();
 
             anvilPanel.SetActive(true);
@@ -230,8 +246,7 @@ namespace Assets.Scripts
 
 
         public void SelectCard(GameObject card)
-        {
-            isActive = true;
+        {           
             cardSelectText.SetActive(false);
             selectCardButton.interactable = false;
 
@@ -302,43 +317,11 @@ namespace Assets.Scripts
             anvilUpgradeButton.interactable = false;
         }
 
-        internal void Select(GameObject selection)
+        internal void SelectReward()
         {
             addButton.GetComponent<Button>().interactable = true;
-            if (this.currentSelection)
-            {
-
-                if (selection == currentSelection)
-                {
-                    addButton.GetComponent<Button>().interactable = false;
-                    if (selection.tag == "Card")
-                    {
-                       // selection.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
-                    }
-                    selection.GetComponent<Selectable>().outline.enabled = false;
-                    currentSelection = null;
-                    return;
-                }
-
-                currentSelection.GetComponent<Selectable>().outline.enabled = false;
-                if (currentSelection.tag == "Card")
-                {
-                  //  currentSelection.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
-                }
-            }
-            currentSelection = selection;
-            selection.GetComponent<Selectable>().outline.enabled = true;
-            if (selection.tag == "Card")
-            {
-              //  selection.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
-                GameManager.instance.cardLoot = currentSelection.GetComponent<CardManager>().card;
-                GameManager.instance.lootType = GameManager.Content.Card;
-            }
-            else if (selection.tag == "Gold")
-            {
-                GameManager.instance.goldLoot = currentSelection.GetComponent<Gold>().goldValue;
-                GameManager.instance.lootType = GameManager.Content.Gold;
-            }
+            rewardSelection = EventSystem.current.currentSelectedGameObject;
+            
         }
 
         void ClosePanel()
@@ -348,15 +331,15 @@ namespace Assets.Scripts
                 Destroy(obj);
             }
             if (selectedCard)
-            {
-                selectedCard.GetComponent<Selectable>().ClearOutline();
+            {               
                 selectedCard.GetComponent<CardManager>().imagePanel.ResetPanel();
                 selectedCard.transform.SetParent(DeckManager.player.deckHolder.transform);
             }
             selections.Clear();
-            currentSelection = null;
-            isActive = false;
+            rewardSelection = null;
+           
             modalPanelObject.SetActive(false);
+            GameManager.instance.doingSetup=false;
         }
 
 
@@ -394,9 +377,6 @@ namespace Assets.Scripts
             }
         }
 
-        public override void OnSelect(BaseEventData data)
-        {
-            Debug.Log("ModalPanel new selection");
-        }
+        
     }
 }

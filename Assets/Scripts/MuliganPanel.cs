@@ -18,6 +18,7 @@ namespace Assets.Scripts
         public void StartMuligan()
         {
             this.gameObject.SetActive(true);
+            Selectable.selectContext = Selectable.SelectContext.Muligan;
             muliganCards = DeckManager.player.GetMuliganCards();
             foreach (CardManager card in muliganCards)
             {
@@ -57,6 +58,7 @@ namespace Assets.Scripts
                 }
             }
             CardgameManager.instance.DrawStartingHands(discardCards);
+            Selectable.selectContext = Selectable.SelectContext.NoSelect;
             this.gameObject.SetActive(false);
         }
 
@@ -64,21 +66,21 @@ namespace Assets.Scripts
          * Changes outline on selected card and sets muliganKeep bool.
          * 
          **/
-        internal void Select(GameObject selectedCard)
-        {
-            var selectScript = selectedCard.GetComponent<Selectable>();
-            if (selectScript.muliganKeep)
-            {
-                selectScript.muliganKeep = false;
-                selectScript.RedOutline();
-            }
-            else
-            {
-                selectScript.muliganKeep = true;
-                selectScript.ClearOutline();
-            }
+        //internal void Select(GameObject selectedCard)
+        //{
+        //    var selectScript = selectedCard.GetComponent<Selectable>();
+        //    if (selectScript.muliganKeep)
+        //    {
+        //        selectScript.muliganKeep = false;
+        //        selectScript.RedOutline();
+        //    }
+        //    else
+        //    {
+        //        selectScript.muliganKeep = true;
+        //        selectScript.ClearOutline();
+        //    }
 
 
-        }
+        //}
     }
 }

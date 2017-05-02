@@ -22,6 +22,7 @@ namespace Assets.Scripts
         public GameObject imagePanel;
 
         public bool descriptionToggle = false;
+        public bool animating = false;
 
 
         public void PopulateCardImage(Card card)
@@ -38,33 +39,24 @@ namespace Assets.Scripts
                 cardImage.sprite = image;
             }
 
-
-            //cardImage.sprite = sprites[card.spriteIcon];
-            //cardImage.color = card.spriteColor;
-            //highlight.sprite = highlights[card.spriteIcon];
-            //highlight.color = card.spriteHighlightColor;
-            //glow.sprite = glows[card.spriteIcon];
-            //glow.color = card.spriteGlowColor;
-
-            //imageBackground.color = card.spriteBackgroundColor;
-            //backgroundGlow.color = card.backgroundGlowColor;
         }
 
 
         public void ShowFullDescription()
         {
-
             descriptionToggle = true;
-            StartCoroutine(ShowDescriptionAnimation());
+            if (!animating)
+            {
+                animating = true;
 
-
+                StartCoroutine(ShowDescriptionAnimation());
+            }
         }
+
         public void HideFullDescription()
         {
 
             descriptionToggle = false;
-            StartCoroutine(HideDescriptionAnimation());          
-
 
         }
 
@@ -73,14 +65,23 @@ namespace Assets.Scripts
             yield return StartCoroutine(Flip(90));
 
             fullDescriptionPanel.SetActive(true);
-            //   backgroundGlow.gameObject.SetActive(false);
             imagePanel.gameObject.SetActive(false);
 
             yield return StartCoroutine(Flip(90));
+
+            yield return new WaitForSeconds(2);
+            while (descriptionToggle)
+            {
+                yield return new WaitForSeconds(1);
+            }
+
+            yield return StartCoroutine(HideDescriptionAnimation());
+            animating = false;
         }
 
         private IEnumerator HideDescriptionAnimation()
         {
+
             yield return StartCoroutine(Flip(90));
 
             fullDescriptionPanel.SetActive(false);
@@ -88,6 +89,9 @@ namespace Assets.Scripts
             imagePanel.gameObject.SetActive(true);
 
             yield return StartCoroutine(Flip(90));
+            animating = false;
+
+
         }
 
 
@@ -107,6 +111,7 @@ namespace Assets.Scripts
                 //Return and loop until sqrRemainingDistance is close enough to zero to end the function
                 yield return new WaitForSeconds(rotationSpeed);
             }
+
         }
 
         public void ResetPanel()

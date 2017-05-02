@@ -8,8 +8,7 @@ using UnityEngine.UI;
 namespace Assets.Scripts
 {
     public class DeckPanel : MonoBehaviour
-    {
-        public bool isActive;
+    {        
         public Button closeButton;
         public Button selectButton;
         public Button applyButton;
@@ -33,38 +32,20 @@ namespace Assets.Scripts
         }
 
 
-        internal void Select(GameObject selectedCard)
+        internal void Select()
         {
             selectButton.interactable = true;
-            if (this.selectedCard)
-            {
-
-                if (selectedCard == this.selectedCard)
-                {
-                  //  selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
-                    selectedCard.GetComponent<Selectable>().outline.enabled = false;
-                    this.selectedCard = null;
-                    selectButton.interactable = false;
-                    return;
-                }
-
-                this.selectedCard.GetComponent<Selectable>().outline.enabled = false;
-             //   this.selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
-            }
-            this.selectedCard = selectedCard;            
-            selectedCard.GetComponent<Selectable>().outline.enabled = true;            
-          //  selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
+            selectedCard = EventSystem.current.currentSelectedGameObject;
         }
 
 
         public void CardSelect()
         {
+            Selectable.selectContext = Selectable.SelectContext.DeckPanel;
             deckPanelObject.SetActive(true);
-            isActive = true;
-            GameManager.instance.dungeonUI.modalPanel.isActive = false;
-                        
+                       
             selectButton.gameObject.SetActive(true);
-            selectButton.interactable = false;           
+            selectButton.interactable = false;
             selectButton.onClick.AddListener(SelectCard);
             selectButton.onClick.AddListener(ClosePanel);
         }
@@ -72,48 +53,26 @@ namespace Assets.Scripts
 
         private void SelectCard()
         {
+            Selectable.selectContext = Selectable.SelectContext.NoSelect;
             GameManager.instance.dungeonUI.modalPanel.SelectCard(selectedCard);
         }
 
-
+        //Show the deck panel and the players deck. Triggered from the button in the main dungeon UI. 
         internal void ShowDeckPanel()
         {
             //GameManager.instance.dungeonManager.gameObject.SetActive(false);
             deckPanelObject.SetActive(true);
-            isActive = true;
+            
 
-            closeButton.gameObject.SetActive(true);            
-            closeButton.onClick.AddListener(ClosePanel);            
+            closeButton.gameObject.SetActive(true);
+            closeButton.onClick.AddListener(ClosePanel);
         }
-
-
-        //internal void DuplicateCardPanel()
-        //{
-        //    deckPanelObject.SetActive(true);
-        //    isActive = true;            
-
-        //    selectButton.gameObject.SetActive(true);            
-        //    selectButton.onClick.AddListener(Duplicate);
-        //}
-
-
-        //private void Duplicate()
-        //{
-        //    DeckManager.player.AddCardtoDeck(selectedCard.GetComponent<CardManager>().card.cardName);
-
-        //    closeButton.gameObject.SetActive(true);
-        //    closeButton.onClick.RemoveAllListeners();
-        //    closeButton.onClick.AddListener(closePanel);
-
-        //    selectButton.gameObject.SetActive(false);
-        //}
-
-
+                      
+        
         internal void DestroyRandomCardsPanel()
         {
             deckPanelObject.SetActive(true);
-            isActive = true;
-
+            
             closeButton.gameObject.SetActive(false);
 
             applyButton.gameObject.SetActive(true);
@@ -137,73 +96,12 @@ namespace Assets.Scripts
         }
 
 
-        //internal void DestroyCardPanel()
-        //{
-        //    deckPanelObject.SetActive(true);
-        //    isActive = true;
-
-        //    closeButton.gameObject.SetActive(false);
-
-        //    selectButton.gameObject.SetActive(true);
-        //    selectButton.onClick.RemoveAllListeners();
-        //    selectButton.onClick.AddListener(Destroy);
-        //}
-
-
-        //private void Destroy()
-        //{
-        //    DeckManager.player.DestroyCard(selectedCard);
-
-        //    closeButton.gameObject.SetActive(true);
-        //    closeButton.onClick.RemoveAllListeners();
-        //    closeButton.onClick.AddListener(closePanel);
-
-        //    selectButton.gameObject.SetActive(false);
-        //}
-
-
-        //internal void UpgradeCardPanel()
-        //{
-        //    deckPanelObject.SetActive(true);
-        //    isActive = true;
-
-        //    closeButton.gameObject.SetActive(false);
-
-        //    selectButton.gameObject.SetActive(true);
-        //    selectButton.onClick.RemoveAllListeners();
-        //    selectButton.onClick.AddListener(Upgrade);
-        //}
-
-
-        //private void Upgrade()
-        //{
-        //    var level = selectedCard.GetComponent<CardManager>().card.level;
-        //    DeckManager.player.DestroyCard(selectedCard);
-
-        //    var newCard = new Card();
-
-        //    if (selectedCard.GetComponent<CardManager>().card.type == Card.Type.ClassCard)
-        //    {
-        //        newCard = DAL.ObjectDAL.GetRandomClassCard(level + 1, level + 1);
-        //    }
-        //    else
-        //    {
-        //        newCard = DAL.ObjectDAL.GetRandomCard(level + 1, level + 1);
-        //    }
-        //    DeckManager.player.AddCardtoDeck(newCard.cardName);
-
-        //    closeButton.gameObject.SetActive(true);
-        //    closeButton.onClick.RemoveAllListeners();
-        //    closeButton.onClick.AddListener(closePanel);
-
-        //    selectButton.gameObject.SetActive(false);
-        //}
 
 
         private void ClosePanel()
         {
+
             
-            isActive = false;
             ClearPanel();
             deckPanelObject.SetActive(false);
             //GameManager.instance.dungeonUI.modalPanel.isActive = true;
