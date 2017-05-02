@@ -18,8 +18,10 @@ namespace Assets.Scripts
         //public Image imageBackground;
         //public Image backgroundGlow;
 
-        public GameObject fullDescription;
-        public bool descriptionToggle=false;
+        public GameObject fullDescriptionPanel;
+        public GameObject imagePanel;
+
+        public bool descriptionToggle = false;
 
 
         public void PopulateCardImage(Card card)
@@ -35,8 +37,8 @@ namespace Assets.Scripts
             {
                 cardImage.sprite = image;
             }
-            
-                                  
+
+
             //cardImage.sprite = sprites[card.spriteIcon];
             //cardImage.color = card.spriteColor;
             //highlight.sprite = highlights[card.spriteIcon];
@@ -49,32 +51,30 @@ namespace Assets.Scripts
         }
 
 
-        public void ShowFullDescription(bool show)
+        public void ShowFullDescription()
         {
-            if (show == descriptionToggle)
-            {
-                return;
-            }
-            else if (show == true)
-            {
-                descriptionToggle = true;
-                StartCoroutine(ShowDescriptionAnimation());
 
-            }
-            else if (show == false)
-            {
-                descriptionToggle = false;
-                StartCoroutine(HideDescriptionAnimation());
-            }
+            descriptionToggle = true;
+            StartCoroutine(ShowDescriptionAnimation());
+
+
+        }
+        public void HideFullDescription()
+        {
+
+            descriptionToggle = false;
+            StartCoroutine(HideDescriptionAnimation());          
+
+
         }
 
         private IEnumerator ShowDescriptionAnimation()
         {
             yield return StartCoroutine(Flip(90));
 
-            fullDescription.SetActive(true);
-         //   backgroundGlow.gameObject.SetActive(false);
-            cardImage.gameObject.SetActive(false);
+            fullDescriptionPanel.SetActive(true);
+            //   backgroundGlow.gameObject.SetActive(false);
+            imagePanel.gameObject.SetActive(false);
 
             yield return StartCoroutine(Flip(90));
         }
@@ -83,9 +83,9 @@ namespace Assets.Scripts
         {
             yield return StartCoroutine(Flip(90));
 
-            fullDescription.SetActive(false);
-       //     backgroundGlow.gameObject.SetActive(true);
-            cardImage.gameObject.SetActive(true);
+            fullDescriptionPanel.SetActive(false);
+            //     backgroundGlow.gameObject.SetActive(true);
+            imagePanel.gameObject.SetActive(true);
 
             yield return StartCoroutine(Flip(90));
         }
@@ -112,11 +112,11 @@ namespace Assets.Scripts
         public void ResetPanel()
         {
             this.transform.localRotation = Quaternion.identity;
-            fullDescription.SetActive(false);
-     //       backgroundGlow.gameObject.SetActive(true);
+            fullDescriptionPanel.SetActive(false);
+            //       backgroundGlow.gameObject.SetActive(true);
             cardImage.gameObject.SetActive(true);
 
-        } 
+        }
 
     }
 }

@@ -144,9 +144,12 @@ namespace Assets.Scripts
                         card.effectCounter = 0;
                         card.transform.SetParent(deckHolder.transform, false);
                         //card.transform.localScale = new Vector3(1f, 1f, 1f);
-                        //card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
+                        card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
                         card.SetCardPosition(CardManager.CardStatus.InDeck);
-                        card.ResetCard(deck);
+                        // card.ResetCard(deck);
+                        card.bottomPanel.ShowBottomPanel(true);
+                        card.imagePanel.ResetPanel();
+                        card.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 320);
                     }
 
                     else
@@ -202,6 +205,7 @@ namespace Assets.Scripts
         internal void InitCardGameDeck()
         {
             deckOffset = 0;
+            discardOffset = 0;
             cardsInDeck.Shuffle(new System.Random());
             foreach (CardManager card in cardsInDeck)
             {

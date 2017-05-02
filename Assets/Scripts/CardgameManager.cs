@@ -157,19 +157,35 @@ namespace Assets.Scripts
         }
 
 
-        internal void ApplyDamage(int value, Team team)
-        {
+        internal void ApplyDamage(int value, bool ignoreArmor, Team team)
+        {            
             if (team == Team.Me)
             {
-                var amount = ((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0;
+                int amount;
+                if (ignoreArmor)
+                {
+                    amount = value + player.damageBoost;
+                }
+                else
+                {
+                    amount = ((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0;
+                }
                 enemy.life -= amount;
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(amount, Team.Opponent));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
-                GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Damage_Dealt,((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0);
+                GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Damage_Dealt, amount);
             }
             else
             {
-                var amount = ((value + enemy.damageBoost) - player.ward) > 0 ? ((value + enemy.damageBoost) - player.ward) : 0;
+                int amount;
+                if (ignoreArmor)
+                {
+                    amount = value + enemy.damageBoost;
+                }
+                else
+                {
+                    amount = ((value + enemy.damageBoost) - player.ward) > 0 ? ((value + enemy.damageBoost) - player.ward) : 0;
+                }
                 player.life -= amount;
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(amount, Team.Me));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
@@ -276,18 +292,18 @@ namespace Assets.Scripts
             {
                 if (selectedCard == this.selectedCard)
                 {
-                    selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+                   // selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
                     selectedCard.GetComponent<Selectable>().ClearOutline();
                     this.selectedCard = null;
                     return;
                 }
 
                 this.selectedCard.GetComponent<Selectable>().ClearOutline();
-                this.selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+              //  this.selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
             }
             this.selectedCard = selectedCard;
             selectedCard.GetComponent<Selectable>().GreenOutline();
-            selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
+           // selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
         }
 
 

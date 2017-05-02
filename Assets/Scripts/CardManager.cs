@@ -292,7 +292,7 @@ namespace Assets.Scripts
             {
                 case CardEffect.Effect.DealDamage:
                     {
-                        CardgameManager.instance.ApplyDamage(cardEffect.value, owner);
+                        CardgameManager.instance.ApplyDamage(cardEffect.value, cardEffect.ignoresArmor, owner);
                         EventManager.Instance.TriggerEvent(new TableCard_Trigger(owner, CardEffect.Trigger.OnDealDamage));
                         break;
                     }
@@ -329,7 +329,7 @@ namespace Assets.Scripts
                     }
                 case CardEffect.Effect.SelfDamage:
                     {
-                        CardgameManager.instance.ApplyDamage(cardEffect.value, opponent);
+                        CardgameManager.instance.ApplyDamage(cardEffect.value, cardEffect.ignoresArmor, opponent);
                         EventManager.Instance.TriggerEvent(new TableCard_Trigger(owner, CardEffect.Trigger.OnDealDamage));
                         break;
                     }

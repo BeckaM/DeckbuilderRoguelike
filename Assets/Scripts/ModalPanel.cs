@@ -5,10 +5,11 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.EventSystems;
 
 namespace Assets.Scripts
 {
-    public class ModalPanel : MonoBehaviour
+    public class ModalPanel :  EventTrigger
     {
         public TMP_Text title;
         public TMP_Text subText;
@@ -232,6 +233,7 @@ namespace Assets.Scripts
         {
             isActive = true;
             cardSelectText.SetActive(false);
+            selectCardButton.interactable = false;
 
             card.transform.SetParent(selectedCardHolder.transform);
             selectedCard = card;
@@ -308,9 +310,10 @@ namespace Assets.Scripts
 
                 if (selection == currentSelection)
                 {
+                    addButton.GetComponent<Button>().interactable = false;
                     if (selection.tag == "Card")
                     {
-                        selection.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+                       // selection.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
                     }
                     selection.GetComponent<Selectable>().outline.enabled = false;
                     currentSelection = null;
@@ -320,14 +323,14 @@ namespace Assets.Scripts
                 currentSelection.GetComponent<Selectable>().outline.enabled = false;
                 if (currentSelection.tag == "Card")
                 {
-                    currentSelection.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+                  //  currentSelection.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
                 }
             }
             currentSelection = selection;
             selection.GetComponent<Selectable>().outline.enabled = true;
             if (selection.tag == "Card")
             {
-                selection.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
+              //  selection.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
                 GameManager.instance.cardLoot = currentSelection.GetComponent<CardManager>().card;
                 GameManager.instance.lootType = GameManager.Content.Card;
             }
@@ -389,6 +392,11 @@ namespace Assets.Scripts
             {
                 GameManager.instance.ModifyGold(-50);
             }
+        }
+
+        public override void OnSelect(BaseEventData data)
+        {
+            Debug.Log("ModalPanel new selection");
         }
     }
 }

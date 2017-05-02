@@ -41,7 +41,7 @@ namespace Assets.Scripts
 
                 if (selectedCard == this.selectedCard)
                 {
-                    selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+                  //  selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
                     selectedCard.GetComponent<Selectable>().outline.enabled = false;
                     this.selectedCard = null;
                     selectButton.interactable = false;
@@ -49,11 +49,11 @@ namespace Assets.Scripts
                 }
 
                 this.selectedCard.GetComponent<Selectable>().outline.enabled = false;
-                this.selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
+             //   this.selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
             }
             this.selectedCard = selectedCard;            
             selectedCard.GetComponent<Selectable>().outline.enabled = true;            
-            selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
+          //  selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
         }
 
 
@@ -66,7 +66,7 @@ namespace Assets.Scripts
             selectButton.gameObject.SetActive(true);
             selectButton.interactable = false;           
             selectButton.onClick.AddListener(SelectCard);
-            selectButton.onClick.AddListener(closePanel);
+            selectButton.onClick.AddListener(ClosePanel);
         }
 
 
@@ -83,7 +83,7 @@ namespace Assets.Scripts
             isActive = true;
 
             closeButton.gameObject.SetActive(true);            
-            closeButton.onClick.AddListener(closePanel);            
+            closeButton.onClick.AddListener(ClosePanel);            
         }
 
 
@@ -130,7 +130,7 @@ namespace Assets.Scripts
             }
             closeButton.gameObject.SetActive(true);
             closeButton.onClick.RemoveAllListeners();
-            closeButton.onClick.AddListener(closePanel);
+            closeButton.onClick.AddListener(ClosePanel);
 
             selectButton.gameObject.SetActive(false);
             applyButton.gameObject.SetActive(false);
@@ -200,7 +200,7 @@ namespace Assets.Scripts
         //}
 
 
-        private void closePanel()
+        private void ClosePanel()
         {
             
             isActive = false;
