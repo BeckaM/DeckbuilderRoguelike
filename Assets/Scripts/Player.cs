@@ -8,13 +8,14 @@ namespace Assets.Scripts
 {
     public class Player : MonoBehaviour
     {
-        public int life=30;
-        public int maxLife=30;
+        public int life = 30;
+        public int maxLife = 30;
         public int ward = 0;
         public int damageBoost = 0;
+        public bool moveToggle = false;
 
         public int mana = 1;
-               
+
         public int maxMana = 10;
         public int manaPerTurn = 1;
 
@@ -28,7 +29,7 @@ namespace Assets.Scripts
         public bool right = false;
         public GameObject playerBody;
         public float restartLevelDelay = 1f;        //Delay time in seconds to restart level.
-        public float moveSpeed= 7.0f;
+        public float moveSpeed = 7.0f;
 
         void Start()
         {
@@ -48,14 +49,37 @@ namespace Assets.Scripts
             {
                 playerBody.transform.Rotate(0, 180, 0);
                 right = false;
-            }     
+            }
+
+            if (moveToggle == true)
+            {
+                //Debug.Log("X position: " + Input.mousePosition.x);
+                //Debug.Log("Y position: " + Input.mousePosition.y);
+                
+                var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                targetPos.y = transform.position.y;
+                targetPos.x += xComp;
+                targetPos.z += zComp;
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+
+            }
+
+            //if (Input.GetMouseButton(0) && GameManager.instance.doingSetup == false)
+            //{
+            //    Debug.Log("X position: " + Input.mousePosition.x);
+            //    Debug.Log("Y position: " + Input.mousePosition.y);
+            //    if (Input.mousePosition.x < 2000 && Input.mousePosition.y < 2000)
+            //    {
+
+            //        var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //        targetPos.y = transform.position.y;
+            //        targetPos.x += xComp;
+            //        targetPos.z += zComp;
+            //        transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+            //    }
+            //}
         }
 
-        internal void MovePlayerTowards(Vector2 position)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, position, moveSpeed * Time.deltaTime);
-        }
-        
 
         void FixedUpdate()
         {
@@ -64,8 +88,8 @@ namespace Assets.Scripts
                 rigidbody.MovePosition(rigidbody.position + velocity * Time.fixedDeltaTime);
             }
         }
-                
-        
+
+
         //OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).
         private void OnTriggerEnter(Collider other)
         {
@@ -108,6 +132,6 @@ namespace Assets.Scripts
             SceneManager.LoadScene("Main");
         }
 
-        
+
     }
 }
