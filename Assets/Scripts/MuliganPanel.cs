@@ -43,7 +43,7 @@ namespace Assets.Scripts
                     card.transform.SetParent(DeckManager.player.hand.transform, false);
                     card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
                     selectScript.ClearOutline();
-                    card.GetComponent<CardManager>().imagePanel.ResetPanel();
+                  //  card.GetComponent<CardManager>().imagePanel.ResetPanel();
                 }
                 else
                 {
@@ -53,7 +53,7 @@ namespace Assets.Scripts
                     card.deckManager.discardOffset -= 2;
                     //   card.GetComponent<CardManager>().ResetTransform();
                     selectScript.ClearOutline();
-                    card.imagePanel.ResetPanel();
+                  //  card.imagePanel.ResetPanel();
                     discardCards++;
                 }
             }

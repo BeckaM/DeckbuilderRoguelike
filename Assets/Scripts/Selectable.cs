@@ -7,13 +7,20 @@ using System;
 namespace Assets.Scripts
 {
 
-    public class Selectable : MonoBehaviour, IPointerClickHandler, ISelectHandler, IDeselectHandler
+    public class Selectable : MonoBehaviour, IPointerClickHandler
     {
         public Outline outline;
         public bool muliganKeep;
-        public static CardManager selectedCard;
+        public static GameObject selectedObject;
         public enum SelectContext { DeckPanel, ModalPanel, Muligan, NoSelect }
-        public static SelectContext selectContext= SelectContext.NoSelect;
+        public static SelectContext selectContext = SelectContext.NoSelect;
+
+
+    
+        public void OnEnable()
+        {
+            ClearOutline();
+        }
 
         public void OnPointerClick(PointerEventData eventData)
         {
@@ -31,20 +38,29 @@ namespace Assets.Scripts
                 }
 
             }
-            else
+            else if(selectContext == SelectContext.ModalPanel)
             {
-                eventData.selectedObject = gameObject;
-                selectedCard = gameObject.GetComponent<CardManager>();
+               if(selectedObject) selectedObject.GetComponent<Selectable>().ClearOutline();
+                selectedObject = gameObject;
+                GameManager.instance.dungeonUI.modalPanel.SelectReward();
+                GreenOutline();
+            }
+            else if (selectContext == SelectContext.DeckPanel)
+            {
+                if (selectedObject) selectedObject.GetComponent<Selectable>().ClearOutline();
+                selectedObject = gameObject;
+                GameManager.instance.dungeonUI.deckPanel.Select();
+                GreenOutline();
             }
         }
 
-        public void RedOutline()
+        private void RedOutline()
         {
             outline.enabled = true;
             outline.effectColor = Color.red;
         }
 
-        public void GreenOutline()
+        private void GreenOutline()
         {
             outline.enabled = true;
             outline.effectColor = Color.green;
@@ -54,30 +70,6 @@ namespace Assets.Scripts
         {
             outline.enabled = false;
 
-        }
-        
-        public void OnSelect(BaseEventData eventData)
-        {
-            Debug.Log(eventData.selectedObject + " selected.");
-            
-            if (selectContext == SelectContext.DeckPanel)
-            {
-                GameManager.instance.dungeonUI.deckPanel.Select();
-                GreenOutline();
-            }
-            else if (selectContext == SelectContext.ModalPanel)
-            {
-                GameManager.instance.dungeonUI.modalPanel.SelectReward();
-                GreenOutline();
-            }
-           
-        }
-
-        public void OnDeselect(BaseEventData eventData)
-        {
-            Debug.Log(eventData.selectedObject + " deselected.");
-
-            ClearOutline();
         }
     }
 }

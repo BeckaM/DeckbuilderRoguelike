@@ -84,12 +84,10 @@ namespace Assets.Scripts
         private void ShowMuligan()
         {
             cardgameUI.muliganPanelScript.StartMuligan();
-
         }
 
         private void SetOpponents()
         {
-
             player.mana = 1;
             enemy.mana = 0;
             /* Old code for non stacking mana
@@ -284,29 +282,8 @@ namespace Assets.Scripts
 
             EventManager.Instance.QueueAnimation(new EndGame_GUI(win, cardRewards, goldReward));
         }
-
-
-        internal void Select(GameObject selectedCard)
-        {
-            if (this.selectedCard)
-            {
-                if (selectedCard == this.selectedCard)
-                {
-                   // selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
-                    selectedCard.GetComponent<Selectable>().ClearOutline();
-                    this.selectedCard = null;
-                    return;
-                }
-
-                this.selectedCard.GetComponent<Selectable>().ClearOutline();
-              //  this.selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(false);
-            }
-            this.selectedCard = selectedCard;
-            selectedCard.GetComponent<Selectable>().GreenOutline();
-           // selectedCard.GetComponent<CardManager>().imagePanel.ShowFullDescription(true);
-        }
-
-
+            
+        
         //Triggered by end turn button.
         public void EndTurn()
         {
@@ -338,9 +315,7 @@ namespace Assets.Scripts
 
 
         public void PlaceCard(CardManager card)
-        {
-            card.GetComponent<Selectable>().ClearOutline();
-            card.GetComponent<CardManager>().imagePanel.ResetPanel();
+        {          
             //Pay the mana cost.
             Debug.Log("Playing a new card: " + card.card.cardName);
             if (card.owner == Team.Me)
@@ -388,7 +363,6 @@ namespace Assets.Scripts
                 }
                 else
                 {
-
                     Debug.Log("Duration = 0, startpoint tabletop endpoint discard");
                     card.SetCardPosition(CardManager.CardStatus.InDiscard);
 

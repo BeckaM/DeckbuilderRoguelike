@@ -148,7 +148,7 @@ namespace Assets.Scripts
                         card.SetCardPosition(CardManager.CardStatus.InDeck);
                         // card.ResetCard(deck);
                         card.bottomPanel.ShowBottomPanel(true);
-                        card.imagePanel.ResetPanel();
+                      //  card.imagePanel.ResetPanel();
                         card.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 320);
                     }
 

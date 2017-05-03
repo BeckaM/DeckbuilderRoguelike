@@ -251,12 +251,12 @@ namespace Assets.Scripts
             if (end == table)
             {
                 bottomPanel.ShowBottomPanel(false);
-                imagePanel.ResetPanel();
+              //  imagePanel.ResetPanel();
             }
             else if (end == discard)
             {
                 bottomPanel.ShowBottomPanel(true);
-                imagePanel.ResetPanel();
+                //imagePanel.ResetPanel();
                 GetComponent<RectTransform>().sizeDelta = new Vector2(250, 320);
 
                 GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, deckManager.discardOffset);
@@ -265,7 +265,7 @@ namespace Assets.Scripts
             else if (end == deckManager.deck)
             {
                 bottomPanel.ShowBottomPanel(true);
-                imagePanel.ResetPanel();
+               // imagePanel.ResetPanel();
                 GetComponent<RectTransform>().sizeDelta = new Vector2(250, 320);
 
                 GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, deckManager.deckOffset);

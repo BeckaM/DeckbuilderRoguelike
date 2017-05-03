@@ -8,15 +8,9 @@ namespace Assets.Scripts
 {
     public class CardImagePanel : MonoBehaviour
     {
-
-        //public Sprite[] sprites;
-        //public Sprite[] highlights;
-        //public Sprite[] glows;
+                
         public Image cardImage;
-        //public Image highlight;
-        //public Image glow;
-        //public Image imageBackground;
-        //public Image backgroundGlow;
+        
 
         public GameObject fullDescriptionPanel;
         public GameObject imagePanel;
@@ -24,6 +18,10 @@ namespace Assets.Scripts
         public bool descriptionToggle = false;
         public bool animating = false;
 
+        public void OnEnable()
+        {
+            ResetPanel();
+        }
 
         public void PopulateCardImage(Card card)
         {
@@ -114,13 +112,13 @@ namespace Assets.Scripts
 
         }
 
-        public void ResetPanel()
+        private void ResetPanel()
         {
+            descriptionToggle = false;
+            animating = false;
             this.transform.localRotation = Quaternion.identity;
-            fullDescriptionPanel.SetActive(false);
-            //       backgroundGlow.gameObject.SetActive(true);
-            cardImage.gameObject.SetActive(true);
-
+            fullDescriptionPanel.SetActive(false); 
+            imagePanel.gameObject.SetActive(true);
         }
 
     }

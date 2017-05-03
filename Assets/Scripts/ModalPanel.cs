@@ -9,15 +9,15 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Scripts
 {
-    public class ModalPanel :  MonoBehaviour
+    public class ModalPanel : MonoBehaviour
     {
         public TMP_Text title;
         public TMP_Text subText;
-                
+
         public GameObject choicesPanel;
         public GameObject goldObject;
         public GameObject cardObject;
-        
+
         public Button addButton;
         public Button closeButton;
 
@@ -36,7 +36,7 @@ namespace Assets.Scripts
         public GameObject selectedCard;
         public GameObject selectedCardHolder;
         public Button selectCardButton;
-         
+
         public GameObject anvilPanel;
         public Button anvilDestroyButton;
         public Button anvilUpgradeButton;
@@ -57,7 +57,7 @@ namespace Assets.Scripts
         public void Chest(string title, string subText, Card reward, UnityAction yesEvent, UnityAction noEvent)
         {
             modalPanelObject.SetActive(true);
-           
+
             ClearPanel();
 
             choicesPanel.SetActive(true);
@@ -86,7 +86,7 @@ namespace Assets.Scripts
         public void Chest(string title, string subText, int goldReward, UnityAction yesEvent)
         {
             modalPanelObject.SetActive(true);
-           
+
             ClearPanel();
 
             choicesPanel.SetActive(true);
@@ -111,7 +111,7 @@ namespace Assets.Scripts
         {
             modalPanelObject.SetActive(true);
             Selectable.selectContext = Selectable.SelectContext.ModalPanel;
-            
+
             ClearPanel();
 
             choicesPanel.SetActive(true);
@@ -143,20 +143,20 @@ namespace Assets.Scripts
 
         private void AddReward()
         {
-            var selected = rewardSelection;
+            var selected = Selectable.selectedObject;
             Selectable.selectContext = Selectable.SelectContext.NoSelect;
 
             if (selected.tag == "Card")
             {
                 DeckManager.player.AddCardtoDeck(selected.GetComponent<CardManager>());
                 selections.Remove(selected);
-
+                //selected.GetComponent<Selectable>().ClearOutline();
             }
-            else if(selected.tag == "Gold")
+            else if (selected.tag == "Gold")
             {
                 GameManager.instance.ModifyGold(selected.GetComponent<Gold>().goldValue);
             }
-            
+
         }
 
 
@@ -167,7 +167,6 @@ namespace Assets.Scripts
             Selectable.selectContext = Selectable.SelectContext.ModalPanel;
             modalPanelObject.SetActive(true);
             
-
             ClearPanel();
 
             choicesPanel.SetActive(true);
@@ -196,7 +195,7 @@ namespace Assets.Scripts
         internal void Shrine(string title, string subText, UnityAction prayer, UnityAction noEvent, bool needsCardSelection, UnityAction shrineSpent)
         {
             modalPanelObject.SetActive(true);
-           
+
 
             ClearPanel();
             prayerPanel.SetActive(true);
@@ -226,7 +225,7 @@ namespace Assets.Scripts
         internal void Anvil(string title, string subText, UnityAction noEvent)
         {
             modalPanelObject.SetActive(true);
-            
+
             ClearPanel();
 
             anvilPanel.SetActive(true);
@@ -244,9 +243,9 @@ namespace Assets.Scripts
             anvilDestroyButton.interactable = false;
         }
 
-
+        //Is called by Deck Panel when it returns a card selected by the player.
         public void SelectCard(GameObject card)
-        {           
+        {
             cardSelectText.SetActive(false);
             selectCardButton.interactable = false;
 
@@ -300,7 +299,7 @@ namespace Assets.Scripts
             DeckManager.player.DestroyCard(manager);
 
             Card newCard = null;
-            int levelBonus =0;
+            int levelBonus = 0;
             while (newCard == null)
             {
                 levelBonus++;
@@ -319,11 +318,9 @@ namespace Assets.Scripts
 
         internal void SelectReward()
         {
-            addButton.GetComponent<Button>().interactable = true;
-            rewardSelection = EventSystem.current.currentSelectedGameObject;
-            
+            addButton.GetComponent<Button>().interactable = true;            
         }
-
+        
         void ClosePanel()
         {
             foreach (GameObject obj in selections)
@@ -331,15 +328,15 @@ namespace Assets.Scripts
                 Destroy(obj);
             }
             if (selectedCard)
-            {               
-                selectedCard.GetComponent<CardManager>().imagePanel.ResetPanel();
+            {
+               // selectedCard.GetComponent<CardManager>().imagePanel.ResetPanel();
                 selectedCard.transform.SetParent(DeckManager.player.deckHolder.transform);
             }
             selections.Clear();
             rewardSelection = null;
-           
+
             modalPanelObject.SetActive(false);
-            GameManager.instance.doingSetup=false;
+            GameManager.instance.doingSetup = false;
         }
 
 
@@ -377,6 +374,6 @@ namespace Assets.Scripts
             }
         }
 
-        
+
     }
 }

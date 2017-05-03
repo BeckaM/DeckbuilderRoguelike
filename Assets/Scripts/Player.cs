@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using System;
 
 namespace Assets.Scripts
 {
@@ -12,6 +14,7 @@ namespace Assets.Scripts
         public int damageBoost = 0;
 
         public int mana = 1;
+               
         public int maxMana = 10;
         public int manaPerTurn = 1;
 
@@ -45,17 +48,14 @@ namespace Assets.Scripts
             {
                 playerBody.transform.Rotate(0, 180, 0);
                 right = false;
-            }
-
-            if (Input.GetMouseButton(0) && GameManager.instance.doingSetup == false)
-            {
-                var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                targetPos.y = transform.position.y;
-                targetPos.x += xComp;
-                targetPos.z += zComp;
-                transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
-            }
+            }     
         }
+
+        internal void MovePlayerTowards(Vector2 position)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, position, moveSpeed * Time.deltaTime);
+        }
+        
 
         void FixedUpdate()
         {
@@ -64,8 +64,8 @@ namespace Assets.Scripts
                 rigidbody.MovePosition(rigidbody.position + velocity * Time.fixedDeltaTime);
             }
         }
-
-
+                
+        
         //OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).
         private void OnTriggerEnter(Collider other)
         {
@@ -107,5 +107,7 @@ namespace Assets.Scripts
             //Load the last scene loaded, in this case Main, the only scene in the game.
             SceneManager.LoadScene("Main");
         }
+
+        
     }
 }
