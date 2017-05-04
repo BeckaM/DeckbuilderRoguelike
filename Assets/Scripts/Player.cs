@@ -51,7 +51,7 @@ namespace Assets.Scripts
                 right = false;
             }
 
-            if (moveToggle == true)
+            if (moveToggle && !GameManager.instance.doingSetup)
             {
                 //Debug.Log("X position: " + Input.mousePosition.x);
                 //Debug.Log("Y position: " + Input.mousePosition.y);
@@ -62,28 +62,18 @@ namespace Assets.Scripts
                 targetPos.z += zComp;
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
 
-            }
+            }         
+        }
 
-            //if (Input.GetMouseButton(0) && GameManager.instance.doingSetup == false)
-            //{
-            //    Debug.Log("X position: " + Input.mousePosition.x);
-            //    Debug.Log("Y position: " + Input.mousePosition.y);
-            //    if (Input.mousePosition.x < 2000 && Input.mousePosition.y < 2000)
-            //    {
-
-            //        var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //        targetPos.y = transform.position.y;
-            //        targetPos.x += xComp;
-            //        targetPos.z += zComp;
-            //        transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
-            //    }
-            //}
+        private void OnEnable()
+        {
+            moveToggle = false;
         }
 
 
         void FixedUpdate()
         {
-            if (GameManager.instance.doingSetup == false)
+            if (!GameManager.instance.doingSetup)
             {
                 rigidbody.MovePosition(rigidbody.position + velocity * Time.fixedDeltaTime);
             }
