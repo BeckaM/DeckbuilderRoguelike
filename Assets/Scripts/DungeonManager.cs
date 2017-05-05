@@ -21,7 +21,7 @@ namespace Assets.Scripts
 
         int enemyCount;
 
-       // public List<int> enemyLevels;
+        // public List<int> enemyLevels;
 
         public List<GameObject> dungeonObjects;
 
@@ -31,7 +31,7 @@ namespace Assets.Scripts
 
         public GameObject player;
         public GameObject exit;
-       
+
 
 
 
@@ -56,26 +56,28 @@ namespace Assets.Scripts
 
 
         private void PlacePlayerAndExit()
-        {            
+        {
             var spots = mapGen.GetPlayerAndExitSpots();
 
             player.transform.position = spots[0];
+            var exitSpot = spots[1];
+            exit.transform.position = exitSpot;
 
             switch (dungeonLevel)
             {
                 case 3:
                     {
-                        exit.transform.position = spots[1];
-                        exit.gameObject.SetActive(false);
-
-                        var boss = Instantiate(bossPrefab);                        
-                        boss.transform.SetParent(mapGen.transform);
-                        boss.transform.position = spots[1];
-
-                        var enemy = DAL.ObjectDAL.GetEnemy("Eliath");
-
-                        boss.GetComponent<EnemyManager>().PopulateEnemy(enemy, dungeonLevel);
-
+                        AddBoss("Eliath", exitSpot);
+                        break;
+                    }
+                case 5:
+                    {
+                        AddBoss("The Prince", exitSpot);
+                        break;
+                    }
+                case 10:
+                    {
+                        AddBoss("Lo-Ruhammah", exitSpot);
                         break;
                     }
                 default:
@@ -87,6 +89,20 @@ namespace Assets.Scripts
 
             //exit.transform.position = CoordToWorldPoint(bestSpotB);
 
+        }
+
+        private void AddBoss(string bossName, Vector3 exitSpot)
+        {
+
+            exit.gameObject.SetActive(false);
+
+            var boss = Instantiate(bossPrefab);
+            boss.transform.SetParent(mapGen.transform);
+            boss.transform.position = exitSpot;
+
+            var enemy = DAL.ObjectDAL.GetEnemy(bossName);
+
+            boss.GetComponent<EnemyManager>().PopulateEnemy(enemy, dungeonLevel);
         }
 
 
@@ -103,14 +119,14 @@ namespace Assets.Scripts
 
         private void GetEnemies(int level)
         {
-           
+
             Debug.Log("Getting enemylist for level " + level);
             if (level == 1)
             {
-                GameManager.instance.enemyLevels = new List<int> { 1, 1, 1 };               
+                GameManager.instance.enemyLevels = new List<int> { 1, 1, 1 };
             }
             else
-            {               
+            {
                 Debug.Log("Old enemylist" + GameManager.instance.enemyLevels.Count);
                 //Determine number of enemies based on current level number, based on a logarithmic progression
                 enemyCount = (int)Mathf.Log(level, 2f) + 3;
@@ -194,7 +210,7 @@ namespace Assets.Scripts
 
         private void GetAnvils(int level)
         {
-            int anvilCount=0;
+            int anvilCount = 0;
 
             //Determine number of Anvils         
             if (level % 2 == 0)

@@ -40,6 +40,21 @@ namespace Assets.Scripts
             EventManager.Instance.AddListener<EndGame_GUI>(EndGame);
         }
 
+        public void ResetUI(Player player, EnemyManager enemy)
+        {
+            playerManaText.text = player.mana.ToString() + "/" + player.maxMana.ToString();
+            monsterManaText.text = enemy.mana.ToString() + "/" + enemy.maxMana.ToString();
+
+            playerLifeText.text = player.life.ToString() + "/" + player.maxLife.ToString();
+            monsterLifeText.text = enemy.life.ToString() + "/" + enemy.maxLife.ToString();
+
+            playerArmorText.text = player.ward.ToString();
+            monsterArmorText.text = enemy.ward.ToString();
+
+            playerDamageIncreaseText.text = player.damageBoost.ToString();
+            monsterDamageIncreaseText.text = enemy.damageBoost.ToString();
+        }
+
         void OnDisable()
         {
             EventManager.Instance.RemoveAll();
@@ -65,7 +80,7 @@ namespace Assets.Scripts
             //Update Mana text in UI.
             if (e.team == CardgameManager.Team.Me)
             {
-                playerManaText.text =  e.mana.ToString() + "/" + e.maxMana.ToString();
+                playerManaText.text = e.mana.ToString() + "/" + e.maxMana.ToString();
             }
             else
             {
@@ -138,7 +153,7 @@ namespace Assets.Scripts
 
         private IEnumerator EffectText(Color color, TMP_Text textObject, string text, int loops)
         {
-           // var effectText = textObject.GetComponent<Text>();
+            // var effectText = textObject.GetComponent<Text>();
             textObject.text = text;
             textObject.color = color;
 

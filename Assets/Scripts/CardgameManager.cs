@@ -40,7 +40,6 @@ namespace Assets.Scripts
         void Awake()
         {
             instance = this;
-
         }
         
         // Use this for initialization
@@ -56,16 +55,12 @@ namespace Assets.Scripts
             cardgameUI.endTurnButton.interactable = true;
 
             //Update life and mana in the GUI.
-            EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
-            EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
-            EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
-            EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
-
-            //Draw our starting hand
-            ShowMuligan();
+            cardgameUI.ResetUI(player, enemy);
             
+            //Draw our starting hand
+            ShowMuligan();            
         }
-
+        
         public void DrawStartingHands(int cardsMuliganed)
         {
             
