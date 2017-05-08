@@ -9,7 +9,6 @@ namespace Assets.Scripts
     [Serializable]
     public class CardEffect
     {
-
         public enum Effect { DealDamage, Heal, DrawCard, DiscardCard, ReduceDamage, IncreaseDamage, AddMaxMana, SelfDamage, SelfDiscard, DefenseDamage};
         public Effect effect;
         public int value;
@@ -18,7 +17,6 @@ namespace Assets.Scripts
         public enum Trigger { Instant, Passive, StartOfTurn, EndOfTurn, OnTakeDamage, OnDealDamage, OnDraw, OnPlayCard, OnHeal, OnExpire, OnDiscard };
         public Trigger trigger;
         public CardgameManager.Team triggeredBy;
-
     }
 
 }

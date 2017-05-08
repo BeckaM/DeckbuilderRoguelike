@@ -12,7 +12,7 @@ namespace Assets.Scripts
         public string cardName;
 
         //Card Stats
-        public enum Type {ManaSource, BasicAttack, Utility, Consumable}
+        public enum Type {ManaSource, BasicAttack, Special, Consumable}
         public Type type;        
         public PlayerClass.ClassName classOwner;
                 
@@ -21,7 +21,8 @@ namespace Assets.Scripts
 
         public List<CardEffect> effects;
 
-        public int cardDuration;      //-1 = permanent, 0 = instant 
+        public int cardDuration;      //-1 = permanent, 0 = instant. Note that a card loses one duration on every End Turn.
+                                      //Duration 1 will expire immediately on ending the turn, duration 2 will last until end of AIs turn and so on.
 
         //Card Appearance
         public string cardText;

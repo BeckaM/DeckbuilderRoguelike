@@ -276,7 +276,7 @@ namespace Assets.Scripts
 
                 EventManager.Instance.AddListener<MoveCard_GUI>(manager.Move);
                 manager.moveCounter++;
-                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, hand, manager.discard));
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, hand, manager.Discard));
 
 
                 //Check for objects that trigger on discard card.

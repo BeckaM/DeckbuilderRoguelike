@@ -49,8 +49,8 @@ namespace Assets.Scripts
                 {
                     card.SetCardPosition(CardManager.CardStatus.InDiscard);
                     card.transform.SetParent(CardgameManager.instance.playerDiscard.transform, false);
-                    card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, card.deckManager.discardOffset);
-                    card.deckManager.discardOffset -= 2;
+                    card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, card.DeckManager.discardOffset);
+                    card.DeckManager.discardOffset -= 2;
                     //   card.GetComponent<CardManager>().ResetTransform();
                     selectScript.ClearOutline();
                   //  card.imagePanel.ResetPanel();

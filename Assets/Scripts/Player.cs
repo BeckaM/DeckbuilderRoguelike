@@ -71,13 +71,7 @@ namespace Assets.Scripts
         }
 
 
-        void FixedUpdate()
-        {
-            if (!GameManager.instance.doingSetup)
-            {
-                rigidbody.MovePosition(rigidbody.position + velocity * Time.fixedDeltaTime);
-            }
-        }
+        
 
 
         //OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).

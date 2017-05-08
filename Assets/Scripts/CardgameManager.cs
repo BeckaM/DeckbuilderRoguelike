@@ -281,8 +281,7 @@ namespace Assets.Scripts
         
         //Triggered by end turn button.
         public void EndTurn()
-        {
-            
+        {            
             EventManager.Instance.TriggerEvent(new TableCard_Trigger(turn, CardEffect.Trigger.EndOfTurn));
 
             if (turn == Team.Opponent)
@@ -362,7 +361,7 @@ namespace Assets.Scripts
                     card.SetCardPosition(CardManager.CardStatus.InDiscard);
 
                     EventManager.Instance.AddListener<MoveCard_GUI>(card.Move);
-                    EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.discard));
+                    EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.Discard));
                     card.moveCounter++;
                 }
             }
@@ -371,7 +370,7 @@ namespace Assets.Scripts
                 card.SetCardPosition(CardManager.CardStatus.OnTable);
 
                 EventManager.Instance.AddListener<MoveCard_GUI>(card.Move);
-                EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.table));
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, tabletop, card.Table));
                 card.moveCounter++;
             }                    
         }

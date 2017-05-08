@@ -20,7 +20,7 @@ namespace Assets.Scripts
         public void OnBeginDrag(PointerEventData eventData)
         {
             var card = GetComponent<CardManager>();
-            if (!card.isDragable) return;
+            if (!card.IsDragable) return;
 
             //Debug.Log("OnBeginDrag");
 
@@ -44,7 +44,7 @@ namespace Assets.Scripts
         public void OnDrag(PointerEventData eventData)
         {
             var card = GetComponent<CardManager>();
-            if (!card.isDragable) return;
+            if (!card.IsDragable) return;
 
             //Debug.Log ("OnDrag");
 
@@ -82,14 +82,14 @@ namespace Assets.Scripts
         public void OnEndDrag(PointerEventData eventData)
         {
             var card = GetComponent<CardManager>();
-            if (!card.isDragable) return;
+            if (!card.IsDragable) return;
 
             this.transform.SetParent(parentToReturnTo, false);
             this.transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
             GetComponent<CanvasGroup>().blocksRaycasts = true;
             Destroy(placeholder);
-            Debug.Log("OnEndDrag. Card is playabe: " + card.isPlayable.ToString() + ". Was dropped on: " + placeholderParent.name);
-            if (parentToReturnTo.name == "Tabletop" && card.isPlayable)
+            Debug.Log("OnEndDrag. Card is playabe: " + card.IsPlayable.ToString() + ". Was dropped on: " + placeholderParent.name);
+            if (parentToReturnTo.name == "Tabletop" && card.IsPlayable)
             {
 
                 CardgameManager.instance.PlaceCard(card);
