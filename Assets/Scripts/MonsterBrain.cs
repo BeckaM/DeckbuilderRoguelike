@@ -14,7 +14,7 @@ namespace Assets.Scripts
                 List<CardManager> cardlist = new List<CardManager>();
                 foreach (CardManager card in DeckManager.monster.cardsInHand)
                 {                   
-                    if (card.isPlayable)
+                    if (card.IsPlayable)
                     {
                         cardlist.Add(card);
                     }

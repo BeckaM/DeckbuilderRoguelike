@@ -48,7 +48,7 @@ namespace Assets.Scripts
 
                 CardManager card = eventData.pointerDrag.GetComponent<CardManager>();
 
-                if (card.isPlayable && card.isDragable)
+                if (card.IsPlayable && card.IsDragable)
                 {
                     d.parentToReturnTo = this.transform;
                     
