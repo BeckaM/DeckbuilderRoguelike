@@ -56,7 +56,7 @@ namespace Assets.Scripts
         //        //Debug.Log("X position: " + Input.mousePosition.x);
         //        //Debug.Log("Y position: " + Input.mousePosition.y);
                 
-<<<<<<< HEAD
+
         //        var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //        targetPos.y = transform.position.y;
         //        targetPos.x += xComp;
@@ -79,24 +79,9 @@ namespace Assets.Scripts
         //        rigidbody.MovePosition(rigidbody.position + velocity * Time.fixedDeltaTime);
         //    }
         //}
-=======
-                var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                targetPos.y = transform.position.y;
-                targetPos.x += xComp;
-                targetPos.z += zComp;
-                transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
 
-            }         
-        }
+            
 
-        private void OnEnable()
-        {
-            moveToggle = false;
-        }
-
-
-        
->>>>>>> fc8ed06c9e39a5d0316f50ff766045a5976252dd
 
 
         //OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).
