@@ -22,62 +22,62 @@ namespace Assets.Scripts
         public float zComp = 3.5f;
         public float xComp = -0.3f;
         public PlayerClass playerClass;
-        public Sprite playerImage;
-        public Sprite[] sprites;
-        new Rigidbody rigidbody;
-        public Vector3 velocity;
+        //public Sprite playerImage;
+        //public Sprite[] sprites;
+        //new Rigidbody rigidbody;
+        //public Vector3 velocity;
         public bool right = false;
         public GameObject playerBody;
         public float restartLevelDelay = 1f;        //Delay time in seconds to restart level.
         public float moveSpeed = 7.0f;
 
-        void Start()
-        {
-            rigidbody = GetComponent<Rigidbody>();
-        }
+        //void Start()
+        //{
+        //    rigidbody = GetComponent<Rigidbody>();
+        //}
 
-        void Update()
-        {
-            velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
+        //void Update()
+        //{
+        //    velocity = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * moveSpeed;
 
-            if (Input.GetAxisRaw("Horizontal") > 0 && !right)
-            {
-                playerBody.transform.Rotate(0, 180, 0);
-                right = true;
-            }
-            if (Input.GetAxisRaw("Horizontal") < 0 && right)
-            {
-                playerBody.transform.Rotate(0, 180, 0);
-                right = false;
-            }
+        //    if (Input.GetAxisRaw("Horizontal") > 0 && !right)
+        //    {
+        //        playerBody.transform.Rotate(0, 180, 0);
+        //        right = true;
+        //    }
+        //    if (Input.GetAxisRaw("Horizontal") < 0 && right)
+        //    {
+        //        playerBody.transform.Rotate(0, 180, 0);
+        //        right = false;
+        //    }
 
-            if (moveToggle && !GameManager.instance.doingSetup)
-            {
-                //Debug.Log("X position: " + Input.mousePosition.x);
-                //Debug.Log("Y position: " + Input.mousePosition.y);
+        //    if (moveToggle && !GameManager.instance.doingSetup)
+        //    {
+        //        //Debug.Log("X position: " + Input.mousePosition.x);
+        //        //Debug.Log("Y position: " + Input.mousePosition.y);
                 
-                var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                targetPos.y = transform.position.y;
-                targetPos.x += xComp;
-                targetPos.z += zComp;
-                transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+        //        var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //        targetPos.y = transform.position.y;
+        //        targetPos.x += xComp;
+        //        targetPos.z += zComp;
+        //        transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
 
-            }         
-        }
+        //    }         
+        //}
 
-        private void OnEnable()
-        {
-            moveToggle = false;
-        }
+        //private void OnEnable()
+        //{
+        //    moveToggle = false;
+        //}
 
 
-        void FixedUpdate()
-        {
-            if (!GameManager.instance.doingSetup)
-            {
-                rigidbody.MovePosition(rigidbody.position + velocity * Time.fixedDeltaTime);
-            }
-        }
+        //void FixedUpdate()
+        //{
+        //    if (!GameManager.instance.doingSetup)
+        //    {
+        //        rigidbody.MovePosition(rigidbody.position + velocity * Time.fixedDeltaTime);
+        //    }
+        //}
 
 
         //OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).

@@ -98,9 +98,9 @@ namespace Assets.Scripts
             cardgameUI.monsterPortrait.color = enemy.enemy.spriteColor;
 
             // player.UpdateLife();            
-            player.playerImage = player.sprites[GameManager.instance.playerClass.spriteIcon];
+           // player.playerImage = player.sprites[GameManager.instance.playerClass.spriteIcon];
 
-            cardgameUI.playerPortrait.sprite = player.playerImage;
+           // cardgameUI.playerPortrait.sprite = player.playerImage;
             cardgameUI.monsterNameText.text = enemy.enemy.EnemyName;
         }
 

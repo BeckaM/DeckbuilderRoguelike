@@ -12,7 +12,7 @@ namespace Assets.Scripts
         public PlayerProgress totalProgress;
         public ClassProgress currentClass;
 
-        public PlayerProgress currentRunProgress;
+        public PlayerProgress currentRunProgress= new PlayerProgress();
 
         public List<PlayerClass> unlockedClasses = new List<PlayerClass>();
         public List<PlayerClass> lockedClasses = new List<PlayerClass>();
