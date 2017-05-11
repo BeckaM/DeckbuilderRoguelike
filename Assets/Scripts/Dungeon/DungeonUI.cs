@@ -25,19 +25,19 @@ namespace Assets.Scripts
 
         public void UpdateXPText()
         {
-            XPText.text = "XP:<#06409b>" + GameManager.instance.playerXP + "/" + GameManager.instance.nextLVLXP;
+            XPText.text = "XP:<#06409b>" + GameManager.instance.player.playerXP + "/" + GameManager.instance.player.nextLVLXP;
         }
 
 
         public void UpdateGoldText()
         {            
-            goldText.text = "Gold:<#9b8e05>" + GameManager.instance.gold;
+            goldText.text = "Gold:<#9b8e05>" + GameManager.instance.player.gold;
         }
 
 
         public void UpdateLifeText()
         {
-            lifeText.text = "Life:<#910000>" + GameManager.instance.lifeHolder + "/" + GameManager.instance.maxLife;
+            lifeText.text = "Life:<#910000>" + GameManager.instance.player.life + "/" + GameManager.instance.player.life;
         }
 
 

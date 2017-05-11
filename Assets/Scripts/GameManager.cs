@@ -9,38 +9,28 @@ namespace Assets.Scripts
 {
     public class GameManager : MonoBehaviour
     {
+        public Player player = new Player();
         public PlayerClass playerClass;
+        public GameObject playerObject;
+
         public List<Sprite> classImages;
 
         public ProgressManager progressManager = new ProgressManager();
-
-        public int gold;
-
-        public int playerLevel = 0;
-        public int playerXP = 0;
-        public int nextLVLXP = 20;
-
-        public int maxLife = 30;
-        public int lifeHolder = 30;
-
+               
         public float levelStartDelay = 2f;                      //Time to wait before starting level, in seconds.     
 
         public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
 
         public PerkManager perkManager = new PerkManager();
 
-        public GameObject monsterDeck;
+       // public GameObject monsterDeck;
         public List<int> enemyLevels;
 
         public CardgameManager cardGameManager;
         public DungeonUI dungeonUI;
         public DungeonManager dungeonManager;                    //Store a reference to our dungeon manager which will set up the level.
         private CardgameUI cardGameUI;
-        public enum Content { Gold, Consumable, Card };
-        public Content lootType;
-        public Card cardLoot;
-        public int goldLoot;
-
+       
         public int level = 0;                                  //Current level number, expressed in game as "Level 1".
 
         public bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
@@ -130,7 +120,7 @@ namespace Assets.Scripts
 
         private void FindLevelObjects()
         {
-
+            playerObject = GameObject.Find("Player");
             dungeonManager = GameObject.Find("Dungeon").GetComponent<DungeonManager>();
             dungeonUI = GameObject.Find("DungeonUI").GetComponent<DungeonUI>();
             cardGameManager = GameObject.Find("CardGame").GetComponent<CardgameManager>();
@@ -138,13 +128,12 @@ namespace Assets.Scripts
         }
 
 
-        public void InitCardgame(Collider monster, Player player)
+        public void InitCardgame(Collider monster)
         {
             doingSetup = true;
             //Create the monster deck and instantiate the cards.
             var enemyManager = monster.gameObject.GetComponent<EnemyManager>();
-
-            // enemyManager.InitMonsterDeck();
+                       
 
             //Send the Player and Monster to the card game.
             CardgameManager.instance.enemy = enemyManager;
@@ -155,7 +144,7 @@ namespace Assets.Scripts
 
             //Prevent player from moving while in card game.
             doingSetup = true;
-            player.gameObject.SetActive(false);
+            playerObject.SetActive(false);
 
             //Enable the card game Canvas, which also starts the CardgameManager script.        
             cardGameManager.gameObject.SetActive(true);
@@ -204,7 +193,7 @@ namespace Assets.Scripts
         //GameOver is called when the player reaches 0 life points
         public void GameOver()
         {
-            dungeonUI.gameOverPanel.UpdateGameOverText(level, playerLevel);
+            dungeonUI.gameOverPanel.UpdateGameOverText(level, player.playerLevel);
             progressManager.EndRun();
             dungeonUI.gameOverPanel.UpdateNewUnlocks(progressManager.GetNewClassUnlocks(), progressManager.GetNewPerkUnlocks());
             progressManager.SaveProgress();
@@ -222,7 +211,7 @@ namespace Assets.Scripts
 
         public void GainXP(int XP)
         {
-            playerXP = playerXP + XP;
+            player.playerXP = player.playerXP + XP;
             LevelUpCheck();
             dungeonUI.UpdateXPText();
         }
@@ -230,7 +219,7 @@ namespace Assets.Scripts
         //Check if player leveled up
         internal void LevelUpCheck()
         {
-            if (playerXP >= nextLVLXP)
+            if (player.playerXP >= player.nextLVLXP)
             {
                 dungeonUI.LevelUpButton.SetActive(true);
             }
@@ -239,10 +228,10 @@ namespace Assets.Scripts
 
         public void GainLife(int gain)
         {
-            lifeHolder += gain;
-            if (lifeHolder > maxLife)
+            player.life += gain;
+            if (player.life > player.maxLife)
             {
-                lifeHolder = maxLife;
+                player.life = player.maxLife;
             }
             dungeonUI.UpdateLifeText();
         }
@@ -250,7 +239,7 @@ namespace Assets.Scripts
 
         internal void LevelUp()
         {
-            var newCards = DAL.ObjectDAL.GetClassCards(playerLevel - 1, playerLevel + 1, playerClass.className);
+            var newCards = DAL.ObjectDAL.GetClassCards(player.playerLevel - 1, player.playerLevel + 1, playerClass.className);
 
             List<Card> rewardList = new List<Card>();
             rewardList.AddRange(newCards);
@@ -261,23 +250,23 @@ namespace Assets.Scripts
 
         internal void LevelUpComplete()
         {           
-            playerLevel++;
-            lifeHolder = maxLife;
+            player.playerLevel++;
+            player.life = player.maxLife;
             dungeonUI.UpdateLifeText();
-            var increase = 1.4 * nextLVLXP;
-            nextLVLXP = nextLVLXP + (int)increase;
+            var increase = 1.4 * player.nextLVLXP;
+            player.nextLVLXP = player.nextLVLXP + (int)increase;
             dungeonUI.UpdateXPText();
-            if (playerXP < nextLVLXP)
+            if (player.playerXP < player.nextLVLXP)
             {
                 dungeonUI.LevelUpButton.SetActive(false);
             }
-            progressManager.HighestAchievedMetric(ProgressManager.Metric.Highest_Player_Level, playerLevel);
+            progressManager.HighestAchievedMetric(ProgressManager.Metric.Highest_Player_Level, player.playerLevel);
         }
 
 
         public void ModifyGold(int gain)
         {
-            gold = gold + gain;
+            player.gold = player.gold + gain;
             dungeonUI.UpdateGoldText();
             if (gain > 0)
             {

@@ -52,8 +52,7 @@ namespace Assets.Scripts.Menu
 
         public void StartGame()
         {
-            GameManager.instance.progressManager.currentRunProgress = new PlayerProgress();
-            //Initialize the starting deck and create the cards.
+            GameManager.instance.progressManager.currentRunProgress = new PlayerProgress();          
             
             SceneManager.LoadScene("Main");
         }

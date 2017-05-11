@@ -14,7 +14,6 @@ namespace Assets.Scripts
         public string conditionText;
         public ProgressManager.Metric condition;
         public int conditionValue;
-
     }
 
     [Serializable]

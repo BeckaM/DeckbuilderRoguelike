@@ -88,18 +88,10 @@ namespace Assets.Scripts
             /* Old code for non stacking mana
              * player.mana = player.maxMana;
             enemy.mana = enemy.maxMana;
-            */
-
-            player.life = GameManager.instance.lifeHolder;
-            player.maxLife = GameManager.instance.maxLife;
-
-            //enemy.UpdateLife();
+            */           
             cardgameUI.monsterPortrait.sprite = enemy.monsterRenderer.sprite;
             cardgameUI.monsterPortrait.color = enemy.enemy.spriteColor;
-
-            // player.UpdateLife();            
-           // player.playerImage = player.sprites[GameManager.instance.playerClass.spriteIcon];
-
+                        
            // cardgameUI.playerPortrait.sprite = player.playerImage;
             cardgameUI.monsterNameText.text = enemy.enemy.EnemyName;
         }
@@ -241,8 +233,7 @@ namespace Assets.Scripts
         private void EndGame(bool win)
         {
             List<Card> cardRewards = new List<Card>();
-            //int goldReward;
-
+            
             List<Card> monsterCards = new List<Card>();
 
             foreach (GameObject CardObject in GameObject.FindGameObjectsWithTag("Card"))
@@ -273,8 +264,7 @@ namespace Assets.Scripts
             }
             
             GameManager.instance.GainXP(enemy.experienceReward);
-            GameManager.instance.lifeHolder = player.life;
-
+           
             EventManager.Instance.QueueAnimation(new EndGame_GUI(win, cardRewards, goldReward));
         }
             

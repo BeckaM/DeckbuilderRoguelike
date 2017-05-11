@@ -30,14 +30,14 @@ namespace Assets.Scripts
             {
                 case "Taste for Blood":
                     {
-                        GameManager.instance.maxLife += 5;
-                        GameManager.instance.lifeHolder += 5;
+                        GameManager.instance.player.maxLife += 5;
+                        GameManager.instance.player.life += 5;
                         break;
                     }
                 case "Thirst for Blood":
                     {
-                        GameManager.instance.maxLife += 10;
-                        GameManager.instance.lifeHolder += 10;
+                        GameManager.instance.player.maxLife += 10;
+                        GameManager.instance.player.life += 10;
                         break;
                     }
                 case "Wisdom From Below":

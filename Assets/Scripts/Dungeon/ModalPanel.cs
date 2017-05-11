@@ -254,7 +254,7 @@ namespace Assets.Scripts
             prayButton.interactable = true;
 
 
-            if (GameManager.instance.gold >= 50)
+            if (GameManager.instance.player.gold >= 50)
             {
                 anvilUpgradeButton.interactable = true;
             }
@@ -263,7 +263,7 @@ namespace Assets.Scripts
                 anvilUpgradeButton.interactable = false;
             }
 
-            if (GameManager.instance.gold >= 20)
+            if (GameManager.instance.player.gold >= 20)
             {
                 anvilDestroyButton.interactable = true;
             }

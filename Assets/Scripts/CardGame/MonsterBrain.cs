@@ -7,7 +7,7 @@ namespace Assets.Scripts
 {
     public static class MonsterBrain
     {        
-        public static List<CardManager> playableCards
+        public static List<CardManager> PlayableCards
         {
             get
             {
@@ -26,7 +26,7 @@ namespace Assets.Scripts
 
         internal static void PlayCards()
         {
-            while (playableCards.Count > 0)
+            while (PlayableCards.Count > 0)
             {
                 PlayCard(ChooseCard());
                 Debug.Log("AI played card");
@@ -39,7 +39,7 @@ namespace Assets.Scripts
         {
             int highestWeight = 0;
             CardManager cardChoice = null;
-            foreach (CardManager card in playableCards)
+            foreach (CardManager card in PlayableCards)
             {
                 var weight = CardWeight(card);
 
