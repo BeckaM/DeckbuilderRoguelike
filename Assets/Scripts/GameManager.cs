@@ -12,6 +12,7 @@ namespace Assets.Scripts
         public Player player = new Player();
         public PlayerClass playerClass;
         public GameObject playerObject;
+        public GameObject playerCameraObject;
 
         public List<Sprite> classImages;
 
@@ -121,6 +122,7 @@ namespace Assets.Scripts
         private void FindLevelObjects()
         {
             playerObject = GameObject.Find("Player");
+            playerCameraObject = GameObject.Find("CameraPivot");
             dungeonManager = GameObject.Find("Dungeon").GetComponent<DungeonManager>();
             dungeonUI = GameObject.Find("DungeonUI").GetComponent<DungeonUI>();
             cardGameManager = GameObject.Find("CardGame").GetComponent<CardgameManager>();
@@ -145,6 +147,7 @@ namespace Assets.Scripts
             //Prevent player from moving while in card game.
             doingSetup = true;
             playerObject.SetActive(false);
+            playerCameraObject.SetActive(false);
 
             //Enable the card game Canvas, which also starts the CardgameManager script.        
             cardGameManager.gameObject.SetActive(true);
