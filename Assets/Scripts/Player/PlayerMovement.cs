@@ -12,6 +12,7 @@ namespace Assets.Scripts
 
         public float rotationSpeed = 0.2f;
         public float moveSpeed = 7.0f;
+        public float deadZone = 0.5f;
 
         public Vector3 movement;
 
@@ -47,7 +48,7 @@ namespace Assets.Scripts
 
                 var heading = targetPos - transform.position;
                 var distance = heading.magnitude;
-                if (distance < 1)            // Deadzone around the player to remove twitchyness. 
+                if (distance < deadZone)            // Deadzone around the player to remove twitchyness. 
                 {
                     return;
                 }

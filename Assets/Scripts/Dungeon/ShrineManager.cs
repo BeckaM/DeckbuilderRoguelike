@@ -10,7 +10,7 @@ namespace Assets.Scripts
     {
         public List<Sprite> sprites;
         public UnityAction prayer;
-        public SpriteRenderer shrineSprite;
+      //  public SpriteRenderer shrineSprite;
         public string shrineType;
         public string shrineDescription;
         public bool needsCardSelection;
@@ -28,7 +28,7 @@ namespace Assets.Scripts
                 needsCardSelection = true;
                 prayer = new UnityAction(GameManager.instance.dungeonUI.modalPanel.DuplicateSelectedCard);
 
-                shrineSprite.color = Color.blue;
+              //  shrineSprite.color = Color.blue;
             }
 
             else if (shrineType == "Shrine of Chaos")
@@ -37,7 +37,7 @@ namespace Assets.Scripts
                 needsCardSelection = false;
                 prayer = new UnityAction(GameManager.instance.dungeonUI.deckPanel.DestroyRandomCardsPanel);
 
-                shrineSprite.color = Color.cyan;
+              //  shrineSprite.color = Color.cyan;
             }
 
             else if (shrineType == "Shrine of Destruction")
@@ -47,7 +47,7 @@ namespace Assets.Scripts
                 needsCardSelection = true;
                 prayer = new UnityAction(GameManager.instance.dungeonUI.modalPanel.DestroySelectedCard);
 
-                shrineSprite.color = Color.red;
+              //  shrineSprite.color = Color.red;
             }
 
             else if (shrineType == "Shrine of Evolution")
@@ -56,7 +56,7 @@ namespace Assets.Scripts
                 needsCardSelection = true;
                 prayer = new UnityAction(GameManager.instance.dungeonUI.modalPanel.UpgradeSelectedCard);
 
-                shrineSprite.color = Color.red;
+              //  shrineSprite.color = Color.red;
             }
         }
         
@@ -77,7 +77,7 @@ namespace Assets.Scripts
         {
             if (isSpent)
             {
-                shrineSprite.color = Color.grey;
+            //    shrineSprite.color = Color.grey;
                 GetComponent<Collider>().enabled = false;
             }
             

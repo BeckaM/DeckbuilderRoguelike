@@ -446,7 +446,7 @@ namespace Assets.Scripts
 
         Vector3 CoordToWorldPoint(Coord tile)
         {
-            return new Vector3(-width / 2 + .5f + tile.tileX, -3f, -height / 2 + .5f + tile.tileY);
+            return new Vector3(-width / 2 + .5f + tile.tileX, 1f, -height / 2 + .5f + tile.tileY);
         }
 
         List<List<Coord>> GetRegions(int tileType)
