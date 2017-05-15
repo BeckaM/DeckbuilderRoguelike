@@ -104,6 +104,16 @@ public class MeshGenerator : MonoBehaviour
         
         MeshCollider wallCollider = gameObject.AddComponent<MeshCollider>();
         wallCollider.sharedMesh = wallMesh;
+                
+        
+        Vector2[] uvs = new Vector2[wallMesh.vertices.Length];
+
+        for (int i = 0; i < uvs.Length; i++)
+        {
+            uvs[i] = new Vector2(wallMesh.vertices[i].x, wallMesh.vertices[i].y);
+        }
+        wallMesh.uv = uvs;
+
     }
 
     void Generate2DColliders()
