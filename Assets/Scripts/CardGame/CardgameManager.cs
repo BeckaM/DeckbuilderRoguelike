@@ -89,8 +89,8 @@ namespace Assets.Scripts
              * player.mana = player.maxMana;
             enemy.mana = enemy.maxMana;
             */           
-            cardgameUI.monsterPortrait.sprite = enemy.monsterRenderer.sprite;
-            cardgameUI.monsterPortrait.color = enemy.enemy.spriteColor;
+            //cardgameUI.monsterPortrait.sprite = enemy.monsterRenderer.sprite;
+            //cardgameUI.monsterPortrait.color = enemy.enemy.spriteColor;
                         
            // cardgameUI.playerPortrait.sprite = player.playerImage;
             cardgameUI.monsterNameText.text = enemy.enemy.EnemyName;

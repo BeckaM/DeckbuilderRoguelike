@@ -23,10 +23,12 @@ namespace Assets.Scripts
         public int monsterLevel;
         public int experienceReward;
 
+       // public GameObject monsterMesh;
+
      //   public GameObject enemyObject;
-        public Sprite[] sprites;
+      //  public Sprite[] sprites;
         //  public Sprite monsterImage;
-        public SpriteRenderer monsterRenderer;
+        //public SpriteRenderer monsterRenderer;
         public TMP_Text monsterLVLText;
 
         //Gets monster properties from Dungeon Manager and sets them on the enemy object.
@@ -38,12 +40,20 @@ namespace Assets.Scripts
             life = enemy.BaseEnemyHP + (enemy.HPPerLevel*level);
             maxLife = life;
             experienceReward = 4 + monsterLevel;
+                        
+            //Set Mesh 
+            GameObject mesh = Resources.Load("Monsters/" + enemytoget.EnemyName, typeof(GameObject)) as GameObject;
 
-          //  var transformer = transform;
+            if (mesh == null)
+            {               
+                   mesh = Resources.Load("Monster/" + "Placeholder", typeof(GameObject)) as GameObject;
+            }
+
+            Instantiate(mesh, this.transform);
 
             //Set Image
-            monsterRenderer.sprite = sprites[enemy.SpriteIcon];
-            monsterRenderer.color = enemytoget.spriteColor;
+            //monsterRenderer.sprite = sprites[enemy.SpriteIcon];
+            //monsterRenderer.color = enemytoget.spriteColor;
 
             //Set lvl text
             monsterLVLText.text = "LVL" + level.ToString();
