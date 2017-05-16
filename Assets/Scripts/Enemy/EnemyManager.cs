@@ -46,7 +46,7 @@ namespace Assets.Scripts
 
             if (mesh == null)
             {               
-                   mesh = Resources.Load("Monster/" + "Placeholder", typeof(GameObject)) as GameObject;
+                   mesh = Resources.Load("Monsters/" + "Placeholder", typeof(GameObject)) as GameObject;
             }
 
             Instantiate(mesh, this.transform);

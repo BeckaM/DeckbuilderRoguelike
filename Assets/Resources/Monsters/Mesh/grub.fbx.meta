@@ -6,10 +6,34 @@ ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Armature
+    100004: Bone
+    100006: Bone.001
+    100008: Bone.001_end
+    100010: Bone.002
+    100012: Bone.003
+    100014: Bone.004
+    100016: Bone.005
+    100018: Bone.005_end
+    100020: Layer_1
     400000: //RootNode
+    400002: Armature
+    400004: Bone
+    400006: Bone.001
+    400008: Bone.001_end
+    400010: Bone.002
+    400012: Bone.003
+    400014: Bone.004
+    400016: Bone.005
+    400018: Bone.005_end
+    400020: Layer_1
     2300000: //RootNode
     3300000: //RootNode
     4300000: Layer_1
+    7400000: Armature|ArmatureAction
+    7400002: Armature|GrubIdle
+    9500000: //RootNode
+    13700000: Layer_1
   materials:
     importMaterials: 1
     materialName: 0
@@ -26,13 +50,113 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Armature|ArmatureAction
+      takeName: Armature|ArmatureAction
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Bone
+        weight: 1
+      - path: Armature/Bone/Bone.002
+        weight: 1
+      - path: Armature/Bone/Bone.002/Bone.001
+        weight: 1
+      - path: Armature/Bone/Bone.002/Bone.001/Bone.001_end
+        weight: 1
+      - path: Armature/Bone/Bone.003
+        weight: 1
+      - path: Armature/Bone/Bone.003/Bone.004
+        weight: 1
+      - path: Armature/Bone/Bone.003/Bone.004/Bone.005
+        weight: 1
+      - path: Armature/Bone/Bone.003/Bone.004/Bone.005/Bone.005_end
+        weight: 1
+      - path: Layer_1
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|GrubIdle
+      takeName: Armature|GrubIdle
+      firstFrame: 0
+      lastFrame: 160
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Bone
+        weight: 1
+      - path: Armature/Bone/Bone.002
+        weight: 1
+      - path: Armature/Bone/Bone.002/Bone.001
+        weight: 1
+      - path: Armature/Bone/Bone.002/Bone.001/Bone.001_end
+        weight: 1
+      - path: Armature/Bone/Bone.003
+        weight: 1
+      - path: Armature/Bone/Bone.003/Bone.004
+        weight: 1
+      - path: Armature/Bone/Bone.003/Bone.004/Bone.005
+        weight: 1
+      - path: Armature/Bone/Bone.003/Bone.004/Bone.005/Bone.005_end
+        weight: 1
+      - path: Layer_1
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
@@ -74,7 +198,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
