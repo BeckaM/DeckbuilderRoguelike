@@ -113,6 +113,7 @@ public class MeshGenerator : MonoBehaviour
             uvs[i] = new Vector2(wallMesh.vertices[i].x, wallMesh.vertices[i].y);
         }
         wallMesh.uv = uvs;
+        wallMesh.RecalculateNormals();
 
     }
 
