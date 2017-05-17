@@ -56,7 +56,7 @@ namespace Assets.Scripts
 
             ProcessMap();
 
-            int borderSize = 50;
+            int borderSize = 2;
             int[,] borderedMap = new int[width + borderSize * 2, height + borderSize * 2];
 
             for (int x = 0; x < borderedMap.GetLength(0); x++)
