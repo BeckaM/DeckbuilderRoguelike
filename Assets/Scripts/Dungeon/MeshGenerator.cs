@@ -104,15 +104,57 @@ public class MeshGenerator : MonoBehaviour
         
         MeshCollider wallCollider = gameObject.AddComponent<MeshCollider>();
         wallCollider.sharedMesh = wallMesh;
-                
-        
-        Vector2[] uvs = new Vector2[wallMesh.vertices.Length];
 
-        for (int i = 0; i < uvs.Length; i++)
+        //GENERATE UV COORDINATES HERE
+        Vector2[] uvs = new Vector2[wallVertices.Count];
+        int march = 0;
+        for (int i = 0; i < wallVertices.Count; i++)
         {
-            uvs[i] = new Vector2(wallMesh.vertices[i].x, wallMesh.vertices[i].y);
+            switch (march)
+            {
+                case 0:
+                    uvs[i] = new Vector2(0, 1);
+                    march++;
+                    break;
+                case 1:
+                    uvs[i] = new Vector2(0.5f, 1);
+                    march++;
+                    break;
+                case 2:
+                    uvs[i] = new Vector2(0, 0);
+                    march++;
+                    break;
+                case 3:
+                    uvs[i] = new Vector2(0.5f, 0);
+                    march++;
+                    break;
+                case 4:
+                    uvs[i] = new Vector2(0.5f, 1);
+                    march++;
+                    break;
+                case 5:
+                    uvs[i] = new Vector2(1, 1);
+                    march++;
+                    break;
+                case 6:
+                    uvs[i] = new Vector2(0.5f, 0);
+                    march++;
+                    break;
+                case 7:
+                    uvs[i] = new Vector2(1, 0);
+                    march = 0;
+                    break;
+            }
         }
         wallMesh.uv = uvs;
+
+        //Vector2[] uvs = new Vector2[wallMesh.vertices.Length];
+
+        //for (int i = 0; i < uvs.Length; i++)
+        //{
+        //    uvs[i] = new Vector2(wallMesh.vertices[i].x, wallMesh.vertices[i].y);
+        //}
+        //wallMesh.uv = uvs;
         wallMesh.RecalculateNormals();
 
     }
