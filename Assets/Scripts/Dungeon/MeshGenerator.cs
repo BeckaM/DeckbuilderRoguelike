@@ -228,9 +228,9 @@ public class MeshGenerator : MonoBehaviour
 
     void TransformSegment(Transform component, float lenght, Vector3 rotation)
     {
-        component.localScale = new Vector3(0.5f, 2.1f, lenght);        
+        component.localScale = new Vector3(1f, 1f, lenght);        
         component.rotation = Quaternion.LookRotation(rotation);
-        component.localPosition = new Vector3(component.transform.localPosition.x, 1, component.transform.localPosition.z);
+        component.localPosition = new Vector3(component.transform.localPosition.x, 0.5f, component.transform.localPosition.z);
     }
 
     void Generate2DColliders()
