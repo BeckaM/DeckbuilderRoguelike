@@ -18,6 +18,14 @@ public class MeshGenerator : MonoBehaviour
     List<List<int>> outlines = new List<List<int>>();
     HashSet<int> checkedVertices = new HashSet<int>();
 
+    public GameObject wallCompMesh;
+    public GameObject wallOne;
+    public GameObject wallTwo;
+    public GameObject wallThree;
+
+    public float maxWallLenght;
+
+
     public void GenerateMesh(int[,] map, float squareSize)
     {
 
@@ -84,7 +92,8 @@ public class MeshGenerator : MonoBehaviour
             for (int i = 0; i < outline.Count - 1; i++)
             {
                 int startIndex = wallVertices.Count;
-                wallVertices.Add(vertices[outline[i]]); // left
+
+                wallVertices.Add(vertices[outline[i]]); // left     
                 wallVertices.Add(vertices[outline[i + 1]]); // right
                 wallVertices.Add(vertices[outline[i]] - Vector3.up * wallHeight); // bottom left
                 wallVertices.Add(vertices[outline[i + 1]] - Vector3.up * wallHeight); // bottom right
@@ -96,12 +105,14 @@ public class MeshGenerator : MonoBehaviour
                 wallTriangles.Add(startIndex + 3);
                 wallTriangles.Add(startIndex + 1);
                 wallTriangles.Add(startIndex + 0);
+
+                DecorateWall(outline[i], outline[i + 1]);
             }
         }
         wallMesh.vertices = wallVertices.ToArray();
         wallMesh.triangles = wallTriangles.ToArray();
         walls.mesh = wallMesh;
-        
+
         MeshCollider wallCollider = gameObject.AddComponent<MeshCollider>();
         wallCollider.sharedMesh = wallMesh;
 
@@ -157,6 +168,69 @@ public class MeshGenerator : MonoBehaviour
         //wallMesh.uv = uvs;
         wallMesh.RecalculateNormals();
 
+    }
+
+    void DecorateWall(int left, int right)
+    {
+        var segmentLenght = Vector3.Distance(vertices[left], vertices[right]);
+        if (maxWallLenght < segmentLenght) maxWallLenght = segmentLenght;
+        var segmentRotation = vertices[left] - vertices[right];
+
+        if (segmentLenght > 6.5)
+        {
+            var start = vertices[left];
+            var end = vertices[right];
+            var point1 = Vector3.MoveTowards(start, end, segmentLenght * 0.33f);
+            var point2 = Vector3.MoveTowards(start, end, segmentLenght * 0.66f);
+
+            PlaceSegment(segmentLenght / 3, segmentRotation, start, point1);
+            PlaceSegment(segmentLenght / 3, segmentRotation, point1, point2);
+            PlaceSegment(segmentLenght / 3, segmentRotation, point2, end);
+        }
+    
+           else if (segmentLenght > 3.5)
+        {
+            var start = vertices[left];
+            var end = vertices[right];
+            var midpoint = Vector3.MoveTowards(start, end, segmentLenght / 2);
+           
+            PlaceSegment(segmentLenght/2, segmentRotation, start, midpoint);
+            PlaceSegment(segmentLenght / 2, segmentRotation, midpoint, end);
+        }
+        else
+        {                       
+            PlaceSegment(segmentLenght, segmentRotation, vertices[left], vertices[right]);
+        }
+
+    }
+
+    void PlaceSegment(float segmentLenght, Vector3 segmentRotation, Vector3 start, Vector3 end)
+    {
+        if (segmentLenght <= 1.5f)
+        {
+            var component = Instantiate(wallOne, start, Quaternion.identity);           
+            component.transform.position = Vector3.MoveTowards(start, end, segmentLenght / 2);
+            TransformSegment(component.transform, segmentLenght, segmentRotation);
+        }
+        else if (segmentLenght <= 2.5)
+        {
+            var component = Instantiate(wallTwo, start, Quaternion.identity);
+            component.transform.position = Vector3.MoveTowards(start, end, segmentLenght / 2);
+            TransformSegment(component.transform, segmentLenght, segmentRotation);
+        }
+        else
+        {
+            var component = Instantiate(wallThree, start, Quaternion.identity);
+            component.transform.position = Vector3.MoveTowards(start, end, segmentLenght / 2);
+            TransformSegment(component.transform, segmentLenght, segmentRotation);
+        }
+    }
+
+    void TransformSegment(Transform component, float lenght, Vector3 rotation)
+    {
+        component.localScale = new Vector3(0.5f, 2.1f, lenght);        
+        component.rotation = Quaternion.LookRotation(rotation);
+        component.localPosition = new Vector3(component.transform.localPosition.x, 1, component.transform.localPosition.z);
     }
 
     void Generate2DColliders()
