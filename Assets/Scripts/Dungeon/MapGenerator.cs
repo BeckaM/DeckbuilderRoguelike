@@ -86,24 +86,19 @@ namespace Assets.Scripts
 
         internal void FindPlacementSpots()
         {
-
             placementSpots = new List<Coord>();
             foreach (Room room in rooms)
             {
                 room.placementSpots = new List<Coord>();
 
-
                 foreach (Coord spot in room.nonEdgeTiles)
                 {
-
                     var bounds = placeChecker.transform.lossyScale;
                     if (CheckBounds(CoordToWorldPoint(spot), bounds, LayerMask.GetMask("DungeonCheck")))
                     {
                         room.placementSpots.Add(spot);
                         placementSpots.Add(spot);
-
                     }
-
                 }
             }
             foreach (GameObject checker in placeCheckers)
@@ -112,10 +107,8 @@ namespace Assets.Scripts
                 col.enabled = false;
                 Destroy(checker);
             }
-
-
-
         }
+
         public bool CheckBounds(Vector3 position, Vector3 boundsSize, int layerMask)
         {
         //    Bounds boxBounds = new Bounds(position, boundsSize);
@@ -201,9 +194,7 @@ namespace Assets.Scripts
                 }
 
             }
-
             return spots;
-
         }
 
         public void PlaceObjects(List<GameObject> objects)
@@ -470,7 +461,6 @@ namespace Assets.Scripts
                     }
                 }
             }
-
             return regions;
         }
 
@@ -512,7 +502,6 @@ namespace Assets.Scripts
             return x >= 0 && x < width && y >= 0 && y < height;
         }
 
-
         void RandomFillMap()
         {
             if (useRandomSeed)
@@ -551,7 +540,6 @@ namespace Assets.Scripts
                         map[x, y] = 1;
                     else if (neighbourWallTiles < 4)
                         map[x, y] = 0;
-
                 }
             }
         }
@@ -576,7 +564,6 @@ namespace Assets.Scripts
                     }
                 }
             }
-
             return wallCount;
         }
 
@@ -592,12 +579,9 @@ namespace Assets.Scripts
                 tileY = y;
                 comp = "X:" + tileX + "Y:" + tileY;
             }
-
-
+            
             public int CompareTo(Coord otherCoord)
-
             {
-
                 return otherCoord.comp.CompareTo(comp);
             }
         }
@@ -687,8 +671,5 @@ namespace Assets.Scripts
                 return otherRoom.roomSize.CompareTo(roomSize);
             }
         }
-
-
-
     }
 }
