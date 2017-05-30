@@ -19,7 +19,8 @@ public class MeshGenerator : MonoBehaviour
     HashSet<int> checkedVertices = new HashSet<int>();
 
     public GameObject wallCompMesh;
-    public GameObject wallOne;
+    public GameObject[] wallOne;
+    public int wallOneCounter=0;
     public GameObject wallTwo;
     public GameObject wallThree;
 
@@ -208,7 +209,9 @@ public class MeshGenerator : MonoBehaviour
     {
         if (segmentLenght <= 1.5f)
         {
-            var component = Instantiate(wallOne, start, Quaternion.identity);           
+            var component = Instantiate(wallOne[wallOneCounter], start, Quaternion.identity);
+            
+            wallOneCounter = wallOneCounter == wallOne.Length-1 ? 0 : wallOneCounter + 1;
             component.transform.position = Vector3.MoveTowards(start, end, segmentLenght / 2);
             TransformSegment(component.transform, segmentLenght, segmentRotation);
         }
