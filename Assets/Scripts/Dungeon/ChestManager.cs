@@ -2,21 +2,24 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using cakeslice;
 
 namespace Assets.Scripts
 {
 
-    public class ChestManager : MonoBehaviour
+    public class ChestManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         private enum Content { Gold, Consumable, Card };
         private Content content;
         private Card cardReward;
         private int goldReward;
         private string subText;
+        public Outline outline;
 
         internal void PopulateChest(int level)
         {
+            outline.enabled = false;
             var adjustedLevel = Math.Ceiling((float)level / 2);
             var rand = UnityEngine.Random.Range(0, 6);
             if (rand == 0)
@@ -77,6 +80,17 @@ namespace Assets.Scripts
             }
             this.gameObject.SetActive(false);
             GameManager.instance.doingSetup = false;
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {            
+            outline.enabled = true;            
+
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            outline.enabled = false;           
         }
     }
 }

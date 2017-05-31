@@ -2,13 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using cakeslice;
 
 namespace Assets.Scripts
 {
 
-    public class AnvilManager : MonoBehaviour
+    public class AnvilManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        public Outline outline;
+
+        internal void OnEnable()
+        {
+            outline.enabled = false;
+        }
 
         internal void OpenAnvil()
         {
@@ -21,22 +28,17 @@ namespace Assets.Scripts
             GameManager.instance.doingSetup = false;
         }
 
-        //private void Destruction()
-        //{            
-        //    GameManager.instance.deckPanel.DestroyCardPanel();
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            outline.enabled = true;
 
-        //    this.gameObject.SetActive(false);
-        //    GameManager.instance.doingSetup = false;
-        //}
+        }
 
-        //private void Upgrade()
-        //{
-        //    Debug.Log("Prayer of Evolution triggered");
-        //    GameManager.instance.deckPanel.UpgradeCardPanel();
-
-        //    this.gameObject.SetActive(false);
-        //    GameManager.instance.doingSetup = false;
-        //}
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            outline.enabled = false;
+        }
+             
     }
 }
 

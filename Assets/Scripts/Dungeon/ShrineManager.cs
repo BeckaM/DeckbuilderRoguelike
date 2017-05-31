@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using cakeslice;
 
 namespace Assets.Scripts
 {    
-    public class ShrineManager : MonoBehaviour
+    public class ShrineManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public List<Sprite> sprites;
         public UnityAction prayer;
@@ -14,12 +16,14 @@ namespace Assets.Scripts
         public string shrineType;
         public string shrineDescription;
         public bool needsCardSelection;
-        public bool isSpent=false; 
+        public bool isSpent=false;
+        public Outline outline;
 
         public List<string> shrineTypes = new List<string> {"Shrine of Duplication", "Shrine of Chaos", "Shrine of Destruction", "Shrine of Evolution" };
 
         internal void PopulateShrine(int level)
-        {                        
+        {
+            outline.enabled = false;
             shrineType = shrineTypes[UnityEngine.Random.Range(0, shrineTypes.Count)];
 
             if (shrineType == "Shrine of Duplication")
@@ -82,7 +86,18 @@ namespace Assets.Scripts
             }
             
             GameManager.instance.doingSetup = false;
-        }              
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            outline.enabled = true;
+
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            outline.enabled = false;
+        }
     }
 }
 

@@ -3,11 +3,14 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using cakeslice;
+using UnityEngine.EventSystems;
+using System;
 
 namespace Assets.Scripts
 {
 
-    public class EnemyManager : MonoBehaviour
+    public class EnemyManager : MonoBehaviour , IPointerEnterHandler, IPointerExitHandler
     {
         public Enemy enemy;
 
@@ -22,6 +25,7 @@ namespace Assets.Scripts
 
         public int monsterLevel;
         public int experienceReward;
+        public Outline outline;
 
        // public GameObject monsterMesh;
 
@@ -49,7 +53,9 @@ namespace Assets.Scripts
                    mesh = Resources.Load("Monsters/" + "Placeholder", typeof(GameObject)) as GameObject;
             }
 
-            Instantiate(mesh, this.transform);
+            var e = Instantiate(mesh, this.transform);
+            outline = e.GetComponentInChildren<Outline>();
+            outline.enabled = false;
 
             //Set Image
             //monsterRenderer.sprite = sprites[enemy.SpriteIcon];
@@ -57,6 +63,7 @@ namespace Assets.Scripts
 
             //Set lvl text
             monsterLVLText.text = "LVL" + level.ToString();
+            monsterLVLText.enabled = false;
         }
 
         //Create all the cards in the scene for the monsters deck when the player fights it. 
@@ -90,6 +97,20 @@ namespace Assets.Scripts
             }
             
             CardgameManager.instance.EndTurn();
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            Debug.Log("pointer enter");
+            outline.enabled = true;
+            monsterLVLText.enabled = true;
+
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            outline.enabled = false;
+            monsterLVLText.enabled = false;
         }
     }
 }
