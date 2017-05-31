@@ -20,9 +20,11 @@ public class MeshGenerator : MonoBehaviour
 
     public GameObject wallCompMesh;
     public GameObject[] wallOne;
-    public int wallOneCounter=0;
-    public GameObject wallTwo;
-    public GameObject wallThree;
+    public int wall1Counter=0;
+    public GameObject[] wallTwo;
+    public int wall2Counter = 0;
+    public GameObject[] wallThree;
+    public int wall3Counter = 0;
 
     public float maxWallLenght;
 
@@ -117,48 +119,48 @@ public class MeshGenerator : MonoBehaviour
         MeshCollider wallCollider = gameObject.AddComponent<MeshCollider>();
         wallCollider.sharedMesh = wallMesh;
 
-        //GENERATE UV COORDINATES HERE
-        Vector2[] uvs = new Vector2[wallVertices.Count];
-        int march = 0;
-        for (int i = 0; i < wallVertices.Count; i++)
-        {
-            switch (march)
-            {
-                case 0:
-                    uvs[i] = new Vector2(0, 1);
-                    march++;
-                    break;
-                case 1:
-                    uvs[i] = new Vector2(0.5f, 1);
-                    march++;
-                    break;
-                case 2:
-                    uvs[i] = new Vector2(0, 0);
-                    march++;
-                    break;
-                case 3:
-                    uvs[i] = new Vector2(0.5f, 0);
-                    march++;
-                    break;
-                case 4:
-                    uvs[i] = new Vector2(0.5f, 1);
-                    march++;
-                    break;
-                case 5:
-                    uvs[i] = new Vector2(1, 1);
-                    march++;
-                    break;
-                case 6:
-                    uvs[i] = new Vector2(0.5f, 0);
-                    march++;
-                    break;
-                case 7:
-                    uvs[i] = new Vector2(1, 0);
-                    march = 0;
-                    break;
-            }
-        }
-        wallMesh.uv = uvs;
+        ////GENERATE UV COORDINATES HERE
+        //Vector2[] uvs = new Vector2[wallVertices.Count];
+        //int march = 0;
+        //for (int i = 0; i < wallVertices.Count; i++)
+        //{
+        //    switch (march)
+        //    {
+        //        case 0:
+        //            uvs[i] = new Vector2(0, 1);
+        //            march++;
+        //            break;
+        //        case 1:
+        //            uvs[i] = new Vector2(0.5f, 1);
+        //            march++;
+        //            break;
+        //        case 2:
+        //            uvs[i] = new Vector2(0, 0);
+        //            march++;
+        //            break;
+        //        case 3:
+        //            uvs[i] = new Vector2(0.5f, 0);
+        //            march++;
+        //            break;
+        //        case 4:
+        //            uvs[i] = new Vector2(0.5f, 1);
+        //            march++;
+        //            break;
+        //        case 5:
+        //            uvs[i] = new Vector2(1, 1);
+        //            march++;
+        //            break;
+        //        case 6:
+        //            uvs[i] = new Vector2(0.5f, 0);
+        //            march++;
+        //            break;
+        //        case 7:
+        //            uvs[i] = new Vector2(1, 0);
+        //            march = 0;
+        //            break;
+        //    }
+        //}
+        //wallMesh.uv = uvs;
 
         //Vector2[] uvs = new Vector2[wallMesh.vertices.Length];
 
@@ -167,7 +169,7 @@ public class MeshGenerator : MonoBehaviour
         //    uvs[i] = new Vector2(wallMesh.vertices[i].x, wallMesh.vertices[i].y);
         //}
         //wallMesh.uv = uvs;
-        wallMesh.RecalculateNormals();
+       // wallMesh.RecalculateNormals();
 
     }
 
@@ -209,21 +211,28 @@ public class MeshGenerator : MonoBehaviour
     {
         if (segmentLenght <= 1.5f)
         {
-            var component = Instantiate(wallOne[wallOneCounter], start, Quaternion.identity);
+            var component = Instantiate(wallOne[wall1Counter], start, Quaternion.identity);
             
-            wallOneCounter = wallOneCounter == wallOne.Length-1 ? 0 : wallOneCounter + 1;
+            wall1Counter = wall1Counter == wallOne.Length-1 ? 0 : wall1Counter + 1;
+
             component.transform.position = Vector3.MoveTowards(start, end, segmentLenght / 2);
             TransformSegment(component.transform, segmentLenght, segmentRotation);
         }
         else if (segmentLenght <= 2.5)
         {
-            var component = Instantiate(wallTwo, start, Quaternion.identity);
+            var component = Instantiate(wallTwo[wall2Counter], start, Quaternion.identity);
+
+            wall2Counter = wall2Counter == wallTwo.Length - 1 ? 0 : wall2Counter + 1;
+
             component.transform.position = Vector3.MoveTowards(start, end, segmentLenght / 2);
             TransformSegment(component.transform, segmentLenght, segmentRotation);
         }
         else
         {
-            var component = Instantiate(wallThree, start, Quaternion.identity);
+            var component = Instantiate(wallThree[wall3Counter], start, Quaternion.identity);
+
+            wall3Counter = wall3Counter == wallThree.Length - 1 ? 0 : wall3Counter + 1;
+
             component.transform.position = Vector3.MoveTowards(start, end, segmentLenght / 2);
             TransformSegment(component.transform, segmentLenght, segmentRotation);
         }
