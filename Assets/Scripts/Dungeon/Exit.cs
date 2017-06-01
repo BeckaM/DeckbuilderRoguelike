@@ -14,18 +14,16 @@ namespace Assets.Scripts
         void Start()
         {
             outline.enabled = false;
-
         }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             outline.enabled = true;
-
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             outline.enabled = false;
         }
-
     }
 }
