@@ -7,6 +7,7 @@ public class MeshGenerator : MonoBehaviour
 
     public SquareGrid squareGrid;
     public MeshFilter walls;
+    public Transform wallHolder;
     public MeshFilter cave;
 
     public bool is2D;
@@ -18,7 +19,7 @@ public class MeshGenerator : MonoBehaviour
     List<List<int>> outlines = new List<List<int>>();
     HashSet<int> checkedVertices = new HashSet<int>();
 
-    public GameObject wallCompMesh;
+//    public GameObject wallCompMesh;
     public GameObject[] wallOne;
     public int wall1Counter=0;
     public GameObject[] wallTwo;
@@ -211,7 +212,7 @@ public class MeshGenerator : MonoBehaviour
     {
         if (segmentLenght <= 1.5f)
         {
-            var component = Instantiate(wallOne[wall1Counter], start, Quaternion.identity);
+            var component = Instantiate(wallOne[wall1Counter], start, Quaternion.identity, wallHolder.transform);
             
             wall1Counter = wall1Counter == wallOne.Length-1 ? 0 : wall1Counter + 1;
 
@@ -220,7 +221,7 @@ public class MeshGenerator : MonoBehaviour
         }
         else if (segmentLenght <= 2.5)
         {
-            var component = Instantiate(wallTwo[wall2Counter], start, Quaternion.identity);
+            var component = Instantiate(wallTwo[wall2Counter], start, Quaternion.identity, wallHolder.transform);
 
             wall2Counter = wall2Counter == wallTwo.Length - 1 ? 0 : wall2Counter + 1;
 
@@ -229,7 +230,7 @@ public class MeshGenerator : MonoBehaviour
         }
         else
         {
-            var component = Instantiate(wallThree[wall3Counter], start, Quaternion.identity);
+            var component = Instantiate(wallThree[wall3Counter], start, Quaternion.identity, wallHolder.transform);
 
             wall3Counter = wall3Counter == wallThree.Length - 1 ? 0 : wall3Counter + 1;
 
