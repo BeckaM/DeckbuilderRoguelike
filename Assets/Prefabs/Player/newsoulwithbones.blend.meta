@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 6e11d0d18a3dc0a4c97b204d5cce8bce
-timeCreated: 1495959890
+guid: faa61233d688c1744abb5695b90705b0
+timeCreated: 1497082272
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -27,9 +27,8 @@ ModelImporter:
     100038: Bone_R_001
     100040: Bone_R_002
     100042: Bone_R_003
-    100044: Layer_2
-    100046: //RootNode
-    100048: soul3_001
+    100044: //RootNode
+    100046: soul3_001
     400000: Armature
     400002: Bone
     400004: Bone_001
@@ -52,17 +51,12 @@ ModelImporter:
     400038: Bone_R_001
     400040: Bone_R_002
     400042: Bone_R_003
-    400044: Layer_2
-    400046: //RootNode
-    400048: soul3_001
-    2300000: Layer_2
-    2300002: soul3_001
-    3300000: Layer_2
-    3300002: soul3_001
-    4300000: Layer_2
-    4300002: soul3_001
+    400044: //RootNode
+    400046: soul3_001
+    4300000: soul3_001
     7400000: Default Take
     9500000: //RootNode
+    13700000: soul3_001
   materials:
     importMaterials: 1
     materialName: 0
