@@ -212,6 +212,7 @@ public class MeshGenerator : MonoBehaviour
     {
         if (segmentLenght <= 1.5f)
         {
+            
             var component = Instantiate(wallOne[wall1Counter], start, Quaternion.identity, wallHolder.transform);
             
             wall1Counter = wall1Counter == wallOne.Length-1 ? 0 : wall1Counter + 1;

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 7f54b5ed9c1a13f468ae8660b62d63f1
-timeCreated: 1496315578
+timeCreated: 1497703193
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
@@ -10,9 +10,10 @@ SubstanceImporter:
     prototypeName: Grass_Ground
     shaderName: 
     shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-    shaderKeywords: _EMISSION _METALLICGLOSSMAP _NORMALMAP _PARALLAXMAP
+    shaderKeywords: _GLOSSYREFLECTIONS_OFF _METALLICGLOSSMAP _NORMALMAP _PARALLAXMAP
+      _SPECULARHIGHLIGHTS_OFF
     renderQueue: -1
-    lightmapFlags: 1
+    lightmapFlags: 4
     inputs:
     - name: $outputsize
       value:
@@ -123,13 +124,13 @@ SubstanceImporter:
       - _DstBlend: 0
       - _GlossMapScale: 0.148
       - _Glossiness: 0.5
-      - _GlossyReflections: 1
+      - _GlossyReflections: 0
       - _Metallic: 0
       - _Mode: 0
       - _OcclusionStrength: 1
       - _Parallax: 0.02
       - _SmoothnessTextureChannel: 0
-      - _SpecularHighlights: 1
+      - _SpecularHighlights: 0
       - _SrcBlend: 1
       - _UVSec: 0
       - _ZWrite: 1
