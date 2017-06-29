@@ -11,7 +11,7 @@ namespace Assets.Scripts.Menu
     {
         public ClassSelect classSelect;
         public GameObject lockPanel;
-        public Image classImage;
+       // public Image classImage;
         public TMP_Text className;
         
         public PlayerClass playerClass;
@@ -24,7 +24,7 @@ namespace Assets.Scripts.Menu
         public void PopulateClassButton(PlayerClass playerClass)
         {
             this.playerClass = playerClass;
-            classImage.sprite = GameManager.instance.classImages[playerClass.spriteIcon];
+           // classImage.sprite = GameManager.instance.classImages[playerClass.spriteIcon];
             className.text = playerClass.className.ToString().Replace("_", " ");           
         }
 
