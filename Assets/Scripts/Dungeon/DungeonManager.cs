@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic; 		//Allows us to use Lists.
 using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine random number generator.
 using System.IO;
+using SimpleFogOfWar;
 
 
 namespace Assets.Scripts
@@ -31,6 +32,7 @@ namespace Assets.Scripts
 
         public GameObject player;
         public GameObject exit;
+        public FogOfWarInfluence playerFOWRevealer;
 
 
 

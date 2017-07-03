@@ -13,7 +13,7 @@ namespace Assets.Scripts
         public PlayerClass playerClass;
         public GameObject playerObject;
         public GameObject playerCameraObject;
-
+       
         public List<Sprite> classImages;
 
         public ProgressManager progressManager = new ProgressManager();
@@ -101,6 +101,7 @@ namespace Assets.Scripts
 
             LevelUpCheck();
 
+
             dungeonUI.UpdateLifeText();
             dungeonUI.UpdateGoldText();
             dungeonUI.UpdateXPText();
@@ -114,8 +115,16 @@ namespace Assets.Scripts
             //Call the HideLevelImage function with a delay in seconds of levelStartDelay.
             Invoke("HideLevelImage", levelStartDelay);
 
+            Invoke("EnableFoWRevealer", levelStartDelay); //Camera needs some time to move to the player before we start revealing fog.
+
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             dungeonManager.SetupScene(level);
+        }
+
+
+        private void EnableFoWRevealer()
+        {
+            dungeonManager.playerFOWRevealer.Suspended = false;
         }
 
 
