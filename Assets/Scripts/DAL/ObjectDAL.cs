@@ -150,7 +150,7 @@ namespace Assets.Scripts.DAL
         }
 
 
-        internal static void SavePerks(PerkWrapper perksToEdit)
+        internal static void SaveItems(ItemWrapper perksToEdit)
         {
             if (!File.Exists(PerkPath))
             {
@@ -184,10 +184,10 @@ namespace Assets.Scripts.DAL
         }
 
 
-        internal static PerkWrapper GetAllPerks()
+        internal static ItemWrapper GetAllItems()
         {
             TextAsset file = Resources.Load<TextAsset>("Perks");
-            return JsonUtility.FromJson<PerkWrapper>(file.text);
+            return JsonUtility.FromJson<ItemWrapper>(file.text);
         }
     }
 }

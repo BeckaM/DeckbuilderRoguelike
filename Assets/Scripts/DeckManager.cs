@@ -293,7 +293,7 @@ namespace Assets.Scripts
 
         internal List<CardManager> GetMuliganCards()
         {
-            int muliganCount = 4 + GameManager.instance.perkManager.bonusInitialDraw;
+            int muliganCount = 4 + GameManager.instance.itemManager.bonusInitialDraw;
             List<CardManager> muliganCards = new List<CardManager>();
             for (var i = 0; i < muliganCount; i++)
             {

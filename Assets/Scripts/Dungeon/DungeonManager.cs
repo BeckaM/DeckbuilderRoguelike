@@ -11,12 +11,10 @@ namespace Assets.Scripts
 
     public class DungeonManager : MonoBehaviour
     {
-
-        //Array of wall prefabs.
-        // public GameObject[] enemyTiles;                                 //Array of enemies to place.
+                
         public GameObject chestPrefab;
         public GameObject shrinePrefab;
-        public GameObject enemyPrefab; //Enemy prefab.
+        public GameObject enemyPrefab; 
         public GameObject anvilPrefab;
         public GameObject bossPrefab;
 

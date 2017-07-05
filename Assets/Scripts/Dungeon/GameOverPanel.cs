@@ -70,7 +70,7 @@ namespace Assets.Scripts
             }
         }
 
-        internal void UpdateNewUnlocks(List<PlayerClass> newClassUnlocks, List<Perk> newPerkUnlocks)
+        internal void UpdateNewUnlocks(List<PlayerClass> newClassUnlocks, List<Item> newPerkUnlocks)
         {
             foreach(PlayerClass pClass in newClassUnlocks)
             {
@@ -83,7 +83,7 @@ namespace Assets.Scripts
                 
             }
 
-            foreach (Perk perk in newPerkUnlocks)
+            foreach (Item perk in newPerkUnlocks)
             {
                 var classUnlock = Instantiate(unlockObject);
                 classUnlock.transform.SetParent(unlockPanel.transform, false);

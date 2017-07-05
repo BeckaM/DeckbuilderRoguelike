@@ -2,23 +2,23 @@
 using UnityEditor;
 using Assets.Scripts.DAL;
 
-[CustomEditor(typeof(PerkEditor))]
-public class InspectorPerk : Editor
+[CustomEditor(typeof(ItemEditor))]
+public class InspectorItems : Editor
 {    
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
-        PerkEditor myScript = (PerkEditor)target;
-        if (GUILayout.Button("Get all perks"))
+        ItemEditor myScript = (ItemEditor)target;
+        if (GUILayout.Button("Get all Items"))
         {
             UnityEditor.AssetDatabase.Refresh();
-            myScript.GetPerksToEdit();
+            myScript.GetItemsToEdit();
         }
 
         if (GUILayout.Button("Save"))
         {
-            myScript.SavePerks();
+            myScript.SaveItems();
         }
     }
 }

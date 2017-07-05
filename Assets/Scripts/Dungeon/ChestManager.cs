@@ -40,7 +40,7 @@ namespace Assets.Scripts
             {
                 content = Content.Gold;
                 float baseGold = UnityEngine.Random.Range(10 + level, 20 + level);
-                var bonusGold = Math.Ceiling(baseGold * GameManager.instance.perkManager.goldIncrease);
+                var bonusGold = Math.Ceiling(baseGold * GameManager.instance.itemManager.goldIncrease);
 
                 goldReward = (int)bonusGold;
 

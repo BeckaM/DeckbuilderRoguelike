@@ -4,11 +4,13 @@ using System.Collections.Generic;
 namespace Assets.Scripts
 {
     [Serializable]
-    public class Perk
+    public class Item
     {
-        public string perkName;
-        public string perkEffectText;
-        public int perkCost;
+        public string itemName;
+        public string itemEffectText;
+        public enum ItemType {Weapon, Trinket};
+        public ItemType type;
+    //    public int Cost;
 
         public string conditionText;
         public ProgressManager.Metric condition;
@@ -17,8 +19,8 @@ namespace Assets.Scripts
 
 
     [Serializable]
-    public class PerkWrapper
+    public class ItemWrapper
     {
-        public List<Perk> perkList;
+        public List<Item> itemList;
     }
 }

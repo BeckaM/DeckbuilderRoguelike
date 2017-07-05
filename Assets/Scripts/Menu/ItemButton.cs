@@ -7,30 +7,30 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Menu
 {
-    public class PerkButton : MonoBehaviour
+    public class ItemButton : MonoBehaviour
     {
-        public PerkSelect perkSelect;
+        public ItemSelect itemSelect;
         public GameObject lockPanel;
-        public TMP_Text perkName;
-        public TMP_Text perkCost;
+        public TMP_Text itemName;
+       // public TMP_Text perkCost;
 
-        public Perk perk;
+        public Item item;
         
         public bool active;
 
-        public void selectPerk()
+        public void selectItem()
         {
-            perkSelect.SelectPerk(this);
+            itemSelect.SelectItem(this);
         }
 
-        public void PopulatePerkButton(Perk perk)
+        public void PopulateItemButton(Item item)
         {
-            this.perk = perk;
-            perkName.text = perk.perkName;
-            perkCost.text = "Cost: " + perk.perkCost.ToString();
+            this.item = item;
+            itemName.text = item.itemName;
+           // perkCost.text = "Cost: " + perk.perkCost.ToString();
         }
 
-        public void LockPerk(bool locked)
+        public void LockItem(bool locked)
         {
             if (locked)
             {

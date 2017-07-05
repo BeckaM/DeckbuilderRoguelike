@@ -17,9 +17,9 @@ namespace Assets.Scripts
         public List<PlayerClass> unlockedClasses = new List<PlayerClass>();
         public List<PlayerClass> lockedClasses = new List<PlayerClass>();
 
-        public List<Perk> unlockedPerks = new List<Perk>();
+        public List<Item> unlockedPerks = new List<Item>();
 
-        public List<Perk> lockedPerks = new List<Perk>();
+        public List<Item> lockedPerks = new List<Item>();
 
         public enum Metric { Monsters_Killed, Damage_Dealt, Healing_Done, Gold_Earned, Highest_Player_Level, Highest_Dungeon_Level, Chests_Opened, Shrines_Opened, Cards_Played };
 
@@ -135,11 +135,11 @@ namespace Assets.Scripts
         }
 
 
-        public List<Perk> GetNewPerkUnlocks()
+        public List<Item> GetNewPerkUnlocks()
         {
-            List<Perk> newPerkUnlocks = new List<Perk>();
+            List<Item> newPerkUnlocks = new List<Item>();
 
-            foreach (Perk perk in lockedPerks)
+            foreach (Item perk in lockedPerks)
             {                
                 if (CheckUnlockConditions(perk))
                 {
@@ -147,16 +147,16 @@ namespace Assets.Scripts
                 }
             }
 
-            foreach (Perk perk in newPerkUnlocks)
+            foreach (Item perk in newPerkUnlocks)
             {
-                totalProgress.perkProgressList.Add(perk.perkName);
+                totalProgress.perkProgressList.Add(perk.itemName);
             }
 
 
             return newPerkUnlocks;
         }
 
-        private bool CheckUnlockConditions(Perk unlock)
+        private bool CheckUnlockConditions(Item unlock)
         {
             if (totalProgress.cumulativeMetrics.ContainsKey(unlock.condition))
             {
@@ -203,11 +203,11 @@ namespace Assets.Scripts
 
         public void LoadPerkUnlockables()
         {
-            var allPerks = DAL.ObjectDAL.GetAllPerks();
+            var allPerks = DAL.ObjectDAL.GetAllItems();
 
-            foreach (Perk perk in allPerks.perkList)
+            foreach (Item perk in allPerks.itemList)
             {
-                if (CheckPerkUnlock(perk.perkName))
+                if (CheckPerkUnlock(perk.itemName))
                 {
                     unlockedPerks.Add(perk);
                 }

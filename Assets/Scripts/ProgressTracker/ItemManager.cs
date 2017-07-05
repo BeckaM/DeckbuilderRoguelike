@@ -8,39 +8,39 @@ using System;
 namespace Assets.Scripts
 {
 
-    public class PerkManager
+    public class ItemManager
     {
-        public List<Perk> activePerks;
+        public List<Item> activeItems;
 
         public int bonusInitialDraw;
         public float goldIncrease=1.0F;
 
-        public void ActivatePerks()
+        public void ActivateItems()
         {
-            foreach (Perk perk in activePerks)
+            foreach (Item item in activeItems)
             {
-                ActivatePerk(perk);
+                ActivateItem(item);
 
             }
         }
 
-        private void ActivatePerk(Perk perk)
+        private void ActivateItem(Item item)
         {
-            switch (perk.perkName)
+            switch (item.itemName)
             {
-                case "Taste for Blood":
+                case "Ring of Fortitude":
                     {
                         GameManager.instance.player.maxLife += 5;
                         GameManager.instance.player.life += 5;
                         break;
                     }
-                case "Thirst for Blood":
+                case "Ring of Greater Fortitude":
                     {
                         GameManager.instance.player.maxLife += 10;
                         GameManager.instance.player.life += 10;
                         break;
                     }
-                case "Wisdom From Below":
+                case "Sword of the Ages":
                     {
                         bonusInitialDraw++;
                         break;
@@ -62,7 +62,7 @@ namespace Assets.Scripts
                     }
                 default:
                     {
-                        Debug.LogError("Perk: " + perk.perkName + " . Not implemented!");
+                        Debug.LogError("Item: " + item.itemName + " . Not implemented!");
                         break;
                     }
             }

@@ -47,8 +47,7 @@ namespace Assets.Scripts.Menu
                 cbScript.LockClass(!GameManager.instance.progressManager.CheckClassUnlock(pClass.className));
             }
         }
-
-
+        
         internal void ShowClassSelect()
         {
             this.gameObject.SetActive(true);
@@ -56,8 +55,7 @@ namespace Assets.Scripts.Menu
             selectedClassPanel.SetActive(true);
             progressPanelManager.ShowProgress();
         }
-
-
+        
         internal void ShowProgress()
         {
             this.gameObject.SetActive(true);
@@ -65,8 +63,7 @@ namespace Assets.Scripts.Menu
             selectedClassPanel.SetActive(false);
             progressPanelManager.ShowProgress();
         }
-
-
+        
         public void SelectClass(PlayerClass playerClass)
         {
             if (isProgress)
@@ -85,8 +82,7 @@ namespace Assets.Scripts.Menu
                 selectButton.interactable = true;
             }
         }
-
-
+        
         public void Select()
         {
             GameManager.instance.playerClass = selectedClass;
@@ -94,8 +90,7 @@ namespace Assets.Scripts.Menu
             DeckManager.player.StartingDeck(selectedClass.startingDeck);
             mainMenu.ShowPerkSelect();            
         }
-
-
+        
         public void HideClassSelect()
         {
             this.gameObject.SetActive(false);

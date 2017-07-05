@@ -26,13 +26,7 @@ namespace Assets.Scripts
         public int monsterLevel;
         public int experienceReward;
         public Outline outline;
-
-       // public GameObject monsterMesh;
-
-     //   public GameObject enemyObject;
-      //  public Sprite[] sprites;
-        //  public Sprite monsterImage;
-        //public SpriteRenderer monsterRenderer;
+              
         public TMP_Text monsterLVLText;
 
         //Gets monster properties from Dungeon Manager and sets them on the enemy object.
@@ -54,6 +48,18 @@ namespace Assets.Scripts
             }
 
             var e = Instantiate(mesh, this.transform);
+
+            var randomSize = UnityEngine.Random.Range(0f, 0.5f);
+            e.transform.localScale += new  Vector3(randomSize, randomSize, randomSize);
+            
+            var randomRotation = UnityEngine.Random.Range(-30f, 30f);
+            e.transform.Rotate(new Vector3(0, randomRotation, 0));
+
+            var randomAnimSpeed = UnityEngine.Random.Range(1f, 1.5f);
+            var animator = e.GetComponent<Animator>();
+            animator.SetFloat("AnimDelay", randomAnimSpeed);
+
+
             outline = e.GetComponentInChildren<Outline>();
             outline.enabled = false;
 

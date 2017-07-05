@@ -253,7 +253,7 @@ namespace Assets.Scripts
             }
 
             float baseGold = Random.Range(10 + enemy.enemy.BaseEnemyLevel, 20 + enemy.enemy.BaseEnemyLevel);
-            var bonusGold = Math.Ceiling(baseGold * GameManager.instance.perkManager.goldIncrease);
+            var bonusGold = Math.Ceiling(baseGold * GameManager.instance.itemManager.goldIncrease);
 
             var goldReward = (int)bonusGold;
            

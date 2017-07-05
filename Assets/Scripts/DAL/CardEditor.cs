@@ -18,7 +18,6 @@ namespace Assets.Scripts.DAL
         public void SaveCards()
         {
             ObjectDAL.SaveCards(CardsToEdit);
-
         }
     }
 }

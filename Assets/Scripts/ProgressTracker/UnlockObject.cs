@@ -20,9 +20,9 @@ namespace Assets.Scripts
         }
 
 
-        public void PopulateUnlock(Perk unlock)
+        public void PopulateUnlock(Item unlock)
         {
-            unlockText.text = "New Perk unlocked: " + unlock.perkName;
+            unlockText.text = "New Perk unlocked: " + unlock.itemName;
             metricText.text = unlock.conditionText;
         }
     }
