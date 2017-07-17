@@ -14,13 +14,11 @@ namespace Assets.Scripts
     public class DeckManager : MonoBehaviour
     {
         public static DeckManager player = null;
-
-
-
+        
         public static DeckManager monster = null;
         CardManager cardManager;
         public string instancename;
-        public GameObject deckHolder
+        public GameObject DeckHolder
         {
             get
             {
@@ -32,7 +30,7 @@ namespace Assets.Scripts
         public List<string> deckStringHolder;
 
         public int deckOffset;
-        public GameObject deck
+        public GameObject Deck
         {
             get
             {
@@ -47,7 +45,7 @@ namespace Assets.Scripts
             }
         }
 
-        public GameObject hand
+        public GameObject Hand
         {
             get
             {
@@ -62,7 +60,7 @@ namespace Assets.Scripts
             }
         }
         public int discardOffset;
-        public GameObject discard
+        public GameObject Discard
         {
             get
             {
@@ -142,7 +140,7 @@ namespace Assets.Scripts
                     {
                         card.moveCounter = 0;
                         card.effectCounter = 0;
-                        card.transform.SetParent(deckHolder.transform, false);
+                        card.transform.SetParent(DeckHolder.transform, false);
                         //card.transform.localScale = new Vector3(1f, 1f, 1f);
                         card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
                         card.SetCardPosition(CardManager.CardStatus.InDeck);
@@ -197,8 +195,7 @@ namespace Assets.Scripts
                 var cardMan = CreateCardObject(card);
                 cardMan.owner = CardgameManager.Team.Me;
                 cardsInDeck.Add(cardMan);
-                cardMan.transform.SetParent(deckHolder.transform, false);
-
+                cardMan.transform.SetParent(DeckHolder.transform, false);
             }
         }
 
@@ -209,7 +206,7 @@ namespace Assets.Scripts
             cardsInDeck.Shuffle(new System.Random());
             foreach (CardManager card in cardsInDeck)
             {
-                card.transform.SetParent(deck.transform, false);
+                card.transform.SetParent(Deck.transform, false);
                                 
                 card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, deckOffset);
                 deckOffset -= 2;
@@ -225,7 +222,7 @@ namespace Assets.Scripts
             deckStringHolder.Add(card.card.cardName);
             cardsInDeck.Add(card);
             cardManager.owner = team;
-            card.transform.SetParent(deckHolder.transform, false);
+            card.transform.SetParent(DeckHolder.transform, false);
 
             //  var deck = this.transform;
 
@@ -276,7 +273,7 @@ namespace Assets.Scripts
 
                 EventManager.Instance.AddListener<MoveCard_GUI>(manager.Move);
                 manager.moveCounter++;
-                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, hand, manager.Discard));
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(manager, Hand, manager.Discard));
 
 
                 //Check for objects that trigger on discard card.
@@ -322,7 +319,7 @@ namespace Assets.Scripts
                 
                 //Queue up a move card animation.
                 EventManager.Instance.AddListener<MoveCard_GUI>(tempCard.Move);
-                EventManager.Instance.QueueAnimation(new MoveCard_GUI(tempCard, deck, hand));
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(tempCard, Deck, Hand));
                 tempCard.moveCounter++;
 
                 //  EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
@@ -351,7 +348,7 @@ namespace Assets.Scripts
             {
                 card.SetCardPosition(CardManager.CardStatus.InDeck);
                 EventManager.Instance.AddListener<MoveCard_GUI>(card.Move);
-                EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, discard, deck));
+                EventManager.Instance.QueueAnimation(new MoveCard_GUI(card, Discard, Deck));
                 card.moveCounter++;
             }
             cardsInDiscard.Clear();

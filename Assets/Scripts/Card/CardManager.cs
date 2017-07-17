@@ -263,7 +263,7 @@ namespace Assets.Scripts
                 GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, DeckManager.discardOffset);
                 DeckManager.discardOffset -= 2;
             }
-            else if (end == DeckManager.deck)
+            else if (end == DeckManager.Deck)
             {
                 bottomPanel.ShowBottomPanel(true);
                // imagePanel.ResetPanel();
@@ -497,7 +497,7 @@ namespace Assets.Scripts
             {
                 DeckManager.discardOffset += 2;
             }
-            else if (start == DeckManager.deck)
+            else if (start == DeckManager.Deck)
             {
                 DeckManager.deckOffset += 2;
             }

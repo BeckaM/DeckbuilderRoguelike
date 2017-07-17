@@ -330,7 +330,7 @@ namespace Assets.Scripts
             if (selectedCard)
             {
                // selectedCard.GetComponent<CardManager>().imagePanel.ResetPanel();
-                selectedCard.transform.SetParent(DeckManager.player.deckHolder.transform);
+                selectedCard.transform.SetParent(DeckManager.player.DeckHolder.transform);
             }
             selections.Clear();
             rewardSelection = null;

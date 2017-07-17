@@ -74,7 +74,7 @@ namespace Assets.Scripts
         {
             EventManager.Instance.AddListener<MoveCard_GUI>(toPlay.Move);
             toPlay.moveCounter++;
-            EventManager.Instance.QueueAnimation(new MoveCard_GUI(toPlay, DeckManager.monster.hand, CardgameManager.instance.tabletop));
+            EventManager.Instance.QueueAnimation(new MoveCard_GUI(toPlay, DeckManager.monster.Hand, CardgameManager.instance.tabletop));
             CardgameManager.instance.PlaceCard(toPlay);
         }
 

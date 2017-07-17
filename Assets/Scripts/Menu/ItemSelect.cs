@@ -39,11 +39,9 @@ namespace Assets.Scripts.Menu
                 var itemButton = Instantiate(itemButtonObj);
                 itemButton.transform.SetParent(itemPanel.transform, false);
                 var itemScript = itemButton.GetComponent<ItemButton>();
-                itemScript.itemSelect = this;
-
+                
                 itemScript.PopulateItemButton(item);
-
-                itemScript.LockItem(!GameManager.instance.progressManager.CheckPerkUnlock(item.itemName));
+                               
             }
         }
 
