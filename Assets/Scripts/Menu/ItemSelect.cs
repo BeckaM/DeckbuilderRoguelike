@@ -10,16 +10,21 @@ namespace Assets.Scripts.Menu
 
     public class ItemSelect : MonoBehaviour
     {
-        public Menu mainMenu;
+        public Menu mainMenu;      
+              
+        public GameObject weaponPrefab;
+        public GameObject trinketPrefab;
 
-        public ItemButton selectedItem;
-        public TMP_Text selectedItemNameText;
-        public TMP_Text selectedItemEffectText;
-        public Button selectButton;
+        public GameObject weaponSelectHolder;
+        public GameObject trinketSelectHolder;
 
-        public GameObject itemButtonObj;
-        public GameObject itemPanel;
-        public GameObject itemChoicePanel;
+        public GameObject weaponSlot;
+
+        public GameObject trinketSlot1;
+        public GameObject trinketSlot2;
+        public GameObject trinketSlot3;
+        public GameObject trinketSlot4;
+
 
         //public int perkPoints = 5;
         //public TMP_Text perkPointsUI;
@@ -27,64 +32,70 @@ namespace Assets.Scripts.Menu
         public List<Item> itemChoices;
 
         // Use this for initialization
-        void Start()
-        {
-            selectButton.interactable = false;
-         //   perkPointsUI.text = perkPoints.ToString();
+        void Start()        {                  
 
             var items = DAL.ObjectDAL.GetAllItems();
 
             foreach (Item item in items.itemList)
             {
-                var itemButton = Instantiate(itemButtonObj);
-                itemButton.transform.SetParent(itemPanel.transform, false);
-                var itemScript = itemButton.GetComponent<ItemButton>();
-                
-                itemScript.PopulateItemButton(item);
-                               
+                if (item.type == Item.ItemType.Trinket)
+                {
+                    var itemPrefab = Instantiate(trinketPrefab);
+                    itemPrefab.transform.SetParent(trinketSelectHolder.transform, false);
+                    var itemScript = itemPrefab.GetComponent<ItemPrefab>();
+
+                    itemScript.PopulateItemButton(item);
+                }
+                else if(item.type == Item.ItemType.Weapon)
+                {
+                    var itemPrefab = Instantiate(weaponPrefab);
+                    itemPrefab.transform.SetParent(weaponSelectHolder.transform, false);
+                    var itemScript = itemPrefab.GetComponent<ItemPrefab>();
+
+                    itemScript.PopulateItemButton(item);
+                }
+                else
+                {
+                    Debug.LogError("Unkown Item Type");
+                }
             }
         }
+        
+        //public void SelectItem(ItemPrefab itemButton)
+        //{
+        //    selectedItem = itemButton;
+        //    selectedItemEffectText.text = itemButton.item.itemEffectText;
+        //    selectedItemNameText.text = itemButton.item.itemName;
+           
+        //}
 
-
-        public void SelectItem(ItemButton itemButton)
-        {
-            selectedItem = itemButton;
-            selectedItemEffectText.text = itemButton.item.itemEffectText;
-            selectedItemNameText.text = itemButton.item.itemName;
-
-            selectButton.interactable = true;
-        }
-
-        public void AddRemoveItem()
-        {
-            if (selectedItem.active)
-            {
-                selectedItem.transform.SetParent(itemPanel.transform);
-                selectedItem.active = false;
-                //perkPoints += selectedItem.item.perkCost;
-                //perkPointsUI.text = perkPoints.ToString();
-                itemChoices.Remove(selectedItem.item);
-            }
-            else
-            {
+        //public void AddRemoveItem()
+        //{
+        //    if (selectedItem.active)
+        //    {
+        //        selectedItem.transform.SetParent(itemPanel.transform);
+        //        selectedItem.active = false;
+        //        //perkPoints += selectedItem.item.perkCost;
+        //        //perkPointsUI.text = perkPoints.ToString();
+        //        itemChoices.Remove(selectedItem.item);
+        //    }
+        //    else
+        //    {
                 
-                    itemChoices.Add(selectedItem.item);
-                    selectedItem.transform.SetParent(itemChoicePanel.transform);
-                    selectedItem.active = true;
-                    //perkPoints -= selectedItem.item.perkCost;
-                    //perkPointsUI.text = perkPoints.ToString();
+        //            itemChoices.Add(selectedItem.item);
+        //            selectedItem.transform.SetParent(itemChoicePanel.transform);
+        //            selectedItem.active = true;
+        //            //perkPoints -= selectedItem.item.perkCost;
+        //            //perkPointsUI.text = perkPoints.ToString();
                 
-            }
-        }
-
-
+        //    }
+        //}
+        
         public void Select()
         {
             GameManager.instance.itemManager.activeItems = itemChoices;
             GameManager.instance.itemManager.ActivateItems();
             mainMenu.StartGame();
         }
-
-
     }
 }

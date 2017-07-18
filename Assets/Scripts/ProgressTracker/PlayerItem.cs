@@ -10,7 +10,7 @@ namespace Assets.Scripts
         public string itemEffectText;
         public enum ItemType {Weapon, Trinket};
         public ItemType type;
-    //    public int Cost;
+        public int itemSprite;
 
         public string conditionText;
         public ProgressManager.Metric condition;

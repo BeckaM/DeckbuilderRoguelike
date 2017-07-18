@@ -2,11 +2,10 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
-
-namespace Assets.Scripts
+namespace Assets.Scripts.Menu
 {
 
-    public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
+    public class ItemDropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -15,7 +14,7 @@ namespace Assets.Scripts
             if (eventData.pointerDrag == null)
                 return;
 
-            Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
+            ItemDraggable d = eventData.pointerDrag.GetComponent<ItemDraggable>();
             if (d != null)
             {
                 d.placeholderParent = this.transform;
@@ -28,33 +27,23 @@ namespace Assets.Scripts
             if (eventData.pointerDrag == null)
                 return;
 
-            Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
+            ItemDraggable d = eventData.pointerDrag.GetComponent<ItemDraggable>();
             if (d != null && d.placeholderParent == this.transform)
             {
                 d.placeholderParent = d.parentToReturnTo;
             }
         }
 
-
-
         public void OnDrop(PointerEventData eventData)
         {
-            Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
+            Debug.Log(eventData.pointerDrag.name + " was dropped on " + gameObject.name);
+
+            ItemDraggable d = eventData.pointerDrag.GetComponent<ItemDraggable>();
             if (d != null)
             {
-                CardManager card = eventData.pointerDrag.GetComponent<CardManager>();
-
-                if (card.IsPlayable && card.IsDragable)
-                {
-                    d.parentToReturnTo = this.transform;
-                    
-                    //Debug.Log(eventData.pointerDrag.name + " was dropped on " + gameObject.name);
-                }
-
+                d.parentToReturnTo = this.transform;
             }
 
-
         }
-
     }
 }

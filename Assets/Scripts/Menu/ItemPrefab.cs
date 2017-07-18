@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Menu
 {
-    public class ItemButton : MonoBehaviour
+    public class ItemPrefab : MonoBehaviour
     {        
         public Image itemImage;
         public TMP_Text itemName;
