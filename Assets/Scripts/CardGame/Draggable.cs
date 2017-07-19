@@ -8,7 +8,6 @@ namespace Assets.Scripts
 
     public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-
         public Transform parentToReturnTo = null;
         public Transform placeholderParent = null;
         public GameObject panel;

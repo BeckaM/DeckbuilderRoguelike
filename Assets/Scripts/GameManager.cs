@@ -207,7 +207,7 @@ namespace Assets.Scripts
         {
             dungeonUI.gameOverPanel.UpdateGameOverText(level, player.playerLevel);
             progressManager.EndRun();
-            dungeonUI.gameOverPanel.UpdateNewUnlocks(progressManager.GetNewClassUnlocks(), progressManager.GetNewPerkUnlocks());
+            dungeonUI.gameOverPanel.UpdateNewUnlocks(progressManager.GetNewClassUnlocks(), progressManager.GetNewItemUnlocks());
             progressManager.SaveProgress();
 
             dungeonUI.gameOverPanel.GameOver();

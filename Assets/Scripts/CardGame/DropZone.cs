@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Scripts
 {
-
     public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
 

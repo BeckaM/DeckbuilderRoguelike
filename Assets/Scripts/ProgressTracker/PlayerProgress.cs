@@ -10,7 +10,7 @@ namespace Assets.Scripts
     public class PlayerProgress
     {
         public List<ClassProgress> classProgressList = new List<ClassProgress>();
-        public List<string> perkProgressList = new List<string>();
+        public List<string> itemProgressList = new List<string>();
 
         //public Dictionary<ProgressManager.Metric, int> cumulativeMetrics = new Dictionary<ProgressManager.Metric, int>();
         public MyDictionary cumulativeMetrics = new MyDictionary();

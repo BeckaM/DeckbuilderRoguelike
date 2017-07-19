@@ -1,12 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Menu
 {
 
     public class ItemDropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
+        public string slot;
+        public Item.ItemType type;
+        public Outline outline;
+        public ItemPrefab contains;
+
+        public void HighlightSlot(bool highlighted)
+        {
+            if (highlighted)
+            {
+                outline.enabled = true;
+            }
+            else{
+                outline.enabled = false;
+            }
+        }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
@@ -14,10 +30,13 @@ namespace Assets.Scripts.Menu
             if (eventData.pointerDrag == null)
                 return;
 
-            ItemDraggable d = eventData.pointerDrag.GetComponent<ItemDraggable>();
+            ItemPrefab d = eventData.pointerDrag.GetComponent<ItemPrefab>();
             if (d != null)
             {
-                d.placeholderParent = this.transform;
+                if (d.item.type == type)
+                {
+                    d.placeholderParent = this.transform;
+                }
             }
         }
 
@@ -27,7 +46,7 @@ namespace Assets.Scripts.Menu
             if (eventData.pointerDrag == null)
                 return;
 
-            ItemDraggable d = eventData.pointerDrag.GetComponent<ItemDraggable>();
+            ItemPrefab d = eventData.pointerDrag.GetComponent<ItemPrefab>();
             if (d != null && d.placeholderParent == this.transform)
             {
                 d.placeholderParent = d.parentToReturnTo;
@@ -38,12 +57,20 @@ namespace Assets.Scripts.Menu
         {
             Debug.Log(eventData.pointerDrag.name + " was dropped on " + gameObject.name);
 
-            ItemDraggable d = eventData.pointerDrag.GetComponent<ItemDraggable>();
+            ItemPrefab d = eventData.pointerDrag.GetComponent<ItemPrefab>();
             if (d != null)
             {
-                d.parentToReturnTo = this.transform;
+                if (d.item.type == type)
+                {
+                    d.parentToReturnTo = this.transform;
+                    if (contains != null )
+                    {
+                        contains.UnequipItem();
+                    }
+                    d.EquipItem();
+                    contains = d;                    
+                }
             }
-
         }
     }
 }

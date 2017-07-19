@@ -32,7 +32,9 @@ namespace Assets.Scripts.DAL
             var startclass = new ClassProgress();
             startclass.className = PlayerClass.ClassName.Iron_Soul;
             progress.classProgressList.Add(startclass);
-            
+
+            progress.itemProgressList.Add("Ring of Fortitude");
+
             var saker = File.Create(playerSave + player);
             saker.Dispose();
             SaveProgress(progress);

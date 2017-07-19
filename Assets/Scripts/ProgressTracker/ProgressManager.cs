@@ -17,9 +17,9 @@ namespace Assets.Scripts
         public List<PlayerClass> unlockedClasses = new List<PlayerClass>();
         public List<PlayerClass> lockedClasses = new List<PlayerClass>();
 
-        public List<Item> unlockedPerks = new List<Item>();
+        public List<Item> unlockedItems = new List<Item>();
 
-        public List<Item> lockedPerks = new List<Item>();
+        public List<Item> lockedItems = new List<Item>();
 
         public enum Metric { Monsters_Killed, Damage_Dealt, Healing_Done, Gold_Earned, Highest_Player_Level, Highest_Dungeon_Level, Chests_Opened, Shrines_Opened, Cards_Played };
 
@@ -135,25 +135,25 @@ namespace Assets.Scripts
         }
 
 
-        public List<Item> GetNewPerkUnlocks()
+        public List<Item> GetNewItemUnlocks()
         {
-            List<Item> newPerkUnlocks = new List<Item>();
+            List<Item> newItemUnlocks = new List<Item>();
 
-            foreach (Item perk in lockedPerks)
+            foreach (Item item in lockedItems)
             {                
-                if (CheckUnlockConditions(perk))
+                if (CheckUnlockConditions(item))
                 {
-                    newPerkUnlocks.Add(perk);
+                    newItemUnlocks.Add(item);
                 }
             }
 
-            foreach (Item perk in newPerkUnlocks)
+            foreach (Item item in newItemUnlocks)
             {
-                totalProgress.perkProgressList.Add(perk.itemName);
+                totalProgress.itemProgressList.Add(item.itemName);
             }
 
 
-            return newPerkUnlocks;
+            return newItemUnlocks;
         }
 
         private bool CheckUnlockConditions(Item unlock)
@@ -179,7 +179,7 @@ namespace Assets.Scripts
         public void LoadUnlockables()
         {
             LoadClassUnlockables();
-            LoadPerkUnlockables();
+            LoadItemUnlockables();
         }
 
 
@@ -201,19 +201,19 @@ namespace Assets.Scripts
         }
 
 
-        public void LoadPerkUnlockables()
+        public void LoadItemUnlockables()
         {
-            var allPerks = DAL.ObjectDAL.GetAllItems();
+            var allItems = DAL.ObjectDAL.GetAllItems();
 
-            foreach (Item perk in allPerks.itemList)
+            foreach (Item item in allItems.itemList)
             {
-                if (CheckPerkUnlock(perk.itemName))
+                if (CheckItemUnlock(item.itemName))
                 {
-                    unlockedPerks.Add(perk);
+                    unlockedItems.Add(item);
                 }
                 else
                 {
-                    lockedPerks.Add(perk);
+                    lockedItems.Add(item);
                 }
             }
         }
@@ -226,11 +226,11 @@ namespace Assets.Scripts
             return (classcheck);
         }
 
-        public bool CheckPerkUnlock(string perkName)
+        public bool CheckItemUnlock(string itemName)
         {
-            var perkcheck = totalProgress.perkProgressList.Exists(item => item.Equals(perkName));
+            var itemcheck = totalProgress.itemProgressList.Exists(item => item.Equals(itemName));
 
-            return (perkcheck);
+            return (itemcheck);
         }
 
 
