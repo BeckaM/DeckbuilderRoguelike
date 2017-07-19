@@ -26,6 +26,7 @@ namespace Assets.Scripts.Menu
         public ProgressPanel progressPanelManager;
 
         public GameObject classModelHolder;
+        public List<GameObject> playerModels;
 
         public bool isProgress;
         
@@ -72,12 +73,9 @@ namespace Assets.Scripts.Menu
             }
             else
             {
-                selectedClass = playerClass;
-              //  selectedClassImage.sprite = GameManager.instance.classImages[playerClass.spriteIcon];
-               // selectedClassImage.color = Color.white;                
+                selectedClass = playerClass;                           
                 selectedClassText.text = playerClass.className.ToString().Replace("_", " "); ;
-
-                Instantiate(playerClass.playerModel, classModelHolder.transform);
+                Instantiate(playerModels[playerClass.playerModel], classModelHolder.transform);
 
                 selectButton.interactable = true;
             }

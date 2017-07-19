@@ -10,7 +10,7 @@ namespace Assets.Scripts
         public enum ClassName { Monster, Iron_Soul, Fate_Weaver, Keeper_Of_The_Source }
         public ClassName className;
         public int spriteIcon;
-        public GameObject playerModel;
+        public int playerModel;
         public List<string> startingDeck;
 
         public string conditionText;

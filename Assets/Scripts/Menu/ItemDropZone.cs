@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Menu
 {
-
     public class ItemDropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
         public string slot;
