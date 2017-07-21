@@ -110,19 +110,31 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
             }
         }
-
+        internal void AddArmor(int value, Team team)
+        {
+            if (team == Team.Me)
+            {
+                player.armor += value;
+                EventManager.Instance.QueueAnimation(new UpdateArmor_GUI(player.armor, Team.Me));
+            }
+            else
+            {
+                enemy.armor += value;
+                EventManager.Instance.QueueAnimation(new UpdateArmor_GUI(enemy.armor, Team.Opponent));
+            }
+        }
 
         internal void IncreaseDamageReduction(int value, Team team)
         {
             if (team == Team.Me)
             {
-                player.ward += value;
-                EventManager.Instance.QueueAnimation(new UpdateArmor_GUI(player.ward, Team.Me));
+                player.damageReduction += value;
+              //  EventManager.Instance.QueueAnimation(new UpdateArmor_GUI(player.damageReduction, Team.Me));
             }
             else
             {
-                enemy.ward += value;
-                EventManager.Instance.QueueAnimation(new UpdateArmor_GUI(enemy.ward, Team.Opponent));
+                enemy.damageReduction += value;
+               // EventManager.Instance.QueueAnimation(new UpdateArmor_GUI(enemy.damageReduction, Team.Opponent));
             }
         }
 
@@ -146,35 +158,49 @@ namespace Assets.Scripts
         {            
             if (team == Team.Me)
             {
-                int amount;
+                int amount = ((value + player.damageBoost) - enemy.damageReduction) > 0 ? ((value + player.damageBoost) - enemy.damageReduction) : 0;
+                
                 if (ignoreArmor)
                 {
-                    amount = value + player.damageBoost;
+                    enemy.life -= amount;
                 }
                 else
                 {
-                    amount = ((value + player.damageBoost) - enemy.ward) > 0 ? ((value + player.damageBoost) - enemy.ward) : 0;
+                    enemy.armor -= amount;
+                    if (enemy.armor < 0)
+                    {
+                        enemy.life += enemy.armor;
+                        enemy.armor = 0;
+                    }
                 }
-                enemy.life -= amount;
+               
                 EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(amount, Team.Opponent));
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
                 GameManager.instance.progressManager.CumulativeMetric(ProgressManager.Metric.Damage_Dealt, amount);
+                EventManager.Instance.QueueAnimation(new UpdateArmor_GUI(enemy.armor, Team.Opponent));
             }
             else
             {
-                int amount;
-                if (ignoreArmor)
-                {
-                    amount = value + enemy.damageBoost;
+                    int amount = ((value + enemy.damageBoost) - player.damageReduction) > 0 ? ((value + enemy.damageBoost) - player.damageReduction) : 0;
+
+                    if (ignoreArmor)
+                    {
+                        player.life -= amount;
+                    }
+                    else
+                    {
+                        player.armor -= amount;
+                        if (player.armor < 0)
+                        {
+                            player.life += player.armor;
+                            player.armor = 0;
+                        }
+                    }
+
+                    EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(amount, Team.Me));
+                    EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));                 
+                    EventManager.Instance.QueueAnimation(new UpdateArmor_GUI(player.armor, Team.Me));
                 }
-                else
-                {
-                    amount = ((value + enemy.damageBoost) - player.ward) > 0 ? ((value + enemy.damageBoost) - player.ward) : 0;
-                }
-                player.life -= amount;
-                EventManager.Instance.QueueAnimation(new ApplyDamage_GUI(amount, Team.Me));
-                EventManager.Instance.QueueAnimation(new UpdateLife_GUI(player.life, player.maxLife, Team.Me));
-            }
             CheckWinConditions();
         }
 
@@ -182,7 +208,7 @@ namespace Assets.Scripts
         {
             player.mana = 1;
             player.maxMana = 10;
-            player.ward = 0;
+            player.damageReduction = 0;
             player.damageBoost = 0;
             player.manaPerTurn = 1; 
         }
@@ -296,7 +322,7 @@ namespace Assets.Scripts
                
             }
         }
-
+              
 
         public void PlaceCard(CardManager card)
         {          

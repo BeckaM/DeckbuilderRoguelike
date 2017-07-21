@@ -238,8 +238,6 @@ namespace Assets.Scripts
         {
             currentClass = totalProgress.classProgressList.Find(item => item.className.Equals(selectedClass.className));
         }
-
-
     }
 }
 

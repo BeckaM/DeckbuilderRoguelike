@@ -48,8 +48,8 @@ namespace Assets.Scripts
             playerLifeText.text = player.life.ToString() + "/" + player.maxLife.ToString();
             monsterLifeText.text = enemy.life.ToString() + "/" + enemy.maxLife.ToString();
 
-            playerArmorText.text = player.ward.ToString();
-            monsterArmorText.text = enemy.ward.ToString();
+            playerArmorText.text = player.damageReduction.ToString();
+            monsterArmorText.text = enemy.damageReduction.ToString();
 
             playerDamageIncreaseText.text = player.damageBoost.ToString();
             monsterDamageIncreaseText.text = enemy.damageBoost.ToString();

@@ -171,23 +171,23 @@ namespace Assets.Scripts
 
         public void SetCardPosition(CardStatus status)
         {
-            cardStatus = status;           
+            cardStatus = status;
 
             if (status == CardStatus.OnTable)
-            {               
+            {
                 EventManager.Instance.AddListener<TableCard_Trigger>(CardTrigger);
             }
             else if (status == CardStatus.InDiscard)
             {
-                DeckManager.cardsInDiscard.Add(this);              
+                DeckManager.cardsInDiscard.Add(this);
             }
             else if (status == CardStatus.InHand)
-            {               
+            {
                 DeckManager.cardsInHand.Add(this);
             }
             else if (status == CardStatus.InDeck)
-            {               
-                DeckManager.cardsInDeck.Add(this);                
+            {
+                DeckManager.cardsInDeck.Add(this);
             }
         }
 
@@ -205,7 +205,7 @@ namespace Assets.Scripts
                         ApplyEffect(cardeffect);
                     }
                 }
-                   else if (trigger.effect == cardeffect.trigger && trigger.team == cardeffect.triggeredBy)
+                else if (trigger.effect == cardeffect.trigger && trigger.team == cardeffect.triggeredBy)
                 {
                     ApplyEffect(cardeffect);
                 }
@@ -216,7 +216,7 @@ namespace Assets.Scripts
             {
                 //Debug.Log(card.cardName);
                 duration--;
-                
+
                 if (duration == 0)
                 {
                     ExpireCard();
@@ -252,7 +252,7 @@ namespace Assets.Scripts
             if (end == Table)
             {
                 bottomPanel.ShowBottomPanel(false);
-              //  imagePanel.ResetPanel();
+                //  imagePanel.ResetPanel();
             }
             else if (end == Discard)
             {
@@ -266,15 +266,15 @@ namespace Assets.Scripts
             else if (end == DeckManager.Deck)
             {
                 bottomPanel.ShowBottomPanel(true);
-               // imagePanel.ResetPanel();
+                // imagePanel.ResetPanel();
                 GetComponent<RectTransform>().sizeDelta = new Vector2(250, 320);
 
                 GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, DeckManager.deckOffset);
                 DeckManager.deckOffset -= 2;
             }
         }
-                
-        
+
+
         internal void ApplyEffect(CardEffect cardEffect)
         {
             EventManager.Instance.AddListener<CardEffect_GUI>(CardEffectAnimation);
@@ -299,6 +299,12 @@ namespace Assets.Scripts
                 case CardEffect.Effect.AddMaxMana:
                     {
                         CardgameManager.instance.IncreaseMaxMana(cardEffect.value, owner);
+                        break;
+                    }
+
+                case CardEffect.Effect.Armor:
+                    {
+                        CardgameManager.instance.AddArmor(cardEffect.value, owner);
                         break;
                     }
                 case CardEffect.Effect.ReduceDamage:
@@ -530,7 +536,7 @@ namespace Assets.Scripts
         //Card expires if it runs out of duration. Checked at the end of turn, both players and AIs.
         public void ExpireCard()
         {
-            SetCardPosition(CardStatus.InDiscard);           
+            SetCardPosition(CardStatus.InDiscard);
             EventManager.Instance.RemoveListener<TableCard_Trigger>(CardTrigger);
 
             foreach (CardEffect cardeffect in card.effects)

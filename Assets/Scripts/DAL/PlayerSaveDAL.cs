@@ -34,6 +34,7 @@ namespace Assets.Scripts.DAL
             progress.classProgressList.Add(startclass);
 
             progress.itemProgressList.Add("Ring of Fortitude");
+            progress.itemProgressList.Add("Resolute Edge");            
 
             var saker = File.Create(playerSave + player);
             saker.Dispose();

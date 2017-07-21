@@ -11,13 +11,16 @@ namespace Assets.Scripts.Menu
     public class ItemPrefab : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public ItemSelect itemSelect;
+
         public Image itemImage;
+        public List<Sprite> images;        
         public TMP_Text itemName;
-       // public TMP_Text perkCost;
+        public TMP_Text popupName;
+        public TMP_Text popupDescription;
 
         public Item item;
         
-        public bool active;
+       // public bool equiped;
 
         public Transform parentToReturnTo = null;
         public Transform placeholderParent = null;
@@ -29,7 +32,9 @@ namespace Assets.Scripts.Menu
             this.itemSelect = itemSelect;
             this.item = item;
             itemName.text = item.itemName;
-           // perkCost.text = "Cost: " + perk.perkCost.ToString();
+            itemImage.sprite = images[item.itemSprite];
+            popupName.text = item.itemName;
+            popupDescription.text = item.itemEffectText;
         }
 
         public void EquipItem()
@@ -55,6 +60,7 @@ namespace Assets.Scripts.Menu
             Debug.Log("OnBeginDrag");
 
             itemSelect.HighlightSlots(item.type, true);
+            UnequipItem();
 
             placeholder = new GameObject();
             placeholder.transform.SetParent(this.transform.parent);
@@ -97,9 +103,7 @@ namespace Assets.Scripts.Menu
                     break;
                 }
             }
-
             placeholder.transform.SetSiblingIndex(newSiblingIndex);
-
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -114,12 +118,7 @@ namespace Assets.Scripts.Menu
 
             Destroy(placeholder);
         }
-
-
-
     }
-
-
 }
 
 

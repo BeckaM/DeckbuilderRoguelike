@@ -16,7 +16,8 @@ namespace Assets.Scripts
 
         public int life;
         public int maxLife;
-        public int ward = 0;
+        public int armor;
+        public int damageReduction = 0;
         public int damageBoost = 0;
 
         public int mana = 1;

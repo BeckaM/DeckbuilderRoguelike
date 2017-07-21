@@ -30,17 +30,14 @@ namespace Assets.Scripts.Menu
                 var buttonText = pButton.GetComponentInChildren<TMP_Text>();
                 if (DAL.PlayerSaveDAL.PlayerExists(playerNr))
                 {                    
-                    buttonText.text = DAL.PlayerSaveDAL.GetPlayerName(playerNr);
-                    
+                    buttonText.text = DAL.PlayerSaveDAL.GetPlayerName(playerNr);                    
                 }
                 else
                 {
                     buttonText.text = "Create New";
                 }
-
                 playerNr++;
             }
-
         }
 
         public void SelectPlayer(int player)

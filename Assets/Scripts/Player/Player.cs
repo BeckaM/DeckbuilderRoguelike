@@ -15,9 +15,10 @@ namespace Assets.Scripts
         public int nextLVLXP = 20;
 
         public int life = 30;
-        public int maxLife = 30;                   
-        
-        public int ward = 0;
+        public int maxLife = 30;
+
+        public int armor =0;
+        public int damageReduction = 0;
         public int damageBoost = 0;     
 
         public int mana = 1;
