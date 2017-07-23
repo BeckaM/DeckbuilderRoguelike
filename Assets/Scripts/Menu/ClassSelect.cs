@@ -26,6 +26,7 @@ namespace Assets.Scripts.Menu
         public ProgressPanel progressPanelManager;
 
         public GameObject classModelHolder;
+        public GameObject currentPlayerModel;
         public List<GameObject> playerModels;
 
         public bool isProgress;
@@ -74,8 +75,12 @@ namespace Assets.Scripts.Menu
             else
             {
                 selectedClass = playerClass;                           
-                selectedClassText.text = playerClass.className.ToString().Replace("_", " "); ;
-                Instantiate(playerModels[playerClass.playerModel], classModelHolder.transform);
+                selectedClassText.text = playerClass.className.ToString().Replace("_", " ");
+                if(currentPlayerModel!= null)
+                {
+                    Destroy(currentPlayerModel);
+                }
+                currentPlayerModel = Instantiate(playerModels[playerClass.playerModel], classModelHolder.transform);
 
                 selectButton.interactable = true;
             }
