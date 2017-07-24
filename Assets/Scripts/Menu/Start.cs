@@ -12,6 +12,7 @@ namespace Assets.Scripts.Menu
     {        
         public Menu mainMenu;
         public GameObject progressScreen;
+        public GameObject camera;
        
 
         public void ShowProgressScreen(bool show)
