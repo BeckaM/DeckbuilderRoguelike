@@ -582,6 +582,22 @@ namespace Assets.Scripts
                 Debug.LogError("Card Effect not Implemented yet!");
             }
         }
+
+        public void CardMouseOver(bool mouseOver)
+        {
+            if (mouseOver)
+            {
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -200f);
+                transform.transform.localScale = transform.localScale * 1.5f;
+                transform.SetAsLastSibling();
+            }
+            else
+            {
+                transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -100f);
+                transform.transform.localScale = transform.localScale *0.666f;
+            }
+        }
+
     }
 }
 
