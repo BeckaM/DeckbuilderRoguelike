@@ -21,6 +21,7 @@ namespace Assets.Scripts.Menu
         public Image selectedClassImage;
         public TMP_Text selectedClassText;
         public Button selectButton;
+        public TMP_Text selectButtonText;
 
         public GameObject progressPanel;
         public ProgressPanel progressPanelManager;
@@ -66,7 +67,7 @@ namespace Assets.Scripts.Menu
             progressPanelManager.ShowProgress();
         }
         
-        public void SelectClass(PlayerClass playerClass)
+        public void SelectClass(PlayerClass playerClass, bool locked)
         {
             if (isProgress)
             {
@@ -82,7 +83,16 @@ namespace Assets.Scripts.Menu
                 }
                 currentPlayerModel = Instantiate(playerModels[playerClass.playerModel], classModelHolder.transform);
 
-                selectButton.interactable = true;
+                if (!locked)
+                {
+                    selectButton.interactable = true;
+                    selectButtonText.text = "Select";
+                }
+                else
+                {
+                    selectButton.interactable = false;
+                    selectButtonText.text = "Locked";
+                }
             }
         }
         

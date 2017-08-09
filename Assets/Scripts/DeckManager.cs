@@ -207,10 +207,10 @@ namespace Assets.Scripts
             foreach (CardManager card in cardsInDeck)
             {
                 card.transform.SetParent(Deck.transform, false);
-                                
+                card.GetComponent<CanvasGroup>().blocksRaycasts = false;
+
                 card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, deckOffset);
                 deckOffset -= 2;
-
                 //  card.GetComponent<CardManager>().ResetTransform();
             }
         }

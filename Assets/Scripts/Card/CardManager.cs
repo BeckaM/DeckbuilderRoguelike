@@ -179,14 +179,17 @@ namespace Assets.Scripts
             }
             else if (status == CardStatus.InDiscard)
             {
+                GetComponent<CanvasGroup>().blocksRaycasts = false;
                 DeckManager.cardsInDiscard.Add(this);
             }
             else if (status == CardStatus.InHand)
             {
+                GetComponent<CanvasGroup>().blocksRaycasts = true;
                 DeckManager.cardsInHand.Add(this);
             }
             else if (status == CardStatus.InDeck)
             {
+                GetComponent<CanvasGroup>().blocksRaycasts = false;
                 DeckManager.cardsInDeck.Add(this);
             }
         }

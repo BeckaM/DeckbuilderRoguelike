@@ -11,6 +11,7 @@ namespace Assets.Scripts
         public Transform parentToReturnTo = null;
         public Transform placeholderParent = null;
         public GameObject panel;
+        private static bool beingDragged = false;
 
         public float distance;
 
@@ -20,6 +21,7 @@ namespace Assets.Scripts
         {
             var card = GetComponent<CardManager>();
             if (!card.IsDragable) return;
+            beingDragged = true;
 
             //Debug.Log("OnBeginDrag");
 
@@ -73,65 +75,67 @@ namespace Assets.Scripts
                     break;
                 }
             }
-
             placeholder.transform.SetSiblingIndex(newSiblingIndex);
-
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
             var card = GetComponent<CardManager>();
-            if (!card.IsDragable) return;
+            if (!card.IsDragable) return;            
 
             this.transform.SetParent(parentToReturnTo, false);
             this.transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
-            GetComponent<CanvasGroup>().blocksRaycasts = true;
+           
             Destroy(placeholder);
             Debug.Log("OnEndDrag. Card is playabe: " + card.IsPlayable.ToString() + ". Was dropped on: " + placeholderParent.name);
             if (parentToReturnTo.name == "Tabletop" && card.IsPlayable)
             {
-
                 CardgameManager.instance.PlaceCard(card);
             }
+            else
+            {
+                GetComponent<CanvasGroup>().blocksRaycasts = true;
+            }
+            transform.transform.localScale = transform.localScale * 0.666f;
+            beingDragged = false;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            placeholder = new GameObject("placeholder", typeof(RectTransform));
-            placeholder.transform.SetParent(this.transform.parent, false);
-            LayoutElement le = placeholder.AddComponent<LayoutElement>();
-            le.preferredWidth = this.GetComponent<LayoutElement>().preferredWidth;
-            le.preferredHeight = this.GetComponent<LayoutElement>().preferredHeight;
-            le.flexibleWidth = 0;
-            le.flexibleHeight = 0;
+            if (!beingDragged)
+            {
+                placeholder = new GameObject("placeholder", typeof(RectTransform));
+                placeholder.transform.SetParent(this.transform.parent, false);
+                LayoutElement le = placeholder.AddComponent<LayoutElement>();
+                le.preferredWidth = this.GetComponent<LayoutElement>().preferredWidth;
+                le.preferredHeight = this.GetComponent<LayoutElement>().preferredHeight;
+                le.flexibleWidth = 0;
+                le.flexibleHeight = 0;
 
-            placeholder.transform.SetSiblingIndex(this.transform.GetSiblingIndex());
+                placeholder.transform.SetSiblingIndex(this.transform.GetSiblingIndex());
 
-            parentToReturnTo = this.transform.parent;
+                parentToReturnTo = this.transform.parent;
+                placeholderParent = parentToReturnTo;
 
-            this.transform.SetParent(this.transform.parent.parent, true);
+                this.transform.SetParent(this.transform.parent.parent, true);
 
-           // positionToReturnTo = transform.localPosition;
-            //  transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -200f);
-            transform.transform.localScale = transform.localScale * 1.5f;
-
+                // positionToReturnTo = transform.localPosition;
+                //  transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -200f);
+                transform.transform.localScale = transform.localScale * 1.5f;
+            }
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (placeholder != null)
+            if (!beingDragged)
             {
                 this.transform.SetParent(parentToReturnTo, false);
                 this.transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
 
                 //  transform.localPosition = positionToReturnTo;
                 transform.transform.localScale = transform.localScale * 0.666f;
-                Destroy(placeholder);
+                Destroy(placeholder);               
             }
         }
-
-
-
-
     }
 }

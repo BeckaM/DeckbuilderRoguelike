@@ -6,11 +6,11 @@ using TMPro;
 
 namespace Assets.Scripts.Menu
 {
-
     public class ClassButton : MonoBehaviour
     {
         public ClassSelect classSelect;
         public GameObject lockPanel;
+        public bool locked;
        // public Image classImage;
         public TMP_Text className;
         
@@ -18,7 +18,7 @@ namespace Assets.Scripts.Menu
 
         public void selectClass()
         {
-            classSelect.SelectClass(playerClass);
+            classSelect.SelectClass(playerClass, locked);
         }
 
         public void PopulateClassButton(PlayerClass playerClass)
@@ -33,15 +33,13 @@ namespace Assets.Scripts.Menu
             if (locked)
             {
                 lockPanel.SetActive(true);
-                this.GetComponent<Button>().interactable = false;
+                this.locked = true;
             }
             else
-            {
-                this.GetComponent<Button>().interactable = true;
+            {                
                 lockPanel.SetActive(false);
+                this.locked = false;
             }
         }
-
-
     }
 }

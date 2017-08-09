@@ -7,7 +7,6 @@ namespace Assets.Scripts
 {
     public class DungeonUI : MonoBehaviour
     {
-
         public TMP_Text goldText;
         public TMP_Text XPText;
         public GameObject LevelUpButton;
@@ -19,27 +18,21 @@ namespace Assets.Scripts
         public GameOverPanel gameOverPanel;
 
         public ModalPanel modalPanel;
-        public DeckPanel deckPanel;
-
-        
+        public DeckPanel deckPanel;               
 
         public void UpdateXPText()
         {
-            XPText.text = "XP:<#06409b>" + GameManager.instance.player.playerXP + "/" + GameManager.instance.player.nextLVLXP;
+            XPText.text = "XP: <#06409b>" + GameManager.instance.player.playerXP + "/" + GameManager.instance.player.nextLVLXP;
         }
-
 
         public void UpdateGoldText()
         {            
-            goldText.text = "Gold:<#9b8e05>" + GameManager.instance.player.gold;
+            goldText.text = "Gold: <#9b8e05>" + GameManager.instance.player.gold;
         }
-
 
         public void UpdateLifeText()
         {
-            lifeText.text = "Life:<#910000>" + GameManager.instance.player.life + "/" + GameManager.instance.player.life;
+            lifeText.text = "Life: <#910000>" + GameManager.instance.player.life + "/" + GameManager.instance.player.life;
         }
-
-
     }
 }
