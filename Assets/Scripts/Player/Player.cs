@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using System;
+using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
@@ -24,8 +25,6 @@ namespace Assets.Scripts
         public int mana = 1;
 
         public int maxMana = 3;
-        public int manaPerTurn = 1;      
-
-
+        public int manaPerTurn = 1;
     }
 }

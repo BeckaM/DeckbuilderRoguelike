@@ -23,6 +23,7 @@ namespace Assets.Scripts
             foreach (CardManager card in muliganCards)
             {
                 card.transform.SetParent(muliganCardHolder.transform, false);
+                card.GetComponent<CanvasGroup>().blocksRaycasts = true;
             }
         }
         /**
@@ -53,7 +54,8 @@ namespace Assets.Scripts
                     card.DeckManager.discardOffset -= 2;
                     //   card.GetComponent<CardManager>().ResetTransform();
                     selectScript.ClearOutline();
-                  //  card.imagePanel.ResetPanel();
+                    card.GetComponent<CanvasGroup>().blocksRaycasts = false;
+                    //  card.imagePanel.ResetPanel();
                     discardCards++;
                 }
             }

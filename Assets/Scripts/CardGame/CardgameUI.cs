@@ -179,7 +179,7 @@ namespace Assets.Scripts
             EventManager.Instance.processingQueue = false;
 
             this.gameObject.SetActive(false);
-            GameManager.instance.playerObject.SetActive(true);
+            GameManager.instance.playerPawn.gameObject.SetActive(true);
             CardgameManager.instance.gameObject.SetActive(false);
 
         }

@@ -9,7 +9,7 @@ namespace Assets.Scripts
 {
     public class DungeonFloor : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
-        public PlayerMovement player;
+        public PlayerPawn player;
 
         public void OnPointerDown(PointerEventData eventData)
         {           

@@ -157,15 +157,13 @@ namespace Assets.Scripts
                 }
             }
         }
-
-
+        
         public void StartingDeck(List<string> startingCards)
         {
             deckStringHolder = new List<string>();
             deckStringHolder.AddRange(startingCards);
         }
-
-
+        
         //public void AddCardstoDeck(List<string> cardsToCreate)
         //{
         //    deckStringHolder.AddRange(cardsToCreate);
@@ -183,8 +181,7 @@ namespace Assets.Scripts
                 AddCardtoDeck(card);
             }
         }
-
-
+        
         internal void InitDeck()
         {
             cardsInDeck = new List<CardManager>();
@@ -214,8 +211,7 @@ namespace Assets.Scripts
                 //  card.GetComponent<CardManager>().ResetTransform();
             }
         }
-
-
+        
         public CardManager AddCardtoDeck(CardManager card)
         {
             //var cardobject = ObjectDAL.GetCard(cardToCreate);
@@ -260,8 +256,7 @@ namespace Assets.Scripts
             }
             return returnList;
         }
-
-
+        
         public void DiscardRandomCard()
         {
             if (cardsInHand.Count > 0)
@@ -356,8 +351,7 @@ namespace Assets.Scripts
 
             //     EventManager.Instance.QueueAnimation(new UpdateDeckTexts_GUI(cardsInDeck.Count, cardsInDiscard.Count, team));
         }
-
-
+        
         public void DestroyCard(CardManager card)
         {
             cardsInDeck.Remove(card);

@@ -348,8 +348,7 @@ namespace Assets.Scripts
                     }
             }
         }
-
-
+        
         public void CardEffectAnimation(CardEffect_GUI e)
         {
             if (e.card == this)

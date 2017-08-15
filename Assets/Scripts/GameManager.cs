@@ -11,7 +11,7 @@ namespace Assets.Scripts
     {
         public Player player = new Player();
         public PlayerClass playerClass;
-        public GameObject playerObject;
+        public PlayerPawn playerPawn;
         public GameObject playerCameraObject;
        
         public List<Sprite> classImages;
@@ -35,8 +35,7 @@ namespace Assets.Scripts
         public int level = 0;                                  //Current level number, expressed in game as "Level 1".
 
         public bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
-
-        //Awake is always called before any Start functions
+                
         void Awake()
         {
             //Check if instance already exists
@@ -52,24 +51,18 @@ namespace Assets.Scripts
                 Destroy(gameObject);
 
             //Sets this to not be destroyed when reloading scene
-            DontDestroyOnLoad(gameObject);
-
-            //Call the InitGame function to initialize the first level 
-            // InitGame();
+            DontDestroyOnLoad(gameObject);           
         }
-
 
         void OnEnable()
         {
             SceneManager.sceneLoaded += OnLevelFinishedLoading;
         }
 
-
         void OnDisable()
         {
             SceneManager.sceneLoaded -= OnLevelFinishedLoading;
         }
-
 
         //This is called each time a scene is loaded.
         void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
@@ -84,7 +77,6 @@ namespace Assets.Scripts
             }
         }
 
-
         //Initializes the game for each level.
         void InitGame()
         {
@@ -93,15 +85,16 @@ namespace Assets.Scripts
 
             //Find all the scene objects we need.
             FindLevelObjects();
+            playerPawn.SetPlayerModel(playerClass.playerModel);
 
             dungeonUI.modalPanel.gameObject.SetActive(false);
             dungeonUI.deckPanel.gameObject.SetActive(false);
             cardGameManager.gameObject.SetActive(false);
             cardGameUI.gameObject.SetActive(false);
 
-            LevelUpCheck();
+            LevelUpCheck();  //Check if we have outsatnding level up. 
 
-
+            //Update the dungeon UI
             dungeonUI.UpdateLifeText();
             dungeonUI.UpdateGoldText();
             dungeonUI.UpdateXPText();
@@ -115,29 +108,26 @@ namespace Assets.Scripts
             //Call the HideLevelImage function with a delay in seconds of levelStartDelay.
             Invoke("HideLevelImage", levelStartDelay);
 
-            Invoke("EnableFoWRevealer", levelStartDelay); //Camera needs some time to move to the player before we start revealing fog.
+            Invoke("EnableFoVRevealer", levelStartDelay); //Camera needs some time to move to the player before we start revealing fog.
 
             //Call the SetupScene function of the BoardManager script, pass it current level number.
             dungeonManager.SetupScene(level);
         }
 
-
-        private void EnableFoWRevealer()
+        private void EnableFoVRevealer()
         {
             dungeonManager.playerFOWRevealer.Suspended = false;
         }
 
-
         private void FindLevelObjects()
         {
-            playerObject = GameObject.Find("Player");
+            playerPawn = GameObject.Find("Player").GetComponent<PlayerPawn>();
             playerCameraObject = GameObject.Find("CameraPivot");
             dungeonManager = GameObject.Find("Dungeon").GetComponent<DungeonManager>();
             dungeonUI = GameObject.Find("DungeonUI").GetComponent<DungeonUI>();
             cardGameManager = GameObject.Find("CardGame").GetComponent<CardgameManager>();
             cardGameUI = GameObject.Find("CardGameUI").GetComponent<CardgameUI>();
         }
-
 
         public void InitCardgame(Collider monster)
         {
@@ -155,7 +145,7 @@ namespace Assets.Scripts
 
             //Prevent player from moving while in card game.
             doingSetup = true;
-            playerObject.SetActive(false);
+            playerPawn.gameObject.SetActive(false);
             playerCameraObject.SetActive(false);
 
             //Enable the card game Canvas, which also starts the CardgameManager script.        
@@ -171,14 +161,13 @@ namespace Assets.Scripts
             CardgameManager.instance.Setup();
         }
 
-
         public void ReturnFromCardgame(bool win, List<Card> cardRewards, int goldReward)
-        {           
+        {
+            playerCameraObject.SetActive(true);
             dungeonManager.gameObject.SetActive(true);
             dungeonUI.gameObject.SetActive(true);
           //  dungeonUI.deckPanel.gameObject.SetActive(false);
-            dungeonUI.UpdateLifeText();
-                       
+            dungeonUI.UpdateLifeText();                       
 
             if (win == false)
             {
@@ -201,7 +190,6 @@ namespace Assets.Scripts
             doingSetup = false;
         }
 
-
         //GameOver is called when the player reaches 0 life points
         public void GameOver()
         {
@@ -213,13 +201,11 @@ namespace Assets.Scripts
             dungeonUI.gameOverPanel.GameOver();
         }
 
-
         public void BackToMenu()
         {
             Destroy(this);
             SceneManager.LoadScene("Start");
         }
-
 
         public void GainXP(int XP)
         {
@@ -237,7 +223,6 @@ namespace Assets.Scripts
             }
         }
 
-
         public void GainLife(int gain)
         {
             player.life += gain;
@@ -248,7 +233,6 @@ namespace Assets.Scripts
             dungeonUI.UpdateLifeText();
         }
 
-
         internal void LevelUp()
         {
             var newCards = DAL.ObjectDAL.GetClassCards(player.playerLevel - 1, player.playerLevel + 1, playerClass.className);
@@ -258,7 +242,6 @@ namespace Assets.Scripts
 
             dungeonUI.modalPanel.LevelUp(rewardList, LevelUpComplete);
         }
-
 
         internal void LevelUpComplete()
         {           
@@ -274,7 +257,6 @@ namespace Assets.Scripts
             }
             progressManager.HighestAchievedMetric(ProgressManager.Metric.Highest_Player_Level, player.playerLevel);
         }
-
 
         public void ModifyGold(int gain)
         {

@@ -62,8 +62,7 @@ namespace Assets.Scripts
         }
         
         public void DrawStartingHands(int cardsMuliganed)
-        {
-            
+        {            
             for (var i = 0; i < cardsMuliganed; i++)
             {
                 DeckManager.player.Draw();               

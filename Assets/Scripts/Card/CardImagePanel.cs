@@ -8,20 +8,13 @@ namespace Assets.Scripts
 {
     public class CardImagePanel : MonoBehaviour
     {
-                
         public Image cardImage;
-        
-
         public GameObject fullDescriptionPanel;
-        public GameObject imagePanel;
+        public GameObject shortDescriptionPanel;
+        // public GameObject imagePanel;
 
-        public bool descriptionToggle = false;
-        public bool animating = false;
-
-        public void OnEnable()
-        {
-            ResetPanel();
-        }
+        //public bool descriptionToggle = false;
+        //public bool animating = false;
 
         public void PopulateCardImage(Card card)
         {
@@ -36,90 +29,81 @@ namespace Assets.Scripts
             {
                 cardImage.sprite = image;
             }
-
         }
 
-
-        public void ShowFullDescription()
+        public void ShowFullDescription(bool show)
         {
-            descriptionToggle = true;
-            if (!animating)
-            {
-                animating = true;
-
-                StartCoroutine(ShowDescriptionAnimation());
-            }
+            fullDescriptionPanel.SetActive(show);
+            shortDescriptionPanel.SetActive(!show);
         }
 
-        public void HideFullDescription()
-        {
+        //public void HideFullDescription()
+        //{
+        //    descriptionToggle = false;
+        //}
 
-            descriptionToggle = false;
+        //private IEnumerator ShowDescriptionAnimation()
+        //{
+        //    yield return StartCoroutine(Flip(90));
 
-        }
+        //    fullDescriptionPanel.SetActive(true);
+        //    imagePanel.gameObject.SetActive(false);
 
-        private IEnumerator ShowDescriptionAnimation()
-        {
-            yield return StartCoroutine(Flip(90));
+        //    yield return StartCoroutine(Flip(90));
 
-            fullDescriptionPanel.SetActive(true);
-            imagePanel.gameObject.SetActive(false);
+        //    yield return new WaitForSeconds(2);
+        //    while (descriptionToggle)
+        //    {
+        //        yield return new WaitForSeconds(1);
+        //    }
 
-            yield return StartCoroutine(Flip(90));
+        //    yield return StartCoroutine(HideDescriptionAnimation());
+        //    animating = false;
+        //}
 
-            yield return new WaitForSeconds(2);
-            while (descriptionToggle)
-            {
-                yield return new WaitForSeconds(1);
-            }
+        //private IEnumerator HideDescriptionAnimation()
+        //{
 
-            yield return StartCoroutine(HideDescriptionAnimation());
-            animating = false;
-        }
+        //    yield return StartCoroutine(Flip(90));
 
-        private IEnumerator HideDescriptionAnimation()
-        {
+        //    fullDescriptionPanel.SetActive(false);
+        //    //     backgroundGlow.gameObject.SetActive(true);
+        //    imagePanel.gameObject.SetActive(true);
 
-            yield return StartCoroutine(Flip(90));
-
-            fullDescriptionPanel.SetActive(false);
-            //     backgroundGlow.gameObject.SetActive(true);
-            imagePanel.gameObject.SetActive(true);
-
-            yield return StartCoroutine(Flip(90));
-            animating = false;
+        //    yield return StartCoroutine(Flip(90));
+        //    animating = false;
 
 
-        }
+        //}
 
 
-        private IEnumerator Flip(float rotation)
-        {
-            float deltaRot = 10f;
-            float rotationSpeed = 0.01f;
-            var degreesToRotate = rotation;
+        //private IEnumerator Flip(float rotation)
+        //{
+        //    float deltaRot = 10f;
+        //    float rotationSpeed = 0.01f;
+        //    var degreesToRotate = rotation;
 
-            while (degreesToRotate > 0.001f)
-            {
-                this.transform.Rotate(0, deltaRot, 0);
+        //    while (degreesToRotate > 0.001f)
+        //    {
+        //        this.transform.Rotate(0, deltaRot, 0);
 
-                //Recalculate the remaining distance after moving.
-                degreesToRotate = degreesToRotate - deltaRot;
+        //        //Recalculate the remaining distance after moving.
+        //        degreesToRotate = degreesToRotate - deltaRot;
 
-                //Return and loop until sqrRemainingDistance is close enough to zero to end the function
-                yield return new WaitForSeconds(rotationSpeed);
-            }
+        //        //Return and loop until sqrRemainingDistance is close enough to zero to end the function
+        //        yield return new WaitForSeconds(rotationSpeed);
+        //    }
 
-        }
+        //}
 
-        private void ResetPanel()
-        {
-            descriptionToggle = false;
-            animating = false;
-            this.transform.localRotation = Quaternion.identity;
-            fullDescriptionPanel.SetActive(false); 
-            imagePanel.gameObject.SetActive(true);
-        }
+        //private void ResetPanel()
+        //{
+        //    descriptionToggle = false;
+        //    animating = false;
+        //    this.transform.localRotation = Quaternion.identity;
+        //    fullDescriptionPanel.SetActive(false); 
+        //    imagePanel.gameObject.SetActive(true);
+        //}
 
     }
 }

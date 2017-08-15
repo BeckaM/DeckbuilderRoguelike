@@ -12,6 +12,7 @@ namespace Assets.Scripts
         public Transform placeholderParent = null;
         public GameObject panel;
         private static bool beingDragged = false;
+        public CardManager cardManager;
 
         public float distance;
 
@@ -19,8 +20,7 @@ namespace Assets.Scripts
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            var card = GetComponent<CardManager>();
-            if (!card.IsDragable) return;
+            if (!cardManager.IsDragable) return;
             beingDragged = true;
 
             //Debug.Log("OnBeginDrag");
@@ -44,8 +44,7 @@ namespace Assets.Scripts
 
         public void OnDrag(PointerEventData eventData)
         {
-            var card = GetComponent<CardManager>();
-            if (!card.IsDragable) return;
+            if (!cardManager.IsDragable) return;
 
             //Debug.Log ("OnDrag");
 
@@ -66,12 +65,9 @@ namespace Assets.Scripts
             {
                 if (this.transform.position.x < placeholderParent.GetChild(i).position.x)
                 {
-
                     newSiblingIndex = i;
-
                     if (placeholder.transform.GetSiblingIndex() < newSiblingIndex)
                         newSiblingIndex--;
-
                     break;
                 }
             }
@@ -79,24 +75,24 @@ namespace Assets.Scripts
         }
 
         public void OnEndDrag(PointerEventData eventData)
-        {
-            var card = GetComponent<CardManager>();
-            if (!card.IsDragable) return;            
+        {            
+            if (!cardManager.IsDragable) return;
 
             this.transform.SetParent(parentToReturnTo, false);
             this.transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
-           
+
             Destroy(placeholder);
-            Debug.Log("OnEndDrag. Card is playabe: " + card.IsPlayable.ToString() + ". Was dropped on: " + placeholderParent.name);
-            if (parentToReturnTo.name == "Tabletop" && card.IsPlayable)
+            Debug.Log("OnEndDrag. Card is playabe: " + cardManager.IsPlayable.ToString() + ". Was dropped on: " + placeholderParent.name);
+            if (parentToReturnTo.name == "Tabletop" && cardManager.IsPlayable)
             {
-                CardgameManager.instance.PlaceCard(card);
+                CardgameManager.instance.PlaceCard(cardManager);
             }
             else
             {
                 GetComponent<CanvasGroup>().blocksRaycasts = true;
             }
             transform.transform.localScale = transform.localScale * 0.666f;
+            cardManager.imagePanel.ShowFullDescription(false);
             beingDragged = false;
         }
 
@@ -122,6 +118,7 @@ namespace Assets.Scripts
                 // positionToReturnTo = transform.localPosition;
                 //  transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -200f);
                 transform.transform.localScale = transform.localScale * 1.5f;
+                cardManager.imagePanel.ShowFullDescription(true);
             }
         }
 
@@ -134,7 +131,8 @@ namespace Assets.Scripts
 
                 //  transform.localPosition = positionToReturnTo;
                 transform.transform.localScale = transform.localScale * 0.666f;
-                Destroy(placeholder);               
+                cardManager.imagePanel.ShowFullDescription(false);
+                Destroy(placeholder);
             }
         }
     }

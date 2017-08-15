@@ -16,9 +16,9 @@ namespace Assets.Scripts
         public TMP_Text healText;
         public int healNumber;
 
-        public GameObject wardIcon;
-        public TMP_Text wardText;
-        public int wardNumber;
+        public GameObject armorIcon;
+        public TMP_Text armortext;
+        public int armorNumber;
 
         public GameObject manaIncreaseIcon;
         public TMP_Text manaIncText;
@@ -70,9 +70,9 @@ namespace Assets.Scripts
                 {
                     ShowHealIcon(effect.value);
                 }
-                else if (effect.effect == CardEffect.Effect.ReduceDamage)
+                else if (effect.effect == CardEffect.Effect.Armor)
                 {
-                    ShowWardIcon(effect.value);
+                    ShowArmorIcon(effect.value);
                 }
                 else if (effect.effect == CardEffect.Effect.AddMaxMana)
                 {
@@ -109,11 +109,11 @@ namespace Assets.Scripts
             cardEffectCount++;
         }
 
-        public void ShowWardIcon(int ward)
+        public void ShowArmorIcon(int armor)
         {
-            wardIcon.SetActive(true);
-            wardNumber = wardNumber + ward;
-            wardText.text = wardNumber.ToString();
+            armorIcon.SetActive(true);
+            armorNumber = armorNumber + armor;
+            armortext.text = armorNumber.ToString();
             cardEffectCount++;
         }
 

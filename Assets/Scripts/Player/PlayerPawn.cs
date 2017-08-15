@@ -2,10 +2,11 @@
 using System.Collections;
 using System;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
-    public class PlayerMovement : MonoBehaviour
+    public class PlayerPawn : MonoBehaviour
     {
         public Animator anim;
         public bool moveToggle = false;
@@ -20,10 +21,13 @@ namespace Assets.Scripts
         public float zComp = 3.5f;
         public float xComp = -0.3f;
 
+        public List<GameObject> playerModels;
+        public GameObject playerModelHolder;
+
         private void OnEnable()
         {
             moveToggle = false;
-            anim.SetBool("IsWalking", false);
+            
         }
 
         void Update()
@@ -31,8 +35,14 @@ namespace Assets.Scripts
             GetKeyboardInput();
             GetMouseInput();
             MovePlayer();
-        }
+        }               
 
+        public void SetPlayerModel(int playerModel)
+        {
+            var pModel = Instantiate(playerModels[playerModel], playerModelHolder.transform);
+            anim = pModel.GetComponent<Animator>();
+            anim.SetBool("IsWalking", false);
+        }
 
         private void GetMouseInput()
         {
