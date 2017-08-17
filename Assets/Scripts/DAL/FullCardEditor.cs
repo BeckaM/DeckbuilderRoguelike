@@ -8,29 +8,33 @@ namespace Assets.Scripts.DAL
 {
     public class FullCardEditor : MonoBehaviour
     {
-        public CardWrapper cardsToEdit;
+        private CardWrapper alLCards;
+        public List<Card> cardsToEdit;
         public GameObject cardObject;
         public GameObject editorPanel;
         public List<GameObject> cardObjects;
         public string cardToEdit;
-        public Card cardBeingEdited;
+        private Card cardBeingEdited;
         public GameObject cardObjectBeingEdited;
         public Enemy enemy;
         public string enemyName;
         public int enemyLevel;
+        public PlayerClass.ClassName cardType = PlayerClass.ClassName.Monster;
 
         public void GetCardsToEdit()
         {
             Clear();
-            cardsToEdit = ObjectDAL.GetAllCards();
+            alLCards = ObjectDAL.GetAllCards();
 
-            foreach (Card card in cardsToEdit.cardItems)
+            foreach (Card card in alLCards.cardItems)
             {
-                CreateCardObject(card);
+                if (card.classOwner == cardType) {
+                    CreateCardObject(card);
+                    cardsToEdit.Add(card);
+                }
             }
         }
-
-
+        
         public void GetMonsterDeck()
         {
 
@@ -43,8 +47,7 @@ namespace Assets.Scripts.DAL
                 CreateCardObject(card);
             }
         }
-
-
+        
         public void Clear()
         {
             foreach (GameObject card in cardObjects)
@@ -52,6 +55,9 @@ namespace Assets.Scripts.DAL
                 DestroyImmediate(card);
             }
             cardObjects.Clear();
+            alLCards = null;
+            cardsToEdit.Clear();
+
         }
 
         public void EditCard()
@@ -77,7 +83,7 @@ namespace Assets.Scripts.DAL
 
         internal Card GetCard(string cardToGet)
         {
-            var card = cardsToEdit.cardItems.Find(item => item.cardName.Equals(cardToGet));
+            var card = alLCards.cardItems.Find(item => item.cardName.Equals(cardToGet));
             return card;
         }
 
@@ -107,8 +113,7 @@ namespace Assets.Scripts.DAL
             ////  var cardtext = cardDescription.GetComponent<Text>();
             //descriptionText.text = card.cardText;
         }
-
-
+        
         private void CreateCardObject(Card card)
         {
             GameObject instance = Instantiate(cardObject);
@@ -125,8 +130,14 @@ namespace Assets.Scripts.DAL
 
         public void SaveCards()
         {
-            ObjectDAL.SaveCards(cardsToEdit);
-
-        }
+            if (alLCards != null)
+            {
+                ObjectDAL.SaveCards(alLCards);
+            }
+            else
+            {
+                Debug.Log("CardWrapper was null, not saving.");
+            }
+        }        
     }
 }

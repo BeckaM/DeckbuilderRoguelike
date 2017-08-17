@@ -15,10 +15,14 @@ namespace Assets.Scripts
         public float moveSpeed = 7.0f;
         public float deadZone = 0.5f;
 
+        public Vector3 targetPos;
+
         public Vector3 movement;
 
         public float restartLevelDelay = 1f;        //Delay time in seconds to restart level.
+        [Tooltip("Up/Down correction")]
         public float zComp = 3.5f;
+        [Tooltip("Left/Right Correction")]
         public float xComp = -0.3f;
 
         public List<GameObject> playerModels;
@@ -51,24 +55,41 @@ namespace Assets.Scripts
                 //Debug.Log("X position: " + Input.mousePosition.x);
                 //Debug.Log("Y position: " + Input.mousePosition.y);
 
-                var targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                targetPos.y = transform.position.y;
-                targetPos.x += xComp;
-                targetPos.z += zComp;               
+                //targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                //targetPos.y = transform.position.y;
+                //targetPos.x += xComp;
+                //targetPos.z += zComp;
+                //targetPos1 = targetPos;
+                               
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
 
-                var heading = targetPos - transform.position;
-                var distance = heading.magnitude;
-                if (distance < deadZone)            // Deadzone around the player to remove twitchyness. 
+                if (Physics.Raycast(ray, out hit, 1000.0f))
                 {
-                    return;
-                }
-                var direction = heading / distance; // This is now the normalized direction.
-                movement = direction;
+                    Vector3 newpos = new Vector3(hit.point.x, transform.position.y, hit.point.z);
 
+                    Vector3 dir = (newpos - this.transform.position).normalized;
+
+
+                    //   var heading = targetPos - transform.position;
+                    var distance = dir.magnitude;
+                    //if (distance < deadZone)            // Deadzone around the player to remove twitchyness. 
+                    //{
+                    //    return;
+                    //}
+                    //var direction = heading / distance; // This is now the normalized direction.
+                    movement = dir;
+                }
             }
         }
-        
-        private void GetKeyboardInput()
+
+        void OnDrawGizmos()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(targetPos, 1);
+        }
+
+            private void GetKeyboardInput()
         {
             float moveHorizontal = Input.GetAxisRaw("Horizontal");
             float moveVertical = Input.GetAxisRaw("Vertical");

@@ -15,6 +15,7 @@ namespace Assets.Scripts
         public TMP_Text subText;
 
         public GameObject choicesPanel;
+        public GameObject choicesHolder;
         public GameObject goldObject;
         public GameObject cardObject;
 
@@ -73,7 +74,7 @@ namespace Assets.Scripts
 
             var card = Instantiate(cardObject);
             selections.Add(card);
-            card.transform.SetParent(choicesPanel.transform, false);
+            card.transform.SetParent(choicesHolder.transform, false);
             var cardScript = card.GetComponent<CardManager>();
             cardScript.PopulateCard(reward);
 
@@ -99,7 +100,7 @@ namespace Assets.Scripts
 
             var gold = Instantiate(goldObject);
             selections.Add(gold);
-            gold.transform.SetParent(choicesPanel.transform, false);
+            gold.transform.SetParent(choicesHolder.transform, false);
             var goldscript = gold.GetComponent<Gold>();
             goldscript.PopulateGold(goldReward);
 
@@ -123,14 +124,14 @@ namespace Assets.Scripts
             {
                 var tempCard = Instantiate(cardObject);
                 selections.Add(tempCard);
-                tempCard.transform.SetParent(choicesPanel.transform, false);
+                tempCard.transform.SetParent(choicesHolder.transform, false);
                 var cardScript = tempCard.GetComponent<CardManager>();
                 cardScript.PopulateCard(card);
             }
 
             var gold = Instantiate(goldObject);
             selections.Add(gold);
-            gold.transform.SetParent(choicesPanel.transform, false);
+            gold.transform.SetParent(choicesHolder.transform, false);
             var goldscript = gold.GetComponent<Gold>();
             goldscript.PopulateGold(goldReward);
 
@@ -178,7 +179,7 @@ namespace Assets.Scripts
             {
                 var tempCard = Instantiate(cardObject);
                 selections.Add(tempCard);
-                tempCard.transform.SetParent(choicesPanel.transform, false);
+                tempCard.transform.SetParent(choicesHolder.transform, false);
                 var cardScript = tempCard.GetComponent<CardManager>();
                 cardScript.PopulateCard(card);
             }
