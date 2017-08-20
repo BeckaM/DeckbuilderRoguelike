@@ -84,18 +84,10 @@ namespace Assets.Scripts
         {
             player.mana = 1;
             enemy.mana = 0;
-            /* Old code for non stacking mana
-             * player.mana = player.maxMana;
-            enemy.mana = enemy.maxMana;
-            */           
-            //cardgameUI.monsterPortrait.sprite = enemy.monsterRenderer.sprite;
-            //cardgameUI.monsterPortrait.color = enemy.enemy.spriteColor;
-                        
-           // cardgameUI.playerPortrait.sprite = player.playerImage;
+            
             cardgameUI.monsterNameText.text = enemy.enemy.EnemyName;
         }
-
-
+        
         internal void IncreaseMaxMana(int value, Team team)
         {
             if (team == Team.Me)
@@ -137,7 +129,6 @@ namespace Assets.Scripts
             }
         }
 
-
         internal void IncreaseDamage(int value, Team team)
         {
             if (team == Team.Me)
@@ -151,7 +142,6 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new UpdateDamageIncrease_GUI(enemy.damageBoost, Team.Opponent));
             }
         }
-
 
         internal void ApplyDamage(int value, bool ignoreArmor, Team team)
         {            
@@ -208,8 +198,9 @@ namespace Assets.Scripts
             player.mana = 1;
             player.maxMana = 10;
             player.damageReduction = 0;
+            player.armor = 0;
             player.damageBoost = 0;
-            player.manaPerTurn = 1; 
+            player.manaPerTurn = 1;
         }
 
         internal void ApplyHealing(int value, Team team)
@@ -234,8 +225,7 @@ namespace Assets.Scripts
                 EventManager.Instance.QueueAnimation(new UpdateLife_GUI(enemy.life, enemy.maxLife, Team.Opponent));
             }
         }
-
-
+        
         private void CheckWinConditions()
         {
             bool win;
@@ -253,8 +243,7 @@ namespace Assets.Scripts
                 EndGame(win);
             }
         }
-
-
+        
         private void EndGame(bool win)
         {
             List<Card> cardRewards = new List<Card>();
@@ -292,8 +281,7 @@ namespace Assets.Scripts
            
             EventManager.Instance.QueueAnimation(new EndGame_GUI(win, cardRewards, goldReward));
         }
-            
-        
+                
         //Triggered by end turn button.
         public void EndTurn()
         {            
@@ -307,6 +295,7 @@ namespace Assets.Scripts
                 player.mana += player.manaPerTurn;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(player.mana, player.maxMana, Team.Me));
                 cardgameUI.endTurnButton.interactable = true;
+                EventManager.Instance.TriggerEvent(new TableCard_Trigger(turn, CardEffect.Trigger.StartOfTurn));
             }
             else if (turn == Team.Me)
             {
@@ -315,14 +304,13 @@ namespace Assets.Scripts
                 turn = Team.Opponent;
                 enemy.mana += enemy.manaPerTurn;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, Team.Opponent));
+                EventManager.Instance.TriggerEvent(new TableCard_Trigger(turn, CardEffect.Trigger.StartOfTurn));
 
                 StartCoroutine(enemy.initAI());
-                Debug.Log("Turn was ended, AI starting to play.");
-               
+                Debug.Log("Turn was ended, AI starting to play.");           
             }
         }
-              
-
+        
         public void PlaceCard(CardManager card)
         {          
             //Pay the mana cost.
@@ -340,8 +328,7 @@ namespace Assets.Scripts
                 enemy.mana = enemy.mana - card.card.cost;
                 EventManager.Instance.QueueAnimation(new UpdateMana_GUI(enemy.mana, enemy.maxMana, card.owner));
             }
-
-
+            
             //Check for triggers from playing a card.
             Debug.Log("Start checking for triggers on play card");
             EventManager.Instance.TriggerEvent(new TableCard_Trigger(card.owner, CardEffect.Trigger.OnPlayCard));
@@ -359,8 +346,7 @@ namespace Assets.Scripts
                 }
             }
             Debug.Log("Done applying Card effects");
-
-
+            
             //Set the new card position.
             Debug.Log("Start moving the card.");
             if (card.card.cardDuration == 0)

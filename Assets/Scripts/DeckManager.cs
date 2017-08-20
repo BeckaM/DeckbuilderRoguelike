@@ -140,14 +140,12 @@ namespace Assets.Scripts
                     {
                         card.moveCounter = 0;
                         card.effectCounter = 0;
-                        card.transform.SetParent(DeckHolder.transform, false);
-                        //card.transform.localScale = new Vector3(1f, 1f, 1f);
+                        card.transform.SetParent(DeckHolder.transform, false);                        
                         card.GetComponent<RectTransform>().localPosition = new Vector3(0f, 0f, 0f);
-                        card.SetCardPosition(CardManager.CardStatus.InDeck);
-                        // card.ResetCard(deck);
-                        card.bottomPanel.ShowBottomPanel(true);
-                      //  card.imagePanel.ResetPanel();
+                        card.SetCardPosition(CardManager.CardStatus.InDeck);                        
+                        card.bottomPanel.ShowBottomPanel(true);                      
                         card.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 320);
+                        card.GetComponent<CanvasGroup>().blocksRaycasts = true;
                     }
 
                     else

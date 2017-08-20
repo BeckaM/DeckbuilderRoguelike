@@ -32,7 +32,7 @@ namespace Assets.Scripts
 
         public void UpdateLifeText()
         {
-            lifeText.text = "Life: <#910000>" + GameManager.instance.player.life + "/" + GameManager.instance.player.life;
+            lifeText.text = "Life: <#910000>" + GameManager.instance.player.life + "/" + GameManager.instance.player.maxLife;
         }
     }
 }
