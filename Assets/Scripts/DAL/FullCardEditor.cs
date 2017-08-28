@@ -61,8 +61,7 @@ namespace Assets.Scripts.DAL
         }
 
         public void EditCard()
-        {
-            // Clear();
+        {           
             if (cardObjectBeingEdited != null)
             {
                 cardObjectBeingEdited.GetComponent<Selectable>().outline.enabled = false;
@@ -73,11 +72,7 @@ namespace Assets.Scripts.DAL
 
             cardObjectBeingEdited = cardObjects.Find(item => item.GetComponent<CardManager>().card.cardName.Equals(cardToEdit));
 
-            cardObjectBeingEdited.GetComponent<Selectable>().outline.enabled = true;
-
-
-            // CreateCardObject(card);
-            //  cardObjectBeingEdited.transform.localScale = new Vector3(2f, 2f, 2f);
+            cardObjectBeingEdited.GetComponent<Selectable>().outline.enabled = true;            
         }
 
 
@@ -90,28 +85,11 @@ namespace Assets.Scripts.DAL
         public void ApplyCardChanges()
         {
             //reverse populate the card
-
-            var edited = cardObjectBeingEdited.GetComponent<CardManager>();
-
-          //  cardBeingEdited.spriteColor = edited.imagePanel.cardImage.color;
-            //cardBeingEdited.spriteHighlightColor = edited.imagePanel.highlight.color;
-            //cardBeingEdited.spriteGlowColor = edited.imagePanel.glow.color;
-
-            //cardBeingEdited.spriteBackgroundColor = edited.imagePanel.imageBackground.color;
-            //cardBeingEdited.backgroundGlowColor = edited.imagePanel.backgroundGlow.color;
+            var edited = cardObjectBeingEdited.GetComponent<CardManager>();      
 
             cardBeingEdited.backgroundColor = edited.cardPanel.color;
-
             cardBeingEdited.cardName = edited.cardName.text;
-
-            cardBeingEdited.cardText = edited.descriptionText.text;
-            ////Set Card Title
-            ////   var titleComponent = cardName.GetComponent<Text>();
-            //cardName.text = card.cardName;
-
-            ////Set Card Description
-            ////  var cardtext = cardDescription.GetComponent<Text>();
-            //descriptionText.text = card.cardText;
+            cardBeingEdited.cardText = edited.descriptionText.text;          
         }
         
         private void CreateCardObject(Card card)
